@@ -1,12 +1,21 @@
--- TABEL USERS
+-- Tabel Roles (RBAC)
+CREATE TABLE roles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,    -- Nama role (misalnya: 'Admin', 'Mentor', 'Peserta')
+    description TEXT NULL,         -- Deskripsi role
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Table Users
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     email_verified_at TIMESTAMP NULL DEFAULT NULL,
-    password VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,  -- Password yang sudah di-hash
     foto_diri VARCHAR(255) NULL,
-    tanggal_lahir date NULL,
+    tanggal_lahir DATE NULL,
     tempat_lahir TEXT NULL,
     alamat_tempat_tinggal TEXT NULL,
     instansi TEXT NULL,
@@ -17,29 +26,37 @@ CREATE TABLE users (
     no_telepon VARCHAR(20) NULL,
     tanggal_bergabung DATE NULL,
     surat_tugas VARCHAR(255) NULL,
-    role_as ENUM('0', '1', '2', '3') NOT NULL DEFAULT '3', -- 0: Mentor, 1: Admin, 2: Karyawan, 3: Peserta
+    role_id INT NOT NULL,  -- Menambahkan foreign key untuk role
     remember_token VARCHAR(100) NULL,
+    created_by INT NULL, -- Menyimpan ID pengguna yang membuat record
+    updated_by INT NULL, -- Menyimpan ID pengguna yang mengupdate record
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL DEFAULT NULL,  -- Untuk soft delete
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT,  -- Relasi ke tabel roles
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- TABEL JENJANG
+-- Table Jenjang
 CREATE TABLE jenjang (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nama_jenjang VARCHAR(255) NOT NULL,
+    description TEXT NULL,  -- Penjelasan tentang jenjang
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- TABEL KATEGORI
+-- Table Kategori
 CREATE TABLE kategori (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nama_kategori VARCHAR(255) NOT NULL,
+    description TEXT NULL,  -- Deskripsi kategori
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- TABEL COURSES
+-- Table Courses
 CREATE TABLE courses (
     id INT PRIMARY KEY AUTO_INCREMENT,
     mentor_id INT NOT NULL, -- Hanya bisa diisi oleh user dengan role 0 (mentor)
@@ -51,6 +68,8 @@ CREATE TABLE courses (
     status ENUM('Aktif', 'Nonaktif') DEFAULT 'Aktif',
     waktu_mulai DATE NOT NULL,
     waktu_akhir DATE NOT NULL,
+    harga DECIMAL(10, 2) NULL, -- Harga kursus (jika ada)
+    jumlah_peserta INT DEFAULT 0, -- Menyimpan jumlah peserta yang sudah mendaftar
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (mentor_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -58,7 +77,7 @@ CREATE TABLE courses (
     FOREIGN KEY (jenjang_id) REFERENCES jenjang(id) ON DELETE CASCADE
 );
 
--- TABEL ENROLLMENTS
+-- Table Courses
 CREATE TABLE enrollments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL, -- Peserta (role 3)
@@ -75,7 +94,7 @@ CREATE TABLE enrollments (
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
--- TABEL LESSONS
+-- Table Lesson 
 CREATE TABLE lessons (
     id INT PRIMARY KEY AUTO_INCREMENT,
     course_id INT NOT NULL,
@@ -95,7 +114,7 @@ CREATE TABLE lessons (
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
--- TABEL ATTENDANCE
+-- Table Attendance 
 CREATE TABLE attendance (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -108,73 +127,26 @@ CREATE TABLE attendance (
     status ENUM('Hadir', 'Tidak Hadir', 'Izin', 'Sakit') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL DEFAULT NULL,  -- Untuk soft delete
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
--- TABEL ASSIGNMENTS
-CREATE TABLE assignments (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    course_id INT NOT NULL,
-    judul VARCHAR(255) NOT NULL,
-    deskripsi TEXT NULL,
-    batas_waktu DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
-);
-
--- TABEL SUBMISSIONS
-CREATE TABLE submissions (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    assignment_id INT NOT NULL,
-    jawaban TEXT NULL,
-    nilai DECIMAL(5,2) DEFAULT NULL,
-    tanggal_submit TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE
-);
-
--- TABEL GRADES
-CREATE TABLE grades (
+-- Table Payment 
+CREATE TABLE payments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
-    total_nilai DECIMAL(5,2) DEFAULT NULL,
-    keterangan VARCHAR(255) NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    amount DECIMAL(10, 2) NOT NULL,  -- Jumlah pembayaran
+    status ENUM('Pending', 'Completed', 'Failed') DEFAULT 'Pending',
+    payment_method ENUM('Credit Card', 'Bank Transfer', 'Digital Wallet') NOT NULL,
+    transaction_id VARCHAR(255) NULL,
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
--- TABEL FORUM
-CREATE TABLE forum (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    course_id INT NOT NULL,
-    user_id INT NOT NULL,
-    judul VARCHAR(255) NOT NULL,
-    deskripsi TEXT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- TABEL COMMENTS
-CREATE TABLE comments (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    forum_id INT NOT NULL,
-    user_id INT NOT NULL,
-    isi_komentar TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (forum_id) REFERENCES forum(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- TABEL SERTIFIKAT
+-- Table Certificates
 CREATE TABLE certificates (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL, -- Peserta yang menerima sertifikat
@@ -187,3 +159,16 @@ CREATE TABLE certificates (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
+
+-- Table Log (Audit)
+CREATE TABLE logs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    action VARCHAR(255) NOT NULL, -- Deskripsi aksi
+    data_before TEXT NULL, -- Data sebelum perubahan
+    data_after TEXT NULL, -- Data setelah perubahan
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
