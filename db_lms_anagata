@@ -1,7 +1,7 @@
 -- Tabel Roles (RBAC)
 CREATE TABLE roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,    -- Nama role (misalnya: 'Admin', 'Mentor', 'Peserta')
+    name VARCHAR(255) NOT NULL,    -- Nama role (misalnya: 'Admin', 'Mentor', 'Peserta', 'karyawan')
     description TEXT NULL,         -- Deskripsi role
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
