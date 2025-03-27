@@ -1,33 +1,17 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-    <div class="container">
-        <h1>Dashboard</h1>
-        <p>Selamat datang, {{ Auth::user()->name }}!</p>
-
-        @if(Auth::user()->role_as == 1)
-            <h2>Dashboard Admin</h2>
-            <p>Menu: Kelola Pengguna, Kelola Kelas, Laporan</p>
-
-        @elseif(Auth::user()->role_as == 2)
-            <h2>Dashboard Karyawan</h2>
-            <p>Menu: Data Kursus, Jadwal, Absensi</p>
-
-        @elseif(Auth::user()->role_as == 3)
-            <h2>Dashboard Trainer</h2>
-            <p>Menu: Kelola Materi, Kelola Siswa</p>
-
-        @elseif(Auth::user()->role_as == 4)
-            <h2>Dashboard Peserta</h2>
-            <p>Menu: Kursus Saya, Sertifikat, Forum</p>
-
-        @elseif(Auth::user()->role_as == 5)
-            <h2>Dashboard Vendor</h2>
-            <p>Menu: Kontrak, Pengelolaan Produk</p>
-
-        @else
-            <h2>Dashboard Umum</h2>
-            <p>Anda tidak memiliki akses spesifik.</p>
-        @endif
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
     </div>
-@endsection
+</x-app-layout>
