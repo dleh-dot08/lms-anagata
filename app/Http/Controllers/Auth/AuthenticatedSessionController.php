@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -28,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return $this->authenticated($request, Auth::user());
     }
 
     /**
@@ -43,5 +44,27 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        Cache::flush();
+        if ($user->role_id == '1') // 1 = Admin
+        {
+            return redirect()->route('admin.dashboard')->with('status', 'Welcome to your dashboard');
+        }
+        if ($user->role_id == '2') // 2 = Crew
+        {
+            return redirect()->route('crew.dashboard')->with('status', 'Welcome to your dashboard');
+        }
+        if ($user->role_id == '3') // 3 = Peserta
+        {
+            return redirect()->route('peserta.dashboard')->with('status', 'Welcome to your dashboard');
+        }
+        if ($user->role_id == '0') // 0 = User Biasa
+        {
+            return redirect()->route('user.dashboard')->with('status', 'Welcome to your dashboard');
+        }
+        return redirect('/')->with('status', 'Logged in successfully');
     }
 }
