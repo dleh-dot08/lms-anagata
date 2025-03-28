@@ -61,6 +61,10 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect()->route('peserta.dashboard')->with('status', 'Welcome to your dashboard');
         }
+        if ($user->role_id == '4') // 4 = vendor
+        {
+            return redirect()->route('vendor.dashboard')->with('status', 'Welcome to your dashboard');
+        }
         if ($user->role_id == '0') // 0 = User Biasa
         {
             return redirect()->route('user.dashboard')->with('status', 'Welcome to your dashboard');
