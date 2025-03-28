@@ -17,7 +17,7 @@
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
         <li class="menu-item active">
-            <a href="#" class="menu-link">
+            <a href="{{ route('admin.dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
@@ -39,7 +39,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="{{ route('dataadmin.index') }}" class="menu-link">
+                    <a href="#" class="menu-link">
                         <div data-i18n="Account">Data Admin</div>
                     </a>
                 </li>
