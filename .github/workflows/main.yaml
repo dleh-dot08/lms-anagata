@@ -64,13 +64,13 @@ jobs:
       - name: Build frontend with Vite
         run: npm run build
 
-      - name: Deploy Laravel backend to /laravel_lms/
+      - name: Deploy Laravel backend to /lms/
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: lms-test.oktavianus.xyz
+          server: lms.oktavianus.xyz
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /public_html/lms-test.oktavianus.xyz/
+          server-dir: /public_html/lms.oktavianus.xyz/
           local-dir: ./
           exclude: |
             exclude: |
