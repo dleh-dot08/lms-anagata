@@ -73,7 +73,6 @@ jobs:
           server-dir: /public_html/lms.oktavianus.xyz/
           local-dir: ./
           exclude: |
-            exclude: |
             **/node_modules/**
             **/tests/**
             **/vendor/**
