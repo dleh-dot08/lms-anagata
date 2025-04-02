@@ -14,10 +14,6 @@ class UserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function __construct()
-    {
-        $this->middleware('auth'); // hanya admin yang bisa mengakses
-    }
 
     public function index()
     {
