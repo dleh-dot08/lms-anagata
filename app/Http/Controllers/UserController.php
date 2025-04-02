@@ -14,16 +14,31 @@ class UserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil users berdasarkan role
-        $admins = User::where('role_id', 1)->get();
-        $mentors = User::where('role_id', 2)->get();
-        $participants = User::where('role_id', 3)->get();
-        $employees = User::where('role_id', 4)->get();
-        $vendors = User::where('role_id', 5)->get();
+        $roleFilter = $request->role;
+        $search = $request->search;
 
-        return view('user.index', compact('admins', 'mentors', 'participants', 'employees', 'vendors'));
+        // Ambil semua role dengan pengguna dan filter berdasarkan role atau pencarian
+        $roles = Role::with(['users' => function ($query) use ($roleFilter, $search) {
+            // Filter berdasarkan role jika ada
+            if ($roleFilter) {
+                $query->where('role_id', $roleFilter);
+            }
+
+            // Filter pencarian berdasarkan nama atau email
+            if ($search) {
+                $query->where(function($query) use ($search) {
+                    $query->where('name', 'like', "%$search%")
+                        ->orWhere('email', 'like', "%$search%");
+                });
+            }
+
+            // Paginasi pengguna
+            $query->paginate(10); // Paginasi per 10 pengguna
+        }])->get();
+
+        return view('admin.users.index', compact('roles'));
     }
 
     /**
