@@ -19,7 +19,7 @@
     <select name="kategori_id" class="form-control">
         @foreach ($kategoris as $kategori)
             <option value="{{ $kategori->id }}" {{ (isset($course) && $course->kategori_id == $kategori->id) ? 'selected' : '' }}>
-                {{ $kategori->nama }}
+                {{ $kategori->nama_kategori }}
             </option>
         @endforeach
     </select>
@@ -30,7 +30,7 @@
     <select name="jenjang_id" class="form-control">
         @foreach ($jenjangs as $jenjang)
             <option value="{{ $jenjang->id }}" {{ (isset($course) && $course->jenjang_id == $jenjang->id) ? 'selected' : '' }}>
-                {{ $jenjang->nama }}
+                {{ $jenjang->nama_jenjang }}
             </option>
         @endforeach
     </select>
