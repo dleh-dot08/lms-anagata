@@ -63,13 +63,15 @@ Route::prefix('users')->name('users.')->group(function () {
     // Rute untuk menyimpan pengguna baru (store)
     Route::post('/', [UserController::class, 'store'])->name('store');
     // Rute untuk menampilkan detail pengguna (show)
-    Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    Route::get('/{id}', [UserController::class, 'show'])->name('show');
     // Rute untuk menampilkan form edit pengguna (edit)
-    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
     // Rute untuk memperbarui pengguna (update)
-    Route::put('/{user}', [UserController::class, 'update'])->name('update');
+    Route::put('/{id}', [UserController::class, 'update'])->name('update');
     // Rute untuk menghapus pengguna (destroy)
-    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+
 });
 
 require __DIR__.'/auth.php';

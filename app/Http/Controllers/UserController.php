@@ -17,29 +17,31 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $roleFilter = $request->role;
-        $search = $request->search;
-
-        // Ambil semua role dengan pengguna dan filter berdasarkan role atau pencarian
-        $roles = Role::with(['users' => function ($query) use ($roleFilter, $search) {
-            // Filter berdasarkan role jika ada
-            if ($roleFilter) {
-                $query->where('role_id', $roleFilter);
-            }
-
-            // Filter pencarian berdasarkan nama atau email
-            if ($search) {
-                $query->where(function($query) use ($search) {
-                    $query->where('name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%");
-                });
-            }
-
-            // Paginasi pengguna
-            $query->paginate(10); // Paginasi per 10 pengguna
-        }])->get();
-
-        return view('users.index', compact('roles'));
+        $roles = Role::all();
+    
+        $users = User::query();
+    
+        // Pencarian berdasarkan nama atau email
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $users->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+        }
+    
+        // Filter berdasarkan role
+        if ($request->has('role')) {
+            $roleId = $request->get('role');
+            $users->where('role_id', $roleId);
+        }
+    
+        // Menampilkan semua pengguna (termasuk yang dihapus)
+        if ($request->has('include_deleted') && $request->get('include_deleted') == 'true') {
+            $users = $users->withTrashed()->paginate(10); // Mengambil semua, termasuk yang dihapus
+        } else {
+            $users = $users->paginate(10); // Hanya yang aktif
+        }
+    
+        return view('users.index', compact('users', 'roles'));
     }
 
     /**
@@ -166,9 +168,8 @@ class UserController extends Controller
     public function restore($id)
     {
         $user = User::withTrashed()->findOrFail($id);
-        $user->restore();  // Restore soft deleted user
-
-        return redirect()->route('users.index')->with('success', 'User berhasil dikembalikan.');
+        $user->restore(); // Mengembalikan data yang dihapus
+        return redirect()->route('users.index')->with('success', 'User restored successfully.');
     }
     
 }
