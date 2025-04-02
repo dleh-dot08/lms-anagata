@@ -45,7 +45,7 @@ class CourseController extends Controller
 
     public function create()
     {
-        $mentors = User::where('role_id', 3)->get();
+        $mentors = User::where('role_id', 2)->get();
         $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
 
