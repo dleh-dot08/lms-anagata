@@ -55,16 +55,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', UserController::class);
 });
 
-Route::prefix('user')->name('user.')->group(function () {
-    // Rute untuk CRUD User
-    Route::get('/', [UserController::class, 'index'])->name('index'); // Menampilkan daftar user
-    Route::get('/create', [UserController::class, 'create'])->name('create'); // Halaman untuk membuat user baru
-    Route::post('/', [UserController::class, 'store'])->name('store'); // Menyimpan user baru
-    Route::get('/{user}', [UserController::class, 'show'])->name('show'); // Menampilkan detail user
-    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit'); // Halaman edit user
-    Route::put('/{user}', [UserController::class, 'update'])->name('update'); // Update user
-    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy'); // Menghapus user (soft delete)
-    Route::post('/{user}/restore', [UserController::class, 'restore'])->name('restore'); // Restore user yang dihapus
+Route::prefix('users')->name('users.')->group(function () {
+    // Rute untuk melihat daftar pengguna (index)
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    // Rute untuk menampilkan form tambah pengguna (create)
+    Route::get('/create', [UserController::class, 'create'])->name('create');
+    // Rute untuk menyimpan pengguna baru (store)
+    Route::post('/', [UserController::class, 'store'])->name('store');
+    // Rute untuk menampilkan detail pengguna (show)
+    Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    // Rute untuk menampilkan form edit pengguna (edit)
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+    // Rute untuk memperbarui pengguna (update)
+    Route::put('/{user}', [UserController::class, 'update'])->name('update');
+    // Rute untuk menghapus pengguna (destroy)
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
 });
 
 require __DIR__.'/auth.php';
