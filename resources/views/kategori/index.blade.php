@@ -32,14 +32,14 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     @if ($kategori->deleted_at)
-                                        <span style="text-decoration: line-through;">{{ $kategori->nama_kategori }}</span>
+                                        <del>{{ $kategori->nama_kategori }}</del>
                                     @else
                                         {{ $kategori->nama_kategori }}
                                     @endif
                                 </td>
                                 <td>
                                     @if ($kategori->deleted_at)
-                                        <span style="text-decoration: line-through;">{{ Str::limit($kategori->description, 50, '...') }}</span>
+                                        <del>{{ Str::limit($kategori->description, 50, '...') }}</del>
                                     @else
                                         {{ Str::limit($kategori->description, 50, '...') }}
                                     @endif
@@ -55,7 +55,7 @@
                                     <a href="{{ route('kategori.show', $kategori->id) }}" class="btn btn-info btn-sm">Detail</a>
                                     @if(!$kategori->deleted_at)
                                         <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
+                                        <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
