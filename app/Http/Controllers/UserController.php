@@ -106,9 +106,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::withTrashed()->findOrFail($id); // Mengambil user termasuk yang terhapus (Soft Delete)
+        $roles = Role::all();
+        $jenjangs = Jenjang::all();
 
-        return view('users.edit', compact('user'));
+        return view('users.edit', compact('user', 'roles', 'jenjangs'));
     }
 
     /**
@@ -120,29 +122,42 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi input
-        $validator = Validator::make($request->all(), [
+        $user = User::withTrashed()->findOrFail($id); // Mengambil user termasuk yang terhapus
+
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'email' => 'required|email|max:255',
+            'role_id' => 'required|exists:roles,id',
+            'foto_diri' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->route('users.edit', $id)
-                ->withErrors($validator)
-                ->withInput();
+        // Menghandle upload foto_diri jika ada
+        if ($request->hasFile('foto_diri')) {
+            if ($user->foto_diri && Storage::exists($user->foto_diri)) {
+                Storage::delete($user->foto_diri);
+            }
+            $user->foto_diri = $request->file('foto_diri')->store('uploads/foto_diri', 'public');
         }
 
-        // Update data user
-        $user = User::findOrFail($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($request->password) {
-            $user->password = Hash::make($request->password);
-        }
-        $user->save();
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role_id,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'tempat_lahir' => $request->tempat_lahir,
+            'alamat_tempat_tinggal' => $request->alamat_tempat_tinggal,
+            'instansi' => $request->instansi,
+            'jenjang_id' => $request->jenjang_id,
+            'jabatan' => $request->jabatan,
+            'bidang_pengajaran' => $request->bidang_pengajaran,
+            'divisi' => $request->divisi,
+            'no_telepon' => $request->no_telepon,
+            'tanggal_bergabung' => $request->tanggal_bergabung,
+            'surat_tugas' => $request->surat_tugas,
+            'updated_by' => auth()->id(),
+        ]);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
     /**
