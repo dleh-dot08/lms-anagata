@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', 'admin'); // hanya admin yang bisa mengakses
+        $this->middleware('auth'); // hanya admin yang bisa mengakses
     }
 
     public function index()

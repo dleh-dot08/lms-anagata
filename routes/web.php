@@ -55,7 +55,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', UserController::class);
 });
 
-Route::prefix('user')->name('user.')->middleware('auth', 'admin')->group(function () {
+Route::prefix('user')->name('user.')->group(function () {
     // Rute untuk CRUD User
     Route::get('/', [UserController::class, 'index'])->name('index'); // Menampilkan daftar user
     Route::get('/create', [UserController::class, 'create'])->name('create'); // Halaman untuk membuat user baru
