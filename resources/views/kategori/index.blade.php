@@ -32,14 +32,14 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     @if ($kategori->deleted_at)
-                                        <del>{{ $kategori->nama_kategori }}</del>
+                                        <span style="text-decoration: line-through;">{{ $kategori->nama_kategori }}</span>
                                     @else
                                         {{ $kategori->nama_kategori }}
                                     @endif
                                 </td>
                                 <td>
                                     @if ($kategori->deleted_at)
-                                        <del>{{ Str::limit($kategori->description, 50, '...') }}</del>
+                                        <span style="text-decoration: line-through;">{{ Str::limit($kategori->description, 50, '...') }}</span>
                                     @else
                                         {{ Str::limit($kategori->description, 50, '...') }}
                                     @endif
@@ -52,20 +52,18 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('kategori.show', $kategori->id) }}" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Detail">Detail</a>
-
+                                    <a href="{{ route('kategori.show', $kategori->id) }}" class="btn btn-info btn-sm">Detail</a>
                                     @if(!$kategori->deleted_at)
-                                        <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Kategori">Edit</a>
-
+                                        <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Kategori">Hapus</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                         </form>
                                     @else
                                         <form action="{{ route('kategori.restore', $kategori->id) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Pulihkan Kategori">Restore</button>
+                                            <button type="submit" class="btn btn-success btn-sm">Restore</button>
                                         </form>
                                     @endif
                                 </td>
@@ -77,8 +75,6 @@
                         @endforelse
                     </tbody>
                 </table>
-
-                <!-- Pagination -->
                 <div class="d-flex justify-content-center mt-3">
                     {{ $kategoris->links('pagination::bootstrap-4') }}
                 </div>
@@ -86,13 +82,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        // Initialize tooltip
-        var tooltipTriggerList = Array.prototype.slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        });
-    </script>
-@endpush
