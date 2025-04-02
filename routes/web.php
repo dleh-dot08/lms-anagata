@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 //use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CourseController;
 
 Route::get('/', function () {
     return view('welcome');
