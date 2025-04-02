@@ -30,9 +30,14 @@ Route::middleware('auth')->group(function () {
     Route::prefix('kategori')->name('kategori.')->group(function () {
         // Rute untuk CRUD Kategori
         Route::resource('/', KategoriController::class);
-
-        // Rute untuk restore kategori yang dihapus (soft delete)
-        Route::post('restore/{id}', [KategoriController::class, 'restore'])->name('restore');
+        Route::get('/', [KategoriController::class, 'index'])->name('index');
+        Route::get('/create', [KategoriController::class, 'create'])->name('create');
+        Route::post('/', [KategoriController::class, 'store'])->name('store');
+        Route::get('/{id}', [KategoriController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [KategoriController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [KategoriController::class, 'update'])->name('update');
+        Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/restore', [KategoriController::class, 'restore'])->name('restore');
     });
 
 });
