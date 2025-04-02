@@ -14,7 +14,7 @@ class CourseController extends Controller
     {
         // Mengambil data mentor dari users dengan role_id = 2
         $mentors = User::where('role_id', 2)->get();
-        $kategoris = Category::all();
+        $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
 
         // Query untuk mengambil courses
