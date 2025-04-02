@@ -16,10 +16,8 @@ class CourseController extends Controller
         $mentors = User::where('role_id', 2)->get();
         $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
-
         // Query untuk mengambil courses
         $courses = Course::query();
-
         // Pencarian berdasarkan nama kelas
         if ($request->has('search') && $request->search != '') {
             $search = $request->get('search');
