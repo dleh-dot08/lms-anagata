@@ -34,7 +34,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="{{ route('user.index') }}" class="menu-link">
+                    <a href="{{ route('users.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Pengguna</div>
                     </a>
                 </li>
