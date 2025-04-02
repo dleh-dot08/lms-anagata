@@ -14,7 +14,6 @@ class UserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-
     public function index()
     {
         // Mengambil users berdasarkan role
