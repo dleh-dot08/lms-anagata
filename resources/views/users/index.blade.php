@@ -47,7 +47,7 @@
                     <tbody>
                         <!-- Loop untuk menampilkan users berdasarkan role -->
                         @foreach($users as $user)
-                            <tr>
+                            <tr class="{{ $user->deleted_at ? 'text-decoration-line-through' : '' }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
