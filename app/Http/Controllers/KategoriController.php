@@ -10,7 +10,7 @@ class KategoriController extends Controller
 
     public function index()
     {
-        $kategoris = Kategoris::paginate(10); // Menampilkan daftar kategori dengan pagination
+        $kategoris = Kategori::withTrashed()->paginate(10); // Menampilkan daftar kategori dengan pagination
         return view('kategori.index', compact('kategoris'));
     }
 
