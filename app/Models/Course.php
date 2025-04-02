@@ -41,4 +41,6 @@ class Course extends Model
     {
         return $this->belongsTo(Jenjang::class);
     }
+
+    protected $dates = ['deleted_at'];
 }
