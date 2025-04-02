@@ -52,18 +52,20 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('kategori.show', $kategori->id) }}" class="btn btn-info btn-sm">Detail</a>
+                                    <a href="{{ route('kategori.show', $kategori->id) }}" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Detail">Detail</a>
+
                                     @if(!$kategori->deleted_at)
-                                        <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Kategori">Edit</a>
+
+                                        <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                            <button type="submit" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Kategori">Hapus</button>
                                         </form>
                                     @else
                                         <form action="{{ route('kategori.restore', $kategori->id) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                            <button type="submit" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Pulihkan Kategori">Restore</button>
                                         </form>
                                     @endif
                                 </td>
@@ -75,10 +77,22 @@
                         @endforelse
                     </tbody>
                 </table>
+
+                <!-- Pagination -->
                 <div class="d-flex justify-content-center mt-3">
-                    {{ $kategori->links('pagination::bootstrap-4') }}
+                    {{ $kategoris->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        // Initialize tooltip
+        var tooltipTriggerList = Array.prototype.slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    </script>
+@endpush
