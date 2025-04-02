@@ -24,10 +24,10 @@ class Course extends Model
         'jumlah_peserta'
     ];
 
-    // Relasi ke Mentor (User dengan role_id = 3)
+    // Relasi ke Mentor (User dengan role_id = 2)
     public function mentor()
     {
-        return $this->belongsTo(User::class, 'mentor_id')->where('role_id', 3);
+        return $this->belongsTo(User::class, 'mentor_id')->where('role_id', 2);
     }
 
     // Relasi ke Kategori
@@ -42,5 +42,5 @@ class Course extends Model
         return $this->belongsTo(Jenjang::class);
     }
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }
