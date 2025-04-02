@@ -39,7 +39,7 @@ class UserController extends Controller
             $query->paginate(10); // Paginasi per 10 pengguna
         }])->get();
 
-        return view('admin.users.index', compact('roles'));
+        return view('admin.user.index', compact('roles'));
     }
 
     /**
