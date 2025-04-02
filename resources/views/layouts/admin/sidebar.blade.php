@@ -55,7 +55,7 @@
             <span class="menu-header-text">Course Management</span>
         </li>
         <li class="menu-item">
-            <a href="#" class="menu-link">
+            <a href="{{ route('courses.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Kursus</div>
             </a>
