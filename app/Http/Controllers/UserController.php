@@ -18,9 +18,9 @@ class UserController extends Controller
     {
         // Mengambil users berdasarkan role
         $admins = User::where('role_id', 1)->get();
-        $mentors = User::where('role_id', 3)->get();
-        $participants = User::where('role_id', 4)->get();
-        $employees = User::where('role_id', 2)->get();
+        $mentors = User::where('role_id', 2)->get();
+        $participants = User::where('role_id', 3)->get();
+        $employees = User::where('role_id', 4)->get();
         $vendors = User::where('role_id', 5)->get();
 
         return view('user.index', compact('admins', 'mentors', 'participants', 'employees', 'vendors'));
