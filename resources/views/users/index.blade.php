@@ -41,6 +41,7 @@
                             <th>Nama</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -52,6 +53,13 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->role->name }}</td>
+                                <td>
+                                    @if($user->deleted_at)
+                                        <span class="text-danger">Tidak Aktif</span>
+                                    @else
+                                        <span class="text-success">Aktif</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <!-- Tombol aksi -->
                                     <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">Detail</a>

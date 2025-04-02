@@ -158,22 +158,16 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();  // Soft delete
-
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+        $user->delete(); // Soft delete
+        return redirect()->route('users.index')->with('success', 'User telah dihapus.');
     }
 
-    /**
-     * Mengembalikan user yang sudah dihapus (restore).
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function restore($id)
     {
         $user = User::withTrashed()->findOrFail($id);
-        $user->restore(); // Mengembalikan data yang dihapus
-        return redirect()->route('users.index')->with('success', 'User restored successfully.');
+        $user->restore(); // Restore from soft delete
+        return redirect()->route('users.index')->with('success', 'User telah dipulihkan.');
     }
+
     
 }
