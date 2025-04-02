@@ -17,7 +17,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <table class="table table-hover table-bordered">
-                    <thead class="table-dark">
+                    <thead class="table-primary">
                         <tr>
                             <th>#</th>
                             <th>Nama Jenjang</th>
