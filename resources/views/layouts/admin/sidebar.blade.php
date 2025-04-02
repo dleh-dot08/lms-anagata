@@ -59,7 +59,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('jenjang.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Jenjang</div>
                     </a>
                 </li>
