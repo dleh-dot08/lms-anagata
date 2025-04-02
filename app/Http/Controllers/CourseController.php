@@ -80,7 +80,7 @@ class CourseController extends Controller
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
             'kategori_id' => 'required|exists:kategoris,id',
-            'jenjang_id' => 'required|exists:jenjangs,id',
+            'jenjang_id' => 'required|exists:jenjang,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
