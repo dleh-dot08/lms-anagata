@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JenjangController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,14 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [JenjangController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [JenjangController::class, 'restore'])->name('restore');
     });
+    Route::prefix('kategori')->name('kategori.')->group(function () {
+        // Rute untuk CRUD Kategori
+        Route::resource('/', KategoriController::class);
+
+        // Rute untuk restore kategori yang dihapus (soft delete)
+        Route::post('restore/{id}', [KategoriController::class, 'restore'])->name('restore');
+    });
+
 });
 
 Route::get('/dashboard', function () {

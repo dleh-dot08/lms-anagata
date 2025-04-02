@@ -64,7 +64,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('kategori.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Kategori</div>
                     </a>
                 </li>
