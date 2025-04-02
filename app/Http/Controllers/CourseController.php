@@ -12,8 +12,8 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil semua mentors, categories, and jenjang
-        $mentors = User::role('mentor')->get();
+        // Mengambil data mentor dari users dengan role_id = 2
+        $mentors = User::where('role_id', 2)->get();
         $kategoris = Category::all();
         $jenjangs = Jenjang::all();
 
@@ -42,6 +42,7 @@ class CourseController extends Controller
 
         return view('courses.index', compact('courses', 'mentors', 'kategoris', 'jenjangs'));
     }
+
 
 
     public function create()
