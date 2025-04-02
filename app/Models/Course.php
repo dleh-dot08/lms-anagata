@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
 {
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'mentor_id',
         'nama_kelas',
@@ -17,21 +21,24 @@ class Course extends Model
         'waktu_mulai',
         'waktu_akhir',
         'harga',
-        'jumlah_peserta',
+        'jumlah_peserta'
     ];
 
+    // Relasi ke Mentor (User dengan role_id = 3)
     public function mentor()
     {
-        return $this->belongsTo(User::class, 'mentor_id');
+        return $this->belongsTo(User::class, 'mentor_id')->where('role_id', 3);
     }
 
+    // Relasi ke Kategori
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'kategori_id');
+        return $this->belongsTo(Kategori::class);
     }
 
+    // Relasi ke Jenjang
     public function jenjang()
     {
-        return $this->belongsTo(Jenjang::class, 'jenjang_id');
+        return $this->belongsTo(Jenjang::class);
     }
 }

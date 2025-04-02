@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [JenjangController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [JenjangController::class, 'restore'])->name('restore');
     });
+
     Route::prefix('kategori')->name('kategori.')->group(function () {
         // Rute untuk CRUD Kategori
         Route::resource('/', KategoriController::class);
@@ -41,6 +42,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/restore', [KategoriController::class, 'restore'])->name('restore');
     });
 
+    Route::prefix('courses')->name('courses.')->group(function () {
+        Route::get('/', [CourseController::class, 'index'])->name('index');
+        Route::get('/create', [CourseController::class, 'create'])->name('create');
+        Route::post('/', [CourseController::class, 'store'])->name('store');
+        Route::get('/{id}', [CourseController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [CourseController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CourseController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CourseController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
+    });
 });
 
 Route::get('/dashboard', function () {
