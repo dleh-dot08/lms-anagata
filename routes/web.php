@@ -70,8 +70,7 @@ Route::prefix('users')->name('users.')->group(function () {
     Route::put('/{id}', [UserController::class, 'update'])->name('update');
     // Rute untuk menghapus pengguna (destroy)
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
-    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-
+    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
 });
 
 require __DIR__.'/auth.php';
