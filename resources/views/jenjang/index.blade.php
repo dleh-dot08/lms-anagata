@@ -30,8 +30,20 @@
                         @forelse ($jenjangs as $index => $jenjang)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $jenjang->nama_jenjang }}</td>
-                                <td>{{ Str::limit($jenjang->description, 50, '...') }}</td>
+                                <td>
+                                    @if ($jenjang->deleted_at)
+                                        <del>{{ $jenjang->nama_jenjang }}</del>
+                                    @else
+                                        {{ $jenjang->nama_jenjang }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($jenjang->deleted_at)
+                                        <del>{{ Str::limit($jenjang->description, 50, '...') }}</del>
+                                    @else
+                                        {{ Str::limit($jenjang->description, 50, '...') }}
+                                    @endif
+                                </td>
                                 <td>
                                     @if ($jenjang->deleted_at)
                                         <span class="badge bg-danger">Dihapus</span>
