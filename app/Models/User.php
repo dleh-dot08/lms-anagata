@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
     /**
@@ -36,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -48,27 +47,59 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-        // Relasi ke Role
-        public function role()
-        {
-            return $this->belongsTo(Role::class);
-        }
-    
-        // Relasi ke Jenjang
-        public function jenjang()
-        {
-            return $this->belongsTo(Jenjang::class);
-        }
-    
-        // Relasi ke User (Created By)
-        public function creator()
-        {
-            return $this->belongsTo(User::class, 'created_by');
-        }
-    
-        // Relasi ke User (Updated By)
-        public function updater()
-        {
-            return $this->belongsTo(User::class, 'updated_by');
-        }
+    /**
+     * Relasi ke Role
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Relasi ke Jenjang
+     */
+    public function jenjang()
+    {
+        return $this->belongsTo(Jenjang::class);
+    }
+
+    /**
+     * Relasi ke User (Created By)
+     */
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relasi ke User (Updated By)
+     */
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Method untuk soft delete user
+     */
+    public function deleteUser()
+    {
+        $this->delete(); // Soft delete
+    }
+
+    /**
+     * Method untuk restore user
+     */
+    public function restoreUser()
+    {
+        $this->restore(); // Restore the soft deleted user
+    }
+
+    /**
+     * Scope untuk mendapatkan data yang soft deleted
+     */
+    public function scopeTrashedUsers($query)
+    {
+        return $query->onlyTrashed();
+    }
 }

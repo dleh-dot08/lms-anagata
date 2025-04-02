@@ -7,7 +7,8 @@ use App\Http\Controllers\JenjangController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Controllers\Admin\UserController;
+//use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,6 +53,18 @@ Route::get('/admin/dashboard', [AdminController::class, 'index'])
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
+});
+
+Route::prefix('user')->name('user.')->middleware('auth', 'admin')->group(function () {
+    // Rute untuk CRUD User
+    Route::get('/', [UserController::class, 'index'])->name('index'); // Menampilkan daftar user
+    Route::get('/create', [UserController::class, 'create'])->name('create'); // Halaman untuk membuat user baru
+    Route::post('/', [UserController::class, 'store'])->name('store'); // Menyimpan user baru
+    Route::get('/{user}', [UserController::class, 'show'])->name('show'); // Menampilkan detail user
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit'); // Halaman edit user
+    Route::put('/{user}', [UserController::class, 'update'])->name('update'); // Update user
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy'); // Menghapus user (soft delete)
+    Route::post('/{user}/restore', [UserController::class, 'restore'])->name('restore'); // Restore user yang dihapus
 });
 
 require __DIR__.'/auth.php';
