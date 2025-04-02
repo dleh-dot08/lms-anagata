@@ -15,35 +15,35 @@ class UserController extends Controller
      *
      * @return \Illuminate\View\View
      */
+    use App\Models\User;
+
     public function index(Request $request)
     {
-        // Mengambil semua roles
-        $roles = Role::all();
+        // Mendapatkan pencarian dan filter role jika ada
+        $search = $request->input('search');
+        $roleId = $request->input('role');
 
-        // Mulai query untuk User
-        $users = User::query();
+        // Query untuk mendapatkan users, mengikutkan yang sudah dihapus (soft deleted)
+        $usersQuery = User::withTrashed();
 
         // Pencarian berdasarkan nama atau email
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->get('search');
-            $users->where(function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+        if ($search) {
+            $usersQuery->where(function($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         }
 
-        // Filter berdasarkan role
-        if ($request->has('role') && $request->get('role') != '') {
-            $roleId = $request->get('role');
-            $users->where('role_id', $roleId);
+        // Filter berdasarkan role, jika ada
+        if ($roleId) {
+            $usersQuery->where('role_id', $roleId);
         }
 
-        // Menampilkan semua pengguna (termasuk yang dihapus)
-        if ($request->has('include_deleted') && $request->get('include_deleted') == 'true') {
-            $users = $users->withTrashed()->paginate(10); // Mengambil semua, termasuk yang dihapus
-        } else {
-            $users = $users->paginate(10); // Hanya yang aktif
-        }
+        // Ambil data dengan paginate
+        $users = $usersQuery->paginate(10); // Pagination untuk 10 per halaman
+
+        // Ambil semua role untuk filter di form
+        $roles = Role::all();
 
         return view('users.index', compact('users', 'roles'));
     }
