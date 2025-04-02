@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth'); // Hanya yang sudah login yang bisa mengakses controller ini
-    }
-
     // Menampilkan daftar kategori
     public function index()
     {
