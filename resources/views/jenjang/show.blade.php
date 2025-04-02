@@ -1,19 +1,17 @@
 @extends('layouts.admin.template')
 
 @section('content')
-    <h2>Detail Jenjang</h2>
+    <div class="container mt-4">
+        <h2>Detail Jenjang</h2>
 
-    <div class="mb-3">
-        <strong>Nama Jenjang:</strong> {{ $jenjang->nama_jenjang }}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h4>{{ $jenjang->nama_jenjang }}</h4>
+                <p>{{ $jenjang->description ?? 'Tidak ada deskripsi' }}</p>
+                <p><strong>Deleted At:</strong> {{ $jenjang->deleted_at ?? 'Aktif' }}</p>
+            </div>
+        </div>
+
+        <a href="{{ route('jenjang.index') }}" class="btn btn-secondary mt-3">Kembali</a>
     </div>
-
-    <div class="mb-3">
-        <strong>Deskripsi:</strong> {{ $jenjang->description ?? 'Tidak ada deskripsi' }}
-    </div>
-
-    <div class="mb-3">
-        <strong>Deleted At:</strong> {{ $jenjang->deleted_at ?? 'Aktif' }}
-    </div>
-
-    <a href="{{ route('jenjang.index') }}" class="btn btn-secondary">Kembali</a>
 @endsection
