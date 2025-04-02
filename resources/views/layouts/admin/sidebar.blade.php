@@ -39,26 +39,6 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Account">Data Admin</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Account">Data Mentor</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Account">Data Karyawan</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Account">Data Vendor</div>
-                    </a>
-                </li>
-                <li class="menu-item">
                     <a href="{{ route('jenjang.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Jenjang</div>
                     </a>
