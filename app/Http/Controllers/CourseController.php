@@ -47,7 +47,7 @@ class CourseController extends Controller
         $request->validate([
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
-            'kategori_id' => 'required|exists:categories,id',
+            'kategori_id' => 'required|exists:kategoris,id',
             'jenjang_id' => 'required|exists:jenjangs,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
@@ -79,7 +79,7 @@ class CourseController extends Controller
         $request->validate([
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
-            'kategori_id' => 'required|exists:categories,id',
+            'kategori_id' => 'required|exists:kategoris,id',
             'jenjang_id' => 'required|exists:jenjangs,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
