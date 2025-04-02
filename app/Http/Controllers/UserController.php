@@ -17,30 +17,34 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // Mengambil semua roles
         $roles = Role::all();
-    
+
+        // Mulai query untuk User
         $users = User::query();
-    
+
         // Pencarian berdasarkan nama atau email
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->search != '') {
             $search = $request->get('search');
-            $users->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+            $users->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
         }
-    
+
         // Filter berdasarkan role
-        if ($request->has('role')) {
+        if ($request->has('role') && $request->get('role') != '') {
             $roleId = $request->get('role');
             $users->where('role_id', $roleId);
         }
-    
+
         // Menampilkan semua pengguna (termasuk yang dihapus)
         if ($request->has('include_deleted') && $request->get('include_deleted') == 'true') {
             $users = $users->withTrashed()->paginate(10); // Mengambil semua, termasuk yang dihapus
         } else {
             $users = $users->paginate(10); // Hanya yang aktif
         }
-    
+
         return view('users.index', compact('users', 'roles'));
     }
 

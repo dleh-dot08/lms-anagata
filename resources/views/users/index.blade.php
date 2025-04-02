@@ -46,37 +46,32 @@
                     </thead>
                     <tbody>
                         <!-- Loop untuk menampilkan users berdasarkan role -->
-                        @foreach($roles as $role)
-                            <tr class="bg-secondary text-white">
-                                <td colspan="5"><strong>{{ $role->name }}</strong></td>
-                            </tr>
-                            @foreach($role->users as $user)
-                                <tr>
-                                    <td>{{ $loop->parent->iteration }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->role->name }}</td>
-                                    <td>
-                                        <!-- Tombol aksi -->
-                                        <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">Detail</a>
-                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        @foreach($users as $user)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->role->name }}</td>
+                                <td>
+                                    <!-- Tombol aksi -->
+                                    <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">Detail</a>
+                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
-                                        <!-- Tombol Hapus atau Restore berdasarkan status deleted_at -->
-                                        @if($user->deleted_at)
-                                            <form action="{{ route('users.restore', $user->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-sm">Restore</button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
+                                    <!-- Tombol Hapus atau Restore berdasarkan status deleted_at -->
+                                    @if($user->deleted_at)
+                                        <form action="{{ route('users.restore', $user->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
