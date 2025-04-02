@@ -39,11 +39,7 @@ class UserController extends Controller
         }
 
         // Menampilkan semua pengguna (termasuk yang dihapus)
-        if ($request->has('include_deleted') && $request->get('include_deleted') == 'true') {
-            $users = $users->withTrashed()->paginate(10); // Mengambil semua, termasuk yang dihapus
-        } else {
-            $users = $users->paginate(10); // Hanya yang aktif
-        }
+        $users = $users->withTrashed()->paginate(10);
 
         return view('users.index', compact('users', 'roles'));
     }
