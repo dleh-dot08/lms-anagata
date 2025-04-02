@@ -46,10 +46,10 @@ class CourseController extends Controller
     public function create()
     {
         $mentors = User::where('role_id', 3)->get();
-        $categories = Kategori::all();
+        $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
 
-        return view('courses.create', compact('mentors', 'categories', 'jenjangs'));
+        return view('courses.create', compact('mentors', 'kategoris', 'jenjangs'));
     }
 
     public function store(Request $request)
