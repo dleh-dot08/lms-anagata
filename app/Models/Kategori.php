@@ -9,7 +9,7 @@ class Kategori extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'kategori';
+    protected $table = 'kategoris';
 
     protected $fillable = [
         'nama_kategori',
