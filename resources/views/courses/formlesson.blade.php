@@ -30,7 +30,17 @@
                 <input type="text" name="video_url1" class="form-control mb-2" placeholder="Video URL 1" value="{{ old('video_url1', $lesson->video_url1 ?? '') }}">
                 <input type="text" name="video_url2" class="form-control mb-2" placeholder="Video URL 2" value="{{ old('video_url2', $lesson->video_url2 ?? '') }}">
                 <input type="text" name="video_url3" class="form-control mb-2" placeholder="Video URL 3" value="{{ old('video_url3', $lesson->video_url3 ?? '') }}">
-                <small class="text-muted">Gunakan link yang bisa dibuka publik dan gunakan iframe di tampilan show.</small>
+                <small class="text-muted">Gunakan link yang bisa dibuka publik dan tampilkan dengan iframe di halaman show.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Link File Materi (Google Drive)</label>
+                <input type="text" name="file_materi1" class="form-control mb-2" placeholder="File Materi 1" value="{{ old('file_materi1', $lesson->file_materi1 ?? '') }}">
+                <input type="text" name="file_materi2" class="form-control mb-2" placeholder="File Materi 2" value="{{ old('file_materi2', $lesson->file_materi2 ?? '') }}">
+                <input type="text" name="file_materi3" class="form-control mb-2" placeholder="File Materi 3" value="{{ old('file_materi3', $lesson->file_materi3 ?? '') }}">
+                <input type="text" name="file_materi4" class="form-control mb-2" placeholder="File Materi 4" value="{{ old('file_materi4', $lesson->file_materi4 ?? '') }}">
+                <input type="text" name="file_materi5" class="form-control mb-2" placeholder="File Materi 5" value="{{ old('file_materi5', $lesson->file_materi5 ?? '') }}">
+                <small class="text-muted">Gunakan link Google Drive versi <code>/preview</code> agar bisa ditampilkan menggunakan iframe.</small>
             </div>
 
             <button type="submit" class="btn btn-success">Simpan</button>
