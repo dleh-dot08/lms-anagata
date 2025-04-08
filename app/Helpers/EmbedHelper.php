@@ -24,6 +24,6 @@ if (!function_exists('convertToEmbed')) {
 if (!function_exists('convertToPreview')) {
     function convertToPreview($url)
     {
-        return convertToEmbed($url); // asumsikan sama, bisa dipisah jika logika beda
+        return convertToEmbed($url);
     }
 }

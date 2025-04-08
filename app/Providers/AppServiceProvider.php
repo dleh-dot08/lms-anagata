@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Include helper manual jika composer dump-autoload tidak bisa
+        $helperPath = app_path('Helpers/EmbedHelper.php');
+        if (file_exists($helperPath)) {
+            require_once $helperPath;
+        }
     }
 }
