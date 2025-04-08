@@ -97,7 +97,7 @@ class CourseController extends Controller
     // Menampilkan halaman detail kursus
     public function show($id)
     {
-        $course = Course::findOrFail($id);
+        $courses = Course::findOrFail($id); // Courses
         return view('courses.show', compact('courses')); // Ubah 'nama_view_detail' menjadi 'courses.show'
     }
 
