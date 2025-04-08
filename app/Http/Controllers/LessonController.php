@@ -76,11 +76,11 @@ class LessonController extends Controller
     }
 
 
-    public function show($id)
+    public function show($courseId, $lessonId)
     {
-        $lesson = Lesson::findOrFail($id);
+        $lesson = Lesson::findOrFail($lessonId);
 
-        // Panggil helper lokal di controller
+        // Kalau kamu pakai convertToEmbed, bisa lakukan di sini:
         $lesson->video_url1 = $this->convertToEmbed($lesson->video_url1);
         $lesson->video_url2 = $this->convertToEmbed($lesson->video_url2);
         $lesson->video_url3 = $this->convertToEmbed($lesson->video_url3);
