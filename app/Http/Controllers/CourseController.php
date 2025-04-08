@@ -149,6 +149,28 @@ class CourseController extends Controller
         return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil ditambahkan.');
     }
 
+    public function searchPeserta(Request $request)
+    {
+        $search = $request->input('q');
+
+        $results = User::where('role_id', 4)
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            })
+            ->select('id', 'name', 'email')
+            ->limit(20)
+            ->get();
+
+        return response()->json($results->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'text' => $user->name . ' (' . $user->email . ')',
+            ];
+        }));
+    }
+
+
     public function removeParticipant($courseId, $enrollmentId)
     {
         $enrollment = Enrollment::where('course_id', $courseId)

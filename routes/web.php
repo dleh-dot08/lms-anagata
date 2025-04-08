@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
         
         // Tambah & hapus peserta
         Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
+        Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
         Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
     });
 });

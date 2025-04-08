@@ -28,13 +28,8 @@
             <form action="{{ route('courses.addParticipant', $course->id) }}" method="POST" class="row g-3 mb-4">
                 @csrf
                 <div class="col-md-6">
-                    <label for="user_id" class="form-label">Pilih Peserta</label>
-                    <select name="user_id" id="user_id" class="form-select" required>
-                        <option value="">-- Pilih Peserta --</option>
-                        @foreach($participants as $participant)
-                            <option value="{{ $participant->id }}">{{ $participant->name }} ({{ $participant->email }})</option>
-                        @endforeach
-                    </select>
+                    <label for="user_id" class="form-label">Cari Peserta</label>
+                    <select name="user_id" id="user_id" class="form-select" style="width: 100%" required></select>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary">Tambah</button>
@@ -106,3 +101,32 @@
     <a href="{{ route('courses.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection
+
+@push('scripts')
+<!-- jQuery & Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#user_id').select2({
+        placeholder: 'Cari peserta berdasarkan nama/email...',
+        ajax: {
+            url: '{{ route("courses.searchPeserta") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return { q: params.term };
+            },
+            processResults: function(data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        }
+    });
+});
+</script>
+@endpush
