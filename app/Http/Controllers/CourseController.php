@@ -151,23 +151,25 @@ class CourseController extends Controller
 
     public function searchPeserta(Request $request)
     {
-        $search = $request->input('q');
+        $query = $request->q;
 
-        $results = User::where('role_id', 4)
-            ->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
-            })
-            ->select('id', 'name', 'email')
-            ->limit(20)
-            ->get();
+        $users = User::where('role_id', 4)
+                    ->where(function($q) use ($query) {
+                        $q->where('name', 'LIKE', '%' . $query . '%')
+                        ->orWhere('email', 'LIKE', '%' . $query . '%');
+                    })
+                    ->select('id', 'name', 'email')
+                    ->limit(20)
+                    ->get();
 
-        return response()->json($results->map(function ($user) {
+        $results = $users->map(function($user) {
             return [
                 'id' => $user->id,
-                'text' => $user->name . ' (' . $user->email . ')',
+                'text' => $user->name . ' (' . $user->email . ')'
             ];
-        }));
+        });
+
+        return response()->json($results);
     }
 
 
