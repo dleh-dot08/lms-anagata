@@ -53,29 +53,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($course->enrollments as $index => $enroll)
+                    @forelse ($enrollments as $index => $enrollment)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $enroll->user->name }}</td>
-                            <td>{{ $enroll->user->jenjang->nama ?? '-' }}</td>
+                            <td>{{ $enrollment->user->name }}</td>
+                            <td>{{ $enrollment->user->jenjang->nama ?? '-' }}</td>
                             <td>
-                                @if($enroll->tanggal_selesai && $enroll->tanggal_selesai < now())
-                                    <span class="badge bg-secondary">Selesai</span>
+                                @if ($enrollment->tanggal_selesai)
+                                    <span class="badge bg-success">Selesai</span>
                                 @else
-                                    <span class="badge bg-success">Aktif</span>
+                                    <span class="badge bg-warning">Aktif</span>
                                 @endif
                             </td>
                             <td>
-                                <form action="{{ route('courses.removeParticipant', ['id' => $course->id, 'participant_id' => $participant->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                <form action="{{ route('courses.removeParticipant', ['id' => $course->id, 'participant_id' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">Hapus</button>
+                                    <button class="btn btn-danger btn-sm">Hapus</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">Belum ada peserta yang terdaftar.</td>
+                            <td colspan="5" class="text-center">Belum ada peserta</td>
                         </tr>
                     @endforelse
                 </tbody>
