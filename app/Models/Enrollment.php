@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model
 {
+    protected $table = 'enrollments';
+
     protected $fillable = [
         'user_id',
         'mentor_id',
@@ -16,18 +18,20 @@ class Enrollment extends Model
         'status',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function mentor()
     {
         return $this->belongsTo(User::class, 'mentor_id');
     }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, 'course_id');
     }
+
+
 }

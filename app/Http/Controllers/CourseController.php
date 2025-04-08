@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\User;
 use App\Models\Kategori;
 use App\Models\Jenjang;
@@ -97,9 +98,16 @@ class CourseController extends Controller
     // Menampilkan halaman detail kursus
     public function show($id)
     {
-        $course = Course::findOrFail($id);
-        return view('courses.show', compact('course'));
+        $course = Course::with(['mentor', 'kategori', 'jenjang'])->findOrFail($id);
+
+        // Ambil peserta yang sudah terdaftar di kursus ini
+        $enrollments = Enrollment::with(['user', 'user.jenjang'])
+            ->where('course_id', $id)
+            ->get();
+
+        return view('courses.show', compact('course', 'enrollments'));
     }
+
 
     // Menghapus kursus (soft delete)
     public function destroy(Course $course)
@@ -108,4 +116,43 @@ class CourseController extends Controller
 
         return redirect()->route('courses.index')->with('success', 'Kursus berhasil dihapus.');
     }
+
+    public function addParticipant(Request $request, $courseId)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $existing = Enrollment::where('course_id', $courseId)
+                    ->where('user_id', $request->user_id)
+                    ->first();
+
+        if ($existing) {
+            return redirect()->back()->with('warning', 'Peserta sudah terdaftar di kursus ini.');
+        }
+
+        Enrollment::create([
+            'user_id' => $request->user_id,
+            'mentor_id' => $request->mentor_id, // bisa juga ambil dari course
+            'course_id' => $courseId,
+            'tanggal_mulai' => now(),
+            'tanggal_daftar' => now(),
+        ]);
+
+        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil ditambahkan.');
+    }
+
+    public function removeParticipant($courseId, $enrollmentId)
+    {
+        $enrollment = Enrollment::where('course_id', $courseId)
+                                ->where('id', $enrollmentId)
+                                ->firstOrFail();
+
+        $enrollment->delete();
+
+        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil dihapus.');
+    }
+
+
+
 }

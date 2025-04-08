@@ -22,7 +22,26 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <a href="#" class="btn btn-primary mb-3">Tambah Peserta</a>
+            <h4 class="mb-3">Daftar Peserta</h4>
+
+            <!-- Form tambah peserta -->
+            <form action="{{ route('courses.addParticipant', $course->id) }}" method="POST" class="row g-3 mb-4">
+                @csrf
+                <div class="col-md-6">
+                    <label for="user_id" class="form-label">Pilih Peserta</label>
+                    <select name="user_id" id="user_id" class="form-select" required>
+                        <option value="">-- Pilih Peserta --</option>
+                        @foreach($participants as $participant)
+                            <option value="{{ $participant->id }}">{{ $participant->name }} ({{ $participant->email }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Tambah</button>
+                </div>
+            </form>
+
+            <!-- Tabel daftar peserta -->
             <table class="table table-hover table-bordered">
                 <thead class="table-primary">
                     <tr>
@@ -34,12 +53,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    @forelse ($course->enrollments as $index => $enroll)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $enroll->user->name }}</td>
+                            <td>{{ $enroll->user->jenjang->nama ?? '-' }}</td>
+                            <td>
+                                @if($enroll->tanggal_selesai && $enroll->tanggal_selesai < now())
+                                    <span class="badge bg-secondary">Selesai</span>
+                                @else
+                                    <span class="badge bg-success">Aktif</span>
+                                @endif
+                            </td>
+                            <td>
+                                <form action="{{ route('courses.removeParticipant', [$course->id, $enroll->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Belum ada peserta yang terdaftar.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-
+    
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <a href="#" class="btn btn-primary mb-3">Tambah Materi Pembelajaran</a>

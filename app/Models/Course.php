@@ -42,5 +42,11 @@ class Course extends Model
         return $this->belongsTo(Jenjang::class);
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }
