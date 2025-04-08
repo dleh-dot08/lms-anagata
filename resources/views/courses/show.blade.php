@@ -18,6 +18,7 @@
             <p><strong>Waktu Akhir:</strong> {{ $course->waktu_akhir }}</p>
             <p><strong>Harga:</strong> {{ $course->harga ?? 'Gratis' }}</p>
             <p><strong>Jumlah Peserta:</strong> {{ $course->jumlah_peserta }}</p>
+            @endforeach
         </div>
     </div>
 
