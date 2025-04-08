@@ -52,8 +52,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}', [CourseController::class, 'update'])->name('update');
         Route::delete('/{id}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
-        Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('courses.addParticipant');
-        Route::delete('{id}/remove-participant/{id}', [CourseController::class, 'removeParticipant'])->name('courses.removeParticipant');
+        
+        // Tambah & hapus peserta
+        Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
+        Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
     });
 });
 
