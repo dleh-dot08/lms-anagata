@@ -43,6 +43,20 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <a href="#" class="btn btn-primary mb-3">Tambah Materi Pembelajaran</a>
+            <table class="table table-hover table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Pertemuan Ke</th>
+                        <th>Video</th>
+                        <th>File</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
         </div>
     </div>
 
