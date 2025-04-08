@@ -95,9 +95,10 @@ class CourseController extends Controller
     }
 
     // Menampilkan halaman detail kursus
-    public function show(Course $course)
+    public function showDetail()
     {
-        return view('courses.show', compact('course'));
+        $courses = Course::all();
+        return view('nama_view_anda', ['courses' => $courses]);
     }
 
     // Menghapus kursus (soft delete)
