@@ -10,6 +10,7 @@ use App\Http\Middleware\AdminMiddleware;
 //use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\LessonController;
 
 Route::get('/', function () {
     return view('welcome');
