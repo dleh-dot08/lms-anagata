@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('editLesson');
         Route::put('/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('updateLesson');
         Route::delete('/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('deleteLesson');
+        Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
 
     });
 });

@@ -53,5 +53,46 @@ class LessonController extends Controller
         Lesson::destroy($lessonId);
         return redirect()->route('courses.show', $courseId)->with('success', 'Materi berhasil dihapus');
     }
+
+    private function convertToEmbed($url)
+    {
+        if (!$url) return null;
+
+        if (str_contains($url, 'youtube.com/watch')) {
+            return str_replace('watch?v=', 'embed/', $url);
+        }
+
+        if (str_contains($url, 'drive.google.com')) {
+            if (str_contains($url, '/view')) {
+                return str_replace('/view', '/preview', $url);
+            }
+
+            if (str_contains($url, '/file/d/')) {
+                return preg_replace('#/file/d/(.*?)/.*#', '/file/d/$1/preview', $url);
+            }
+        }
+
+        return $url;
+    }
+
+
+    public function show($id)
+    {
+        $lesson = Lesson::findOrFail($id);
+
+        // Panggil helper lokal di controller
+        $lesson->video_url1 = $this->convertToEmbed($lesson->video_url1);
+        $lesson->video_url2 = $this->convertToEmbed($lesson->video_url2);
+        $lesson->video_url3 = $this->convertToEmbed($lesson->video_url3);
+
+        $lesson->file_materi1 = $this->convertToEmbed($lesson->file_materi1);
+        $lesson->file_materi2 = $this->convertToEmbed($lesson->file_materi2);
+        $lesson->file_materi3 = $this->convertToEmbed($lesson->file_materi3);
+        $lesson->file_materi4 = $this->convertToEmbed($lesson->file_materi4);
+        $lesson->file_materi5 = $this->convertToEmbed($lesson->file_materi5);
+
+        return view('courses.showlesson', compact('lesson'));
+    }
+
 }
 
