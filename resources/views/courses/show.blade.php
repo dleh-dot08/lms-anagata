@@ -6,7 +6,6 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            @foreach ($courses as $course)
             <h3>{{ $course->nama_kelas }}</h3>
             <p><strong>Mentor:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
             <p><strong>Kategori:</strong> {{ $course->kategori_id->nama ?? 'Tidak Ada' }}</p>
@@ -18,7 +17,6 @@
             <p><strong>Waktu Akhir:</strong> {{ $course->waktu_akhir }}</p>
             <p><strong>Harga:</strong> {{ $course->harga ?? 'Gratis' }}</p>
             <p><strong>Jumlah Peserta:</strong> {{ $course->jumlah_peserta }}</p>
-            @endforeach
         </div>
     </div>
 
