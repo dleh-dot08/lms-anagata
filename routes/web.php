@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [KategoriController::class, 'restore'])->name('restore');
     });
-    
+
     Route::get('/courses/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
     Route::prefix('courses')->name('courses.')->group(function () {
         Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
@@ -58,6 +58,14 @@ Route::middleware('auth')->group(function () {
         // Tambah & hapus peserta
         Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
         Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
+
+        // Lesson
+        Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
+        Route::post('/{course}/lessons', [LessonController::class, 'store'])->name('storeLesson');
+        Route::get('/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('editLesson');
+        Route::put('/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('updateLesson');
+        Route::delete('/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('deleteLesson');
+
     });
 });
 
