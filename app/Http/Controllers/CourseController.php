@@ -154,15 +154,15 @@ class CourseController extends Controller
         $query = $request->q;
 
         $users = User::where('role_id', 3)
-                    ->where(function($q) use ($query) {
-                        $q->where('name', 'LIKE', '%' . $query . '%')
-                        ->orWhere('email', 'LIKE', '%' . $query . '%');
+                    ->where(function ($q) use ($query) {
+                        $q->where('name', 'LIKE', "%{$query}%")
+                        ->orWhere('email', 'LIKE', "%{$query}%");
                     })
                     ->select('id', 'name', 'email')
                     ->limit(20)
                     ->get();
 
-        $results = $users->map(function($user) {
+        $results = $users->map(function ($user) {
             return [
                 'id' => $user->id,
                 'text' => $user->name . ' (' . $user->email . ')'

@@ -73,6 +73,36 @@
                             <td colspan="5" class="text-center">Belum ada peserta</td>
                         </tr>
                     @endforelse
+
+                    @push('scripts')
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+                        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+                        <script>
+                            $(document).ready(function () {
+                                $('#user_id').select2({
+                                    placeholder: 'Cari peserta berdasarkan nama/email...',
+                                    ajax: {
+                                        url: '{{ route("courses.searchPeserta") }}',
+                                        dataType: 'json',
+                                        delay: 250,
+                                        data: function (params) {
+                                            return {
+                                                q: params.term
+                                            };
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data
+                                            };
+                                        },
+                                        cache: true
+                                    }
+                                });
+                            });
+                        </script>
+                    @endpush
                 </tbody>
             </table>
         </div>
@@ -101,32 +131,3 @@
     <a href="{{ route('courses.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection
-
-@push('scripts')
-<!-- jQuery & Select2 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-<script>
-$(document).ready(function() {
-    $('#user_id').select2({
-        placeholder: 'Cari peserta berdasarkan nama/email...',
-        ajax: {
-            url: '{{ route("courses.searchPeserta") }}',
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return { q: params.term };
-            },
-            processResults: function(data) {
-                return {
-                    results: data
-                };
-            },
-            cache: true
-        }
-    });
-});
-</script>
-@endpush

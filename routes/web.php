@@ -42,7 +42,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [KategoriController::class, 'restore'])->name('restore');
     });
-
+    
+    Route::get('/courses/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
     Route::prefix('courses')->name('courses.')->group(function () {
         Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
         Route::get('/', [CourseController::class, 'index'])->name('index');
