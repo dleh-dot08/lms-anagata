@@ -142,7 +142,7 @@
                             </td>
                             <td>
                                 <a href="{{ route('courses.editLesson', [$course->id, $lesson->id]) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="{{ route('courses.showLesson', [$course->id, $lesson->id]) }}" class="btn btn-info">Lihat</a>
+                                <a href="{{ route('courses.showLesson', [$course->id, $lesson->id]) }}" class="btn btn-sm btn-info">Lihat</a>
                                 <form action="{{ route('courses.deleteLesson', [$course->id, $lesson->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')
