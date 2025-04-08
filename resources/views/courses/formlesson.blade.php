@@ -1,9 +1,10 @@
 @extends('layouts.admin.template')
 
 @section('content')
-<div class="card shadow-sm mb-4">
+<div class="card shadow-sm">
     <div class="card-body">
-        <form action="{{ isset($lesson) ? route('courses.updateLesson', [$course->id, $lesson->id]) : route('courses.storeLesson', $course->id) }}" method="POST" enctype="multipart/form-data">
+        <h5 class="mb-4">{{ isset($lesson) ? 'Edit Materi' : 'Tambah Materi' }}</h5>
+        <form action="{{ isset($lesson) ? route('courses.updateLesson', [$course->id, $lesson->id]) : route('courses.storeLesson', $course->id) }}" method="POST">
             @csrf
             @if(isset($lesson))
                 @method('PUT')
@@ -11,35 +12,36 @@
 
             <div class="mb-3">
                 <label for="judul" class="form-label">Judul Materi</label>
-                <input type="text" class="form-control" name="judul" value="{{ old('judul', $lesson->judul ?? '') }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="konten" class="form-label">Konten</label>
-                <textarea class="form-control" name="konten">{{ old('konten', $lesson->konten ?? '') }}</textarea>
+                <input type="text" name="judul" class="form-control" value="{{ old('judul', $lesson->judul ?? '') }}" required>
             </div>
 
             <div class="mb-3">
                 <label for="pertemuan_ke" class="form-label">Pertemuan Ke</label>
-                <input type="number" class="form-control" name="pertemuan_ke" value="{{ old('pertemuan_ke', $lesson->pertemuan_ke ?? '') }}" required>
+                <input type="number" name="pertemuan_ke" class="form-control" value="{{ old('pertemuan_ke', $lesson->pertemuan_ke ?? '') }}" required>
             </div>
 
-            @for ($i = 1; $i <= 3; $i++)
-                <div class="mb-3">
-                    <label for="video_url{{ $i }}" class="form-label">Video URL {{ $i }}</label>
-                    <input type="text" class="form-control" name="video_url{{ $i }}" value="{{ old("video_url$i", $lesson->{"video_url$i"} ?? '') }}">
-                </div>
-            @endfor
+            <div class="mb-3">
+                <label for="konten" class="form-label">Konten</label>
+                <textarea name="konten" class="form-control" id="editor">{{ old('konten', $lesson->konten ?? '') }}</textarea>
+            </div>
 
-            @for ($i = 1; $i <= 5; $i++)
-                <div class="mb-3">
-                    <label for="file_materi{{ $i }}" class="form-label">File Materi {{ $i }}</label>
-                    <input type="text" class="form-control" name="file_materi{{ $i }}" value="{{ old("file_materi$i", $lesson->{"file_materi$i"} ?? '') }}">
-                </div>
-            @endfor
+            <div class="mb-3">
+                <label class="form-label">Link Video (YouTube/Google Drive)</label>
+                <input type="text" name="video_url1" class="form-control mb-2" placeholder="Video URL 1" value="{{ old('video_url1', $lesson->video_url1 ?? '') }}">
+                <input type="text" name="video_url2" class="form-control mb-2" placeholder="Video URL 2" value="{{ old('video_url2', $lesson->video_url2 ?? '') }}">
+                <input type="text" name="video_url3" class="form-control mb-2" placeholder="Video URL 3" value="{{ old('video_url3', $lesson->video_url3 ?? '') }}">
+                <small class="text-muted">Gunakan link yang bisa dibuka publik dan gunakan iframe di tampilan show.</small>
+            </div>
 
-            <button type="submit" class="btn btn-success">{{ isset($lesson) ? 'Update' : 'Simpan' }}</button>
+            <button type="submit" class="btn btn-success">Simpan</button>
         </form>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor');
+</script>
 @endsection
