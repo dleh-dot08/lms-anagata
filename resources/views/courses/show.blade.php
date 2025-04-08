@@ -20,6 +20,18 @@
         </div>
     </div>
 
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <a href="#" class="btn btn-primary mb-3">Tambah Peserta</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <a href="#" class="btn btn-primary mb-3">Tambah Materi Pembelajaran</a>
+        </div>
+    </div>
+
     <a href="{{ route('courses.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection
