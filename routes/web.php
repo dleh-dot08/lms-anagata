@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('courses')->name('courses.')->group(function () {
+        Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
         Route::get('/', [CourseController::class, 'index'])->name('index');
         Route::get('/create', [CourseController::class, 'create'])->name('create');
         Route::post('/', [CourseController::class, 'store'])->name('store');
@@ -55,7 +56,6 @@ Route::middleware('auth')->group(function () {
         
         // Tambah & hapus peserta
         Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
-        Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
         Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
     });
 });
