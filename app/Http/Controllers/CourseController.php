@@ -95,10 +95,10 @@ class CourseController extends Controller
     }
 
     // Menampilkan halaman detail kursus
-    public function show($id) // Biasanya method 'show' menerima ID sebagai parameter
+    public function show($id)
     {
-        $course = Course::findOrFail($id); // Mengambil data kursus berdasarkan ID atau menampilkan error 404 jika tidak ditemukan
-        return view('nama_view_detail', compact('course')); // Mengirim data ke view
+        $course = Course::findOrFail($id);
+        return view('courses.show', compact('course')); // Ubah 'nama_view_detail' menjadi 'courses.show'
     }
 
     // Menghapus kursus (soft delete)
