@@ -153,7 +153,7 @@ class CourseController extends Controller
     {
         $query = $request->q;
 
-        $users = User::where('role_id', 4)
+        $users = User::where('role_id', 3)
                     ->where(function($q) use ($query) {
                         $q->where('name', 'LIKE', '%' . $query . '%')
                         ->orWhere('email', 'LIKE', '%' . $query . '%');
