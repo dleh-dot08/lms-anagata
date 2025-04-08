@@ -98,7 +98,7 @@ class CourseController extends Controller
     public function show($id)
     {
         $course = Course::findOrFail($id);
-        return view('courses.show', compact('course')); // Ubah 'nama_view_detail' menjadi 'courses.show'
+        return view('courses.show', compact('courses')); // Ubah 'nama_view_detail' menjadi 'courses.show'
     }
 
     // Menghapus kursus (soft delete)
