@@ -124,28 +124,27 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Kursus berhasil dihapus.');
     }
 
-    public function searchPeserta(Request $request)
+    public function searchPeserta(Request $request, Course $course)
     {
-        $search = $request->q;
+        $term = $request->get('q');
 
-        $users = User::where('role_id', 3) // peserta
-            ->where(function ($query) use ($search) {
-                $query->where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%");
+        $existingUserIds = $course->enrollments()->pluck('user_id');
+
+        $users = User::where('role_id', 4)
+            ->whereNotIn('id', $existingUserIds)
+            ->where(function ($query) use ($term) {
+                $query->where('name', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%");
             })
             ->limit(10)
             ->get();
 
-        $results = [];
-        foreach ($users as $user) {
-            $results[] = [
-                'id' => $user->id,
-                'text' => $user->name . ' (' . $user->email . ')',
-            ];
-        }
-
-        return response()->json($results);
+        return response()->json($users->map(fn($u) => [
+            'id' => $u->id,
+            'text' => "{$u->name} ({$u->email})"
+        ]));
     }
+
 
     public function addParticipant(Request $request, $id)
     {

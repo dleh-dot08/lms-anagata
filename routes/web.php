@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
         // Tambah peserta ke kursus
         Route::post('{course}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
         // Ajax untuk select2 search peserta
-        Route::get('search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
+        Route::get('{course}/search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
         // Hapus peserta dari kursus
         Route::delete('{course}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
 
