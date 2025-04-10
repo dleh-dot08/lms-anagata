@@ -4,39 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Jenjang;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
 {
-    public function form(Course $course)
+    public function form($courseId, Request $request)
     {
-        $users = User::where('role_id', 3)->get(); // semua peserta
+        $course = Course::findOrFail($courseId);
+        $jenjangs = Jenjang::all();
+        $filterJenjang = $request->jenjang_id;
 
-        return view('courses.formparticipant', compact('course', 'users'));
-    }
-
-    public function searchPeserta(Request $request)
-    {
-        $term = $request->input('q');
-        $results = User::where('role_id', 3)
-            ->where(function ($query) use ($term) {
-                $query->where('name', 'like', "%$term%")
-                      ->orWhere('email', 'like', "%$term%");
+        $users = User::where('role_id', 3) // peserta
+            ->when($filterJenjang, function ($query, $filterJenjang) {
+                $query->where('jenjang_id', $filterJenjang);
             })
-            ->limit(10)
             ->get();
 
-        return response()->json($results->map(function ($user) {
-            return [
-                'id' => $user->id,
-                'text' => "{$user->name} ({$user->email})",
-            ];
-        }));
+        return view('courses.formparticipant', compact('users', 'course', 'jenjangs', 'filterJenjang'));
     }
 
-    public function store(Request $request, Course $course)
+    public function store(Request $request, $courseId)
     {
+        $course = Course::findOrFail($courseId);
+
         $userIds = $request->input('user_ids', []);
 
         foreach ($userIds as $userId) {
@@ -46,11 +38,19 @@ class ParticipantController extends Controller
             ], [
                 'mentor_id' => $course->mentor_id,
                 'tanggal_daftar' => now(),
-                'tanggal_mulai' => now()
+                'tanggal_mulai' => now(),
             ]);
         }
 
-        return redirect()->route('courses.show', $course->id)->with('success', 'Peserta berhasil ditambahkan!');
+        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil ditambahkan!');
+    }
+
+    public function destroy($courseId, $userId)
+    {
+        Enrollment::where('course_id', $courseId)
+            ->where('user_id', $userId)
+            ->delete();
+
+        return back()->with('success', 'Peserta berhasil dihapus.');
     }
 }
-

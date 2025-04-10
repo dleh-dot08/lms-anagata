@@ -3,46 +3,63 @@
 @section('content')
 <div class="card shadow-sm">
     <div class="card-body">
-        <h4>Tambah Peserta ke Kursus: {{ $course->nama_kelas }}</h4>
+        <h4 class="mb-3">Tambah Peserta ke Kursus: {{ $course->nama_kelas }}</h4>
+
+        <form method="GET" action="{{ route('courses.formparticipant', $course->id) }}" class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="jenjang_id" class="form-label">Filter Jenjang</label>
+                    <select name="jenjang_id" id="jenjang_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Semua Jenjang --</option>
+                        @foreach($jenjangs as $jenjang)
+                            <option value="{{ $jenjang->id }}" {{ $filterJenjang == $jenjang->id ? 'selected' : '' }}>
+                                {{ $jenjang->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </form>
 
         <form action="{{ route('courses.participants.store', $course->id) }}" method="POST">
             @csrf
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Jenjang</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($users as $user)
+                        <tr>
+                            <td><input type="checkbox" name="user_ids[]" value="{{ $user->id }}"></td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->jenjang->nama ?? '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">Tidak ada peserta ditemukan.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
 
-            <div class="mb-3">
-                <label for="user_ids">Pilih Peserta (bisa banyak)</label>
-                <select name="user_ids[]" id="user_ids" class="form-control" multiple style="width: 100%">
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                    @endforeach
-                </select>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Tambah Peserta Terpilih</button>
+                <a href="{{ route('courses.show', $course->id) }}" class="btn btn-secondary">Kembali</a>
             </div>
-
-            <button type="submit" class="btn btn-primary">Tambahkan Peserta</button>
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('selectAll').addEventListener('change', function () {
+        let checkboxes = document.querySelectorAll('input[name="user_ids[]"]');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+</script>
 @endsection
-
-@push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script>
-        $('#user_ids').select2({
-            placeholder: "Cari dan pilih peserta...",
-            ajax: {
-                url: '{{ route("courses.participants.search") }}',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return { q: params.term };
-                },
-                processResults: function (data) {
-                    return { results: data };
-                },
-                cache: true
-            }
-        });
-    </script>
-@endpush
