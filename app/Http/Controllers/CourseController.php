@@ -88,7 +88,7 @@ class CourseController extends Controller
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
             'kategori_id' => 'required|exists:kategoris,id',
-            'jenjang_id' => 'required|exists:jenjang,id',
+            'jenjang_id' => 'required|exists:jenjangs,id', // <- perbaikan di sini
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
@@ -97,7 +97,18 @@ class CourseController extends Controller
             'jumlah_peserta' => 'required|integer|min:0',
         ]);
 
-        $course->update($request->all());
+        $course->update($request->only([
+            'nama_kelas',
+            'mentor_id',
+            'kategori_id',
+            'jenjang_id',
+            'level',
+            'status',
+            'waktu_mulai',
+            'waktu_akhir',
+            'harga',
+            'jumlah_peserta',
+        ]));
 
         return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
     }
