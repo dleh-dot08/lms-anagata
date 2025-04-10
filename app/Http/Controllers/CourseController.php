@@ -124,66 +124,61 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Kursus berhasil dihapus.');
     }
 
-    public function addParticipant(Request $request, $courseId)
+    public function searchPeserta(Request $request)
+    {
+        $search = $request->q;
+
+        $users = User::where('role_id', 3) // peserta
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%");
+            })
+            ->limit(10)
+            ->get();
+
+        $results = [];
+        foreach ($users as $user) {
+            $results[] = [
+                'id' => $user->id,
+                'text' => $user->name . ' (' . $user->email . ')',
+            ];
+        }
+
+        return response()->json($results);
+    }
+
+    public function addParticipant(Request $request, $id)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $existing = Enrollment::where('course_id', $courseId)
-                    ->where('user_id', $request->user_id)
-                    ->first();
+        $existing = Enrollment::where('course_id', $id)
+                            ->where('user_id', $request->user_id)
+                            ->first();
 
         if ($existing) {
-            return redirect()->back()->with('warning', 'Peserta sudah terdaftar di kursus ini.');
+            return back()->with('warning', 'Peserta sudah terdaftar dalam kursus ini.');
         }
 
         Enrollment::create([
+            'course_id' => $id,
             'user_id' => $request->user_id,
-            'mentor_id' => $request->mentor_id, // bisa juga ambil dari course
-            'course_id' => $courseId,
-            'tanggal_mulai' => now(),
+            'mentor_id' => auth()->id(), // opsional
             'tanggal_daftar' => now(),
+            'tanggal_mulai' => now(),
         ]);
 
-        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil ditambahkan.');
+        return back()->with('success', 'Peserta berhasil ditambahkan.');
     }
 
-    public function searchPeserta(Request $request)
+    public function removeParticipant($id, $participant_id)
     {
-        $query = $request->q;
+        Enrollment::where('course_id', $id)
+                ->where('user_id', $participant_id)
+                ->delete();
 
-        $users = User::where('role_id', 3)
-                    ->where(function ($q) use ($query) {
-                        $q->where('name', 'LIKE', "%{$query}%")
-                        ->orWhere('email', 'LIKE', "%{$query}%");
-                    })
-                    ->select('id', 'name', 'email')
-                    ->limit(20)
-                    ->get();
-
-        $results = $users->map(function ($user) {
-            return [
-                'id' => $user->id,
-                'text' => $user->name . ' (' . $user->email . ')'
-            ];
-        });
-
-        return response()->json($results);
+        return back()->with('success', 'Peserta berhasil dihapus.');
     }
-
-
-    public function removeParticipant($courseId, $enrollmentId)
-    {
-        $enrollment = Enrollment::where('course_id', $courseId)
-                                ->where('id', $enrollmentId)
-                                ->firstOrFail();
-
-        $enrollment->delete();
-
-        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil dihapus.');
-    }
-
-
 
 }

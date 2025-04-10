@@ -84,7 +84,7 @@
                                 $('#user_id').select2({
                                     placeholder: 'Cari peserta berdasarkan nama/email...',
                                     ajax: {
-                                        url: '{{ route("courses.searchPeserta") }}',
+                                        url: '{{ route("courses.searchPeserta") }}', // ini ganti
                                         dataType: 'json',
                                         delay: 250,
                                         data: function (params) {
