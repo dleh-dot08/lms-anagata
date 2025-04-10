@@ -25,86 +25,55 @@
             <h4 class="mb-3">Daftar Peserta</h4>
 
             <!-- Form tambah peserta -->
-            <form action="{{ route('courses.addParticipant', $course->id) }}" method="POST" class="row g-3 mb-4">
-                @csrf
-                <div class="col-md-6">
-                    <label for="user_id" class="form-label">Cari Peserta</label>
-                    <select name="user_id" id="user_id" class="form-select" style="width: 100%" required></select>
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">Daftar Peserta</h4>
+                        <a href="{{ route('courses.participants.form', $course->id) }}" class="btn btn-success">
+                            + Tambah Peserta
+                        </a>
+                    </div>
+
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Nama Peserta</th>
+                                <th>Jenjang</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($enrollments as $index => $enrollment)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $enrollment->user->name }}</td>
+                                    <td>{{ $enrollment->user->jenjang->nama ?? '-' }}</td>
+                                    <td>
+                                        @if ($enrollment->tanggal_selesai)
+                                            <span class="badge bg-success">Selesai</span>
+                                        @else
+                                            <span class="badge bg-warning">Aktif</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('courses.participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Belum ada peserta</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary">Tambah</button>
-                </div>
-            </form>
-
-            <!-- Tabel daftar peserta -->
-            <table class="table table-hover table-bordered">
-                <thead class="table-primary">
-                    <tr>
-                        <th>#</th>
-                        <th>Nama Peserta</th>
-                        <th>Jenjang</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($enrollments as $index => $enrollment)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $enrollment->user->name }}</td>
-                            <td>{{ $enrollment->user->jenjang->nama ?? '-' }}</td>
-                            <td>
-                                @if ($enrollment->tanggal_selesai)
-                                    <span class="badge bg-success">Selesai</span>
-                                @else
-                                    <span class="badge bg-warning">Aktif</span>
-                                @endif
-                            </td>
-                            <td>
-                                <form action="{{ route('courses.removeParticipant', ['id' => $course->id, 'participant_id' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Belum ada peserta</td>
-                        </tr>
-                    @endforelse
-
-                    @push('scripts')
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-                        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-                        <script>
-                            $(document).ready(function () {
-                                $('#user_id').select2({
-                                    placeholder: 'Cari peserta berdasarkan nama/email...',
-                                    ajax: {
-                                        url: '{{ route("courses.searchPeserta", ["course" => $course->id]) }}', // ini ganti
-                                        dataType: 'json',
-                                        delay: 250,
-                                        data: function (params) {
-                                            return {
-                                                q: params.term
-                                            };
-                                        },
-                                        processResults: function (data) {
-                                            return {
-                                                results: data
-                                            };
-                                        },
-                                        cache: true
-                                    }
-                                });
-                            });
-                        </script>
-                    @endpush
-                </tbody>
-            </table>
+            </div>
         </div>
     </div>
     
