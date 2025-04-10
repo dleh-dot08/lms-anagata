@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-3">Daftar Peserta</h4>
-                        <a href="{{ route('courses.participants.form', $course->id) }}" class="btn btn-success">
+                        <a href="{{ route('participants.show', $course->id) }}" class="btn btn-success">
                             + Tambah Peserta
                         </a>
                     </div>
