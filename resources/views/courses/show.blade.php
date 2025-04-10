@@ -23,18 +23,12 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h4 class="mb-3">Daftar Peserta</h4>
+                <a href="{{ route('courses.participants.form', $course->id) }}" class="btn btn-success">
+                    + Tambah Peserta
+                </a>
+            </div>
 
-            <!-- Form tambah peserta -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-0">Daftar Peserta</h4>
-                        <a href="{{ route('courses.participants.form', $course->id) }}" class="btn btn-success">
-                            + Tambah Peserta
-                        </a>
-                    </div>
-
-                    <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered">
                         <thead class="table-primary">
                             <tr>
                                 <th>#</th>
@@ -71,9 +65,7 @@
                                 </tr>
                             @endforelse
                         </tbody>
-                    </table>
-                </div>
-            </div>
+            </table>
         </div>
     </div>
     
