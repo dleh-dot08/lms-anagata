@@ -58,7 +58,7 @@
                 <td>{{ $course->status }}</td>
                 <td>
                     <a href="{{ route('courses.show', $course->id) }}" class="btn btn-info btn-sm">Lihat</a>
-                    <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{{ route('courses.update', $course->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     
                     @if($course->trashed())
                         <form action="{{ route('courses.restore', $course->id) }}" method="POST" class="d-inline">
