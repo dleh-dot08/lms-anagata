@@ -58,11 +58,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
         
         // Tambah & hapus peserta
-        Route::get('/', [ParticipantController::class, 'index'])->name('index');
-        Route::get('{course}', [ParticipantController::class, 'show'])->name('show');
-        Route::post('{course}/add', [ParticipantController::class, 'add'])->name('add');
-        Route::delete('{course}/{user}/remove', [ParticipantController::class, 'remove'])->name('remove');
-        Route::get('search', [ParticipantController::class, 'search'])->name('search');
+        Route::get('{course}/participants', [ParticipantController::class, 'form'])->name('participants.form');
+        Route::post('{course}/participants', [ParticipantController::class, 'store'])->name('participants.store');
+        Route::get('search-peserta', [ParticipantController::class, 'searchPeserta'])->name('participants.search');
         
         //Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
         //Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');

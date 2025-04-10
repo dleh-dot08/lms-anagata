@@ -2,53 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Enrollment;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
 {
-    public function show(Course $course)
+    public function form(Course $course)
     {
-        $enrollments = Enrollment::where('course_id', $course->id)->with('user.jenjang')->get();
-        $allPeserta = User::where('role_id', 3)->get();
+        $users = User::where('role_id', 3)->get(); // semua peserta
 
-        return view('participants.formparticipant', compact('course', 'enrollments', 'allPeserta'));
+        return view('courses.formparticipant', compact('course', 'users'));
     }
 
-    public function add(Request $request, Course $course)
+    public function searchPeserta(Request $request)
     {
-        $request->validate(['user_ids' => 'required|array']);
-        foreach ($request->user_ids as $user_id) {
-            Enrollment::firstOrCreate([
-                'course_id' => $course->id,
-                'user_id' => $user_id,
-            ]);
-        }
-
-        return back()->with('success', 'Peserta berhasil ditambahkan.');
-    }
-
-    public function remove(Course $course, User $user)
-    {
-        Enrollment::where('course_id', $course->id)->where('user_id', $user->id)->delete();
-        return back()->with('success', 'Peserta berhasil dihapus.');
-    }
-
-    public function search(Request $request)
-    {
-        $term = $request->q;
+        $term = $request->input('q');
         $results = User::where('role_id', 3)
-            ->where(function($query) use ($term) {
-                $query->where('name', 'LIKE', "%$term%")
-                      ->orWhere('email', 'LIKE', "%$term%");
+            ->where(function ($query) use ($term) {
+                $query->where('name', 'like', "%$term%")
+                      ->orWhere('email', 'like', "%$term%");
             })
             ->limit(10)
             ->get();
 
         return response()->json($results->map(function ($user) {
-            return ['id' => $user->id, 'text' => $user->name . ' - ' . $user->email];
+            return [
+                'id' => $user->id,
+                'text' => "{$user->name} ({$user->email})",
+            ];
         }));
     }
+
+    public function store(Request $request, Course $course)
+    {
+        $userIds = $request->input('user_ids', []);
+
+        foreach ($userIds as $userId) {
+            Enrollment::firstOrCreate([
+                'course_id' => $course->id,
+                'user_id' => $userId
+            ], [
+                'mentor_id' => $course->mentor_id,
+                'tanggal_daftar' => now(),
+                'tanggal_mulai' => now()
+            ]);
+        }
+
+        return redirect()->route('courses.show', $course->id)->with('success', 'Peserta berhasil ditambahkan!');
+    }
 }
+
