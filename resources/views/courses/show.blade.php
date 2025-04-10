@@ -58,7 +58,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <form action="{{ route('participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                        <form action="{{ route('courses.participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-danger btn-sm">Hapus</button>
