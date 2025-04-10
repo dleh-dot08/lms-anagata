@@ -8,8 +8,8 @@
         <div class="card-body">
             <h3>{{ $course->nama_kelas }}</h3>
             <p><strong>Mentor:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
-            <p><strong>Kategori:</strong> {{ $course->kategori_id->nama ?? 'Tidak Ada' }}</p>
-            <p><strong>Jenjang:</strong> {{ $course->jenjang_id->nama ?? 'Tidak Ada' }}</p>
+            <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</p>
+            <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</p>
             <p><strong>Level:</strong> {{ $course->level }}</p>
             <p><strong>Status:</strong> {{ $course->status }}</p>
             <p><strong>Deskripsi:</strong> {{ $course->deskripsi }}</p>
@@ -20,63 +20,71 @@
         </div>
     </div>
 
+    <!-- Daftar Peserta -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Daftar Peserta</h4>
+                <a href="{{ route('courses.formparticipant', $course->id) }}" class="btn btn-success">
+                    + Tambah Peserta
+                </a>
+            </div>
 
-            <!-- Form tambah peserta -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-3">Daftar Peserta</h4>
-                        <a href="{{ route('courses.formparticipant', $course->id) }}" class="btn btn-success">
-                            + Tambah Peserta
-                        </a>
-                    </div>
-
-                    <table class="table table-hover table-bordered">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>#</th>
-                                <th>Nama Peserta</th>
-                                <th>Jenjang</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($enrollments as $index => $enrollment)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $enrollment->user->name }}</td>
-                                    <td>{{ $enrollment->user->jenjang->nama ?? '-' }}</td>
-                                    <td>
-                                        @if ($enrollment->tanggal_selesai)
-                                            <span class="badge bg-success">Selesai</span>
-                                        @else
-                                            <span class="badge bg-warning">Aktif</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <form action="{{ route('courses.participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-danger btn-sm">Hapus</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">Belum ada peserta</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+            <!-- Form pencarian -->
+            <form method="GET" action="{{ route('courses.show', $course->id) }}" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari peserta..." value="{{ request('search') }}">
+                    <button class="btn btn-primary" type="submit">Cari</button>
                 </div>
+            </form>
+
+            <table class="table table-hover table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Peserta</th>
+                        <th>Jenjang</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($enrollments as $index => $enrollment)
+                        <tr>
+                            <td>{{ ($enrollments->currentPage() - 1) * $enrollments->perPage() + $loop->iteration }}</td>
+                            <td>{{ $enrollment->user->name }}</td>
+                            <td>{{ $enrollment->user->jenjang->nama_jenjang ?? '-' }}</td>
+                            <td>
+                                @if ($enrollment->tanggal_selesai)
+                                    <span class="badge bg-success">Selesai</span>
+                                @else
+                                    <span class="badge bg-warning">Aktif</span>
+                                @endif
+                            </td>
+                            <td>
+                                <form action="{{ route('courses.participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Belum ada peserta</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            <!-- Paginasi -->
+            <div class="d-flex justify-content-center">
+                {{ $enrollments->withQueryString()->links() }}
             </div>
         </div>
     </div>
-    
+
+    <!-- Materi -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <a href="{{ route('courses.createLessonForm', $course->id) }}" class="btn btn-primary mb-3">Tambah Materi Pembelajaran</a>

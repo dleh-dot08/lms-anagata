@@ -96,24 +96,24 @@ class CourseController extends Controller
     }
 
     // Menampilkan halaman detail kursus
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $course = Course::findOrFail($id);
+        $course = Course::with('mentor', 'kategori', 'jenjang', 'lessons')->findOrFail($id);
 
-        // Ambil daftar enrollments untuk course ini
-        $enrollments = Enrollment::with('user.jenjang')
-            ->where('course_id', $id)
-            ->get();
+        $query = Enrollment::with('user.jenjang')
+            ->where('course_id', $id);
 
-        // Ambil semua user_id yang sudah terdaftar di enrollments
-        $enrolledUserIds = $enrollments->pluck('user_id')->toArray();
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
 
-        // Ambil peserta (role_id = 4) yang belum terdaftar
-        $participants = User::where('role_id', 4)
-            ->whereNotIn('id', $enrolledUserIds)
-            ->get();
+        $enrollments = $query->paginate(10);
 
-        return view('courses.show', compact('course', 'participants', 'enrollments'));
+        return view('courses.show', compact('course', 'enrollments'));
     }
 
     // Menghapus kursus (soft delete)
