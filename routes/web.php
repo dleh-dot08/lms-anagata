@@ -60,12 +60,11 @@ Route::middleware('auth')->group(function () {
         //Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
         //Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
         // Tambah peserta ke kursus
-        Route::post('/{course}/add-participant', [CourseController::class, 'addParticipant'])->name('courses.addParticipant');
+        Route::post('{course}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
         // Ajax untuk select2 search peserta
         Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
         // Hapus peserta dari kursus
-        Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('courses.removeParticipant');
-
+        Route::delete('{course}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
 
         // Lesson
         Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
