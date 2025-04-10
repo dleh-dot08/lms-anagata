@@ -57,19 +57,17 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
         
-        // Tambah & hapus peserta
-        Route::get('{course}/participants', [ParticipantController::class, 'form'])->name('participants.form');
+        // Form untuk tambah peserta ke kursus tertentu
+        Route::get('{course}/formparticipant', [ParticipantController::class, 'form'])->name('formparticipant');
+
+        // Simpan peserta (single / bulk)
         Route::post('{course}/participants', [ParticipantController::class, 'store'])->name('participants.store');
-        Route::get('search-peserta', [ParticipantController::class, 'searchPeserta'])->name('participants.search');
-        
-        //Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
-        //Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
-        // Tambah peserta ke kursus
-        Route::post('{course}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
-        // Ajax untuk select2 search peserta
-        Route::get('{course}/search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
+
+        // AJAX: Search peserta untuk Select2 autocomplete
+        Route::get('search-peserta', [ParticipantController::class, 'search'])->name('participants.search');
+
         // Hapus peserta dari kursus
-        Route::delete('{course}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
+        Route::delete('{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('participants.destroy');
 
         // Lesson
         Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
