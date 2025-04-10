@@ -2,63 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
 {
-    public function create(Course $course)
+    public function show(Course $course)
     {
-        return view('courses.formparticipant', compact('course'));
+        $enrollments = Enrollment::where('course_id', $course->id)->with('user.jenjang')->get();
+        $allPeserta = User::where('role_id', 3)->get();
+
+        return view('participants.formparticipant', compact('course', 'enrollments', 'allPeserta'));
     }
 
-    public function store(Request $request, Course $course)
+    public function add(Request $request, Course $course)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
+        $request->validate(['user_ids' => 'required|array']);
+        foreach ($request->user_ids as $user_id) {
+            Enrollment::firstOrCreate([
+                'course_id' => $course->id,
+                'user_id' => $user_id,
+            ]);
+        }
 
-        Enrollment::create([
-            'course_id' => $course->id,
-            'user_id' => $request->user_id,
-            'mentor_id' => $course->mentor_id, // atau dari login user
-            'tanggal_daftar' => now(),
-            'tanggal_mulai' => now(),
-        ]);
+        return back()->with('success', 'Peserta berhasil ditambahkan.');
+    }
 
-        return redirect()->route('courses.show', $course->id)->with('success', 'Peserta berhasil ditambahkan.');
+    public function remove(Course $course, User $user)
+    {
+        Enrollment::where('course_id', $course->id)->where('user_id', $user->id)->delete();
+        return back()->with('success', 'Peserta berhasil dihapus.');
     }
 
     public function search(Request $request)
     {
         $term = $request->q;
-
-        $users = User::where('role_id', 4) // hanya peserta
+        $results = User::where('role_id', 3)
             ->where(function($query) use ($term) {
-                $query->where('name', 'like', "%$term%")
-                      ->orWhere('email', 'like', "%$term%");
+                $query->where('name', 'LIKE', "%$term%")
+                      ->orWhere('email', 'LIKE', "%$term%");
             })
-            ->select('id', 'name', 'email')
             ->limit(10)
-            ->get()
-            ->map(function ($user) {
-                return [
-                    'id' => $user->id,
-                    'text' => $user->name . ' (' . $user->email . ')',
-                ];
-            });
+            ->get();
 
-        return response()->json($users);
-    }
-
-    public function destroy(Course $course, User $user)
-    {
-        Enrollment::where('course_id', $course->id)
-                  ->where('user_id', $user->id)
-                  ->delete();
-
-        return back()->with('success', 'Peserta berhasil dihapus.');
+        return response()->json($results->map(function ($user) {
+            return ['id' => $user->id, 'text' => $user->name . ' - ' . $user->email];
+        }));
     }
 }
