@@ -59,7 +59,6 @@ Route::middleware('auth')->group(function () {
         
         // Form untuk tambah peserta ke kursus tertentu
         Route::get('{course}/formparticipant', [ParticipantController::class, 'form'])->name('formparticipant');
-
         // Simpan peserta (single / bulk)
         Route::post('{course}/participants', [ParticipantController::class, 'store'])->name('participants.store');
 
