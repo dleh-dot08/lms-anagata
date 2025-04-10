@@ -53,7 +53,7 @@
                         <td><input type="checkbox" name="user_ids[]" value="{{ $participant->id }}"></td>
                         <td>{{ $participant->name }}</td>
                         <td>{{ $participant->email }}</td>
-                        <td>{{ $participant->jenjang->nama ?? '-' }}</td>
+                        <td>{{ $participant->jenjang->nama_jenjang ?? '-' }}</td>
                     </tr>
                 @empty
                     <tr>

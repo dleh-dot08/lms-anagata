@@ -14,21 +14,28 @@ class CourseController extends Controller
     // Menampilkan daftar kursus
     public function index(Request $request)
     {
-        // Ambil data mentor
-        $mentors = User::where('role_id', 2)->get();
-        // Ambil data kategori dan jenjang
-        $kategoris = Kategori::all();
-        $jenjangs = Jenjang::all();
+        $query = Course::with(['mentor', 'kategori', 'jenjang']);
 
-        // Menyaring kursus berdasarkan pencarian
-        $courses = Course::query();
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->get('search');
-            $courses->where('nama_kelas', 'like', "%{$search}%");
+        // Filter berdasarkan tab aktif/nonaktif
+        if ($request->tab === 'nonaktif') {
+            $query->where('status', '!=', 'Aktif');
+        } else {
+            $query->where('status', 'Aktif');
         }
-        $courses = $courses->paginate(10);
 
-        return view('courses.index', compact('courses', 'mentors', 'kategoris', 'jenjangs'));
+        // Filter berdasarkan pencarian nama kursus
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_kelas', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter berdasarkan status manual jika diisi dari dropdown (opsional)
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $courses = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('courses.index', compact('courses'));
     }
 
     // Menampilkan halaman pembuatan kursus
