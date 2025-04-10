@@ -10,19 +10,38 @@ use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
 {
-    public function form($courseId, Request $request)
+    public function form(Course $course, Request $request)
     {
-        $course = Course::findOrFail($courseId);
-        $jenjangs = Jenjang::all();
-        $filterJenjang = $request->jenjang_id;
+        // Ambil peserta yang BELUM terdaftar di kursus ini
+        $query = User::where('role_id', 3) // hanya peserta
+            ->whereNotIn('id', function($sub) use ($course) {
+                $sub->select('user_id')->from('enrollments')->where('course_id', $course->id);
+            });
 
-        $users = User::where('role_id', 3) // peserta
-            ->when($filterJenjang, function ($query, $filterJenjang) {
-                $query->where('jenjang_id', $filterJenjang);
-            })
-            ->get();
+        // Filter jenjang jika ada
+        if ($request->jenjang) {
+            $query->where('jenjang_id', $request->jenjang);
+        }
 
-        return view('courses.formparticipant', compact('users', 'course', 'jenjangs', 'filterJenjang'));
+        // Filter pencarian (nama/email)
+        if ($request->q) {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%')
+                ->orWhere('email', 'like', '%' . $request->q . '%');
+            });
+        }
+
+        // Pilihan per halaman: 10, 50, 100, all
+        $perPage = $request->input('perPage', 10);
+        if ($perPage === 'all') {
+            $participants = $query->get();
+        } else {
+            $participants = $query->paginate((int)$perPage)->appends($request->all());
+        }
+
+        $jenjangList = Jenjang::all();
+
+        return view('courses.formparticipant', compact('course', 'participants', 'jenjangList', 'perPage'));
     }
 
     public function store(Request $request, $courseId)
