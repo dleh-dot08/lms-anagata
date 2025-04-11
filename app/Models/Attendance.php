@@ -13,6 +13,7 @@ class Attendance extends Model
         'user_id',
         'course_id',
         'tanggal',
+        'waktu_absen',
         'longitude',
         'latitude',
         'file_attache',
@@ -20,13 +21,15 @@ class Attendance extends Model
         'status',
     ];
 
-    // Relasi dengan User
+    protected $dates = ['tanggal'];
+
+    // Relasi ke user (peserta)
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi dengan Course
+    // Relasi ke course
     public function course()
     {
         return $this->belongsTo(Course::class);

@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\AttendanceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -77,6 +78,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
 
     });
+});
+
+// Admin routes
+Route::middleware(['auth', 'role:1'])->prefix('admin/attendances')->group(function () {
+    Route::get('/', [AttendanceController::class, 'adminIndex'])->name('attendances.admin.index');
+    Route::get('/{attendance}', [AttendanceController::class, 'show'])->name('attendances.admin.show');
+});
+
+// Peserta & Mentor routes
+Route::middleware(['auth', 'role:2,3'])->group(function () {
+    Route::get('/absensi/{course}/create', [AttendanceController::class, 'create'])->name('attendances.create');
+    Route::post('/absensi', [AttendanceController::class, 'store'])->name('attendances.store');
+    Route::get('/rekap-absensi', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
 });
 
 Route::get('/dashboard', function () {
