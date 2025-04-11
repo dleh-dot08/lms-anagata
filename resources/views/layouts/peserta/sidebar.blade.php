@@ -28,64 +28,22 @@
                 <div data-i18n="Analytics">Biodata</div>
             </a>
         </li>
-
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">master</span>
-        </li>
-
         <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-menu"></i>
-                <div data-i18n="Account Settings">Data Manajemen</div>
+            <a href="{{ route('courses.showLesson') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
+                <div data-i18n="Analytics">Kursus</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="{{ route('users.index') }}" class="menu-link">
-                        <div data-i18n="Account">Data Pengguna</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{ route('jenjang.index') }}" class="menu-link">
-                        <div data-i18n="Account">Data Jenjang</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{ route('kategori.index') }}" class="menu-link">
-                        <div data-i18n="Account">Data Kategori</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Course Management</span>
         </li>
         <li class="menu-item">
             <a href="{{ route('courses.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Boxicons">Data Kursus</div>
+                <i class="menu-icon tf-icons bx bx bxs-calendar-check"></i>
+                <div data-i18n="Analytics">Absensi</div>
             </a>
         </li>
         <li class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Boxicons">Data Kelas</div>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Boxicons">Data Sertifikat</div>
-            </a>
-        </li>
-
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text"> Attandence Management</span>
-        </li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Boxicons">Data Absensi</div>
+            <a href="{{ route('courses.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-badge-check"></i>
+                <div data-i18n="Analytics">Sertifikat</div>
             </a>
         </li>
     </ul>

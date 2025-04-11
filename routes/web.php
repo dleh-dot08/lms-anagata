@@ -25,7 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::prefix('jenjang')->name('jenjang.')->group(function () {
+    
+    // Jenjang (Admin Only)
+    Route::middleware(AdminMiddleware::class)->prefix('jenjang')->name('jenjang.')->group(function () {
         Route::get('/', [JenjangController::class, 'index'])->name('index');
         Route::get('/create', [JenjangController::class, 'create'])->name('create');
         Route::post('/', [JenjangController::class, 'store'])->name('store');
@@ -36,7 +38,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/restore', [JenjangController::class, 'restore'])->name('restore');
     });
 
-    Route::prefix('kategori')->name('kategori.')->group(function () {
+    // Kategori (Admin Only)
+    Route::middleware(AdminMiddleware::class)->prefix('kategori')->name('kategori.')->group(function () {
         // Rute untuk CRUD Kategori
         Route::resource('/', KategoriController::class);
         Route::get('/', [KategoriController::class, 'index'])->name('index');
@@ -49,8 +52,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/restore', [KategoriController::class, 'restore'])->name('restore');
     });
 
-    Route::get('/courses/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
-    Route::prefix('courses')->name('courses.')->group(function () {
+    // Course Management (Admin Only
+    Route::middleware(AdminMiddleware::class)->get('/courses/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
+    Route::middleware(AdminMiddleware::class)->prefix('courses')->name('courses.')->group(function () {
         Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
         Route::get('/', [CourseController::class, 'index'])->name('index');
         Route::get('/create', [CourseController::class, 'create'])->name('create');
@@ -109,27 +113,25 @@ Route::get('/admin/dashboard', [AdminController::class, 'index'])
 ->name('admin.dashboard')
 ->middleware(AdminMiddleware::class);
 
+// Admin User Management
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
 });
 
-Route::prefix('users')->name('users.')->group(function () {
-    // Rute untuk melihat daftar pengguna (index)
-    Route::get('/', [UserController::class, 'index'])->name('index');
-    // Rute untuk menampilkan form tambah pengguna (create)
-    Route::get('/create', [UserController::class, 'create'])->name('create');
-    // Rute untuk menyimpan pengguna baru (store)
-    Route::post('/', [UserController::class, 'store'])->name('store');
-    // Rute untuk menampilkan detail pengguna (show)
-    Route::get('/{id}', [UserController::class, 'show'])->name('show');
-    // Rute untuk menampilkan form edit pengguna (edit)
-    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
-    // Rute untuk memperbarui pengguna (update)
-    Route::put('/{id}', [UserController::class, 'update'])->name('update');
-    // Rute untuk menghapus pengguna (destroy)
-    Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
-    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
-});
+Route::middleware(['auth', AdminMiddleware::class])
+    ->prefix('users')
+    ->name('users.')
+    ->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+        Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
+    });
+
 
 Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
 ->name('peserta.dashboard')
