@@ -53,10 +53,6 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="biodata-tab" data-bs-toggle="tab" data-bs-target="#biodata" type="button" role="tab" aria-controls="biodata" aria-selected="true">📄 Biodata Pribadi</button>
             </li>
-            
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pengaturan-tab" data-bs-toggle="tab" data-bs-target="#pengaturan" type="button" role="tab" aria-controls="pengaturan" aria-selected="false">⚙️ Setting</button>
-            </li>
         </ul>
 
         <!-- Tab Content -->

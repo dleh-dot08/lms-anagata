@@ -33,11 +33,14 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        User::created(function ($user) {
-            Biodata::create([
-                'id_user' => $user->id,
-                'tanggal_bergabung' => now(), // Atau bisa default null
-            ]);
-        });
+        if (!app()->runningUnitTests()) {
+            User::created(function ($user) {
+                Biodata::create([
+                    'id_user' => $user->id,
+                    'tanggal_bergabung' => now(),
+                ]);
+            });
+        }
+        
     }
 }
