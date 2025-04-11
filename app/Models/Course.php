@@ -52,5 +52,10 @@ class Course extends Model
         return $this->hasMany(Lesson::class);
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }

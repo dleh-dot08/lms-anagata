@@ -11,6 +11,8 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Middleware\PesertaMiddleware;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\BiodataController;
@@ -54,14 +56,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [CourseController::class, 'create'])->name('create');
         Route::post('/', [CourseController::class, 'store'])->name('store');
         Route::get('/{id}', [CourseController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [CourseController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [CourseController::class, 'update'])->name('update');
+        Route::get('/{course}/edit', [CourseController::class, 'edit'])->name('edit');
+        Route::put('/{course}', [CourseController::class, 'update'])->name('update');
         Route::delete('/{id}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
         
-        // Tambah & hapus peserta
-        Route::post('/{id}/add-participant', [CourseController::class, 'addParticipant'])->name('addParticipant');
-        Route::delete('/{id}/remove-participant/{participant_id}', [CourseController::class, 'removeParticipant'])->name('removeParticipant');
+        // Form untuk tambah peserta ke kursus tertentu
+        Route::get('{course}/formparticipant', [ParticipantController::class, 'form'])->name('formparticipant');
+        // Simpan peserta (single / bulk)
+        Route::post('{course}/participants', [ParticipantController::class, 'store'])->name('participants.store');
+
+        // AJAX: Search peserta untuk Select2 autocomplete
+        Route::get('search-peserta', [ParticipantController::class, 'search'])->name('participants.search');
+
+        // Hapus peserta dari kursus
+        Route::delete('{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('participants.destroy');
 
         // Lesson
         Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
@@ -77,6 +86,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
     Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
     Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
+});
+
+// Admin routes
+Route::middleware(['auth', 'role:1'])->prefix('admin/attendances')->group(function () {
+    Route::get('/', [AttendanceController::class, 'adminIndex'])->name('attendances.admin.index');
+    Route::get('/{attendance}', [AttendanceController::class, 'show'])->name('attendances.admin.show');
+});
+
+// Peserta & Mentor routes
+Route::middleware(['auth', 'role:2,3'])->group(function () {
+    Route::get('/absensi/{course}/create', [AttendanceController::class, 'create'])->name('attendances.create');
+    Route::post('/absensi', [AttendanceController::class, 'store'])->name('attendances.store');
+    Route::get('/rekap-absensi', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
 });
 
 Route::get('/dashboard', function () {

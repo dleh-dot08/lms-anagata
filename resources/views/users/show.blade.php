@@ -22,6 +22,7 @@
                     <tr><th>Tempat & Tanggal Lahir</th><td>{{ $user->tempat_lahir }}, {{ $user->tanggal_lahir }}</td></tr>
                     <tr><th>Alamat</th><td>{{ $user->alamat_tempat_tinggal }}</td></tr>
                     <tr><th>Instansi</th><td>{{ $user->instansi }}</td></tr>
+                    <tr><th>Jenjang</th><td>{{ $user->jenjang->nama_jenjang }}</td></tr>
                     <tr><th>Jabatan</th><td>{{ $user->jabatan }}</td></tr>
                     <tr><th>Bidang Pengajaran</th><td>{{ $user->bidang_pengajaran }}</td></tr>
                     <tr><th>Divisi</th><td>{{ $user->divisi }}</td></tr>

@@ -14,21 +14,28 @@ class CourseController extends Controller
     // Menampilkan daftar kursus
     public function index(Request $request)
     {
-        // Ambil data mentor
-        $mentors = User::where('role_id', 2)->get();
-        // Ambil data kategori dan jenjang
-        $kategoris = Kategori::all();
-        $jenjangs = Jenjang::all();
+        $query = Course::with(['mentor', 'kategori', 'jenjang']);
 
-        // Menyaring kursus berdasarkan pencarian
-        $courses = Course::query();
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->get('search');
-            $courses->where('nama_kelas', 'like', "%{$search}%");
+        // Filter berdasarkan tab aktif/nonaktif
+        if ($request->tab === 'nonaktif') {
+            $query->where('status', '!=', 'Aktif');
+        } else {
+            $query->where('status', 'Aktif');
         }
-        $courses = $courses->paginate(10);
 
-        return view('courses.index', compact('courses', 'mentors', 'kategoris', 'jenjangs'));
+        // Filter berdasarkan pencarian nama kursus
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_kelas', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter berdasarkan status manual jika diisi dari dropdown (opsional)
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $courses = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('courses.index', compact('courses'));
     }
 
     // Menampilkan halaman pembuatan kursus
@@ -81,7 +88,7 @@ class CourseController extends Controller
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
             'kategori_id' => 'required|exists:kategoris,id',
-            'jenjang_id' => 'required|exists:jenjang,id',
+            'jenjang_id' => 'required|exists:jenjangs,id', // <- perbaikan di sini
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
@@ -90,30 +97,41 @@ class CourseController extends Controller
             'jumlah_peserta' => 'required|integer|min:0',
         ]);
 
-        $course->update($request->all());
+        $course->update($request->only([
+            'nama_kelas',
+            'mentor_id',
+            'kategori_id',
+            'jenjang_id',
+            'level',
+            'status',
+            'waktu_mulai',
+            'waktu_akhir',
+            'harga',
+            'jumlah_peserta',
+        ]));
 
         return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
     }
 
     // Menampilkan halaman detail kursus
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $course = Course::findOrFail($id);
+        $course = Course::with('mentor', 'kategori', 'jenjang', 'lessons')->findOrFail($id);
 
-        // Ambil daftar enrollments untuk course ini
-        $enrollments = Enrollment::with('user.jenjang')
-            ->where('course_id', $id)
-            ->get();
+        $query = Enrollment::with('user.jenjang')
+            ->where('course_id', $id);
 
-        // Ambil semua user_id yang sudah terdaftar di enrollments
-        $enrolledUserIds = $enrollments->pluck('user_id')->toArray();
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
 
-        // Ambil peserta (role_id = 4) yang belum terdaftar
-        $participants = User::where('role_id', 4)
-            ->whereNotIn('id', $enrolledUserIds)
-            ->get();
+        $enrollments = $query->paginate(10);
 
-        return view('courses.show', compact('course', 'participants', 'enrollments'));
+        return view('courses.show', compact('course', 'enrollments'));
     }
 
     // Menghapus kursus (soft delete)
@@ -124,66 +142,60 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Kursus berhasil dihapus.');
     }
 
-    public function addParticipant(Request $request, $courseId)
+    public function searchPeserta(Request $request, Course $course)
+    {
+        $term = $request->get('q');
+
+        $existingUserIds = $course->enrollments()->pluck('user_id');
+
+        $users = User::where('role_id', 4)
+            ->whereNotIn('id', $existingUserIds)
+            ->where(function ($query) use ($term) {
+                $query->where('name', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%");
+            })
+            ->limit(10)
+            ->get();
+
+        return response()->json($users->map(fn($u) => [
+            'id' => $u->id,
+            'text' => "{$u->name} ({$u->email})"
+        ]));
+    }
+
+
+    public function addParticipant(Request $request, $id)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $existing = Enrollment::where('course_id', $courseId)
-                    ->where('user_id', $request->user_id)
-                    ->first();
+        $existing = Enrollment::where('course_id', $id)
+                            ->where('user_id', $request->user_id)
+                            ->first();
 
         if ($existing) {
-            return redirect()->back()->with('warning', 'Peserta sudah terdaftar di kursus ini.');
+            return back()->with('warning', 'Peserta sudah terdaftar dalam kursus ini.');
         }
 
         Enrollment::create([
+            'course_id' => $id,
             'user_id' => $request->user_id,
-            'mentor_id' => $request->mentor_id, // bisa juga ambil dari course
-            'course_id' => $courseId,
-            'tanggal_mulai' => now(),
+            'mentor_id' => auth()->id(), // opsional
             'tanggal_daftar' => now(),
+            'tanggal_mulai' => now(),
         ]);
 
-        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil ditambahkan.');
+        return back()->with('success', 'Peserta berhasil ditambahkan.');
     }
 
-    public function searchPeserta(Request $request)
+    public function removeParticipant($id, $participant_id)
     {
-        $query = $request->q;
+        Enrollment::where('course_id', $id)
+                ->where('user_id', $participant_id)
+                ->delete();
 
-        $users = User::where('role_id', 3)
-                    ->where(function ($q) use ($query) {
-                        $q->where('name', 'LIKE', "%{$query}%")
-                        ->orWhere('email', 'LIKE', "%{$query}%");
-                    })
-                    ->select('id', 'name', 'email')
-                    ->limit(20)
-                    ->get();
-
-        $results = $users->map(function ($user) {
-            return [
-                'id' => $user->id,
-                'text' => $user->name . ' (' . $user->email . ')'
-            ];
-        });
-
-        return response()->json($results);
+        return back()->with('success', 'Peserta berhasil dihapus.');
     }
-
-
-    public function removeParticipant($courseId, $enrollmentId)
-    {
-        $enrollment = Enrollment::where('course_id', $courseId)
-                                ->where('id', $enrollmentId)
-                                ->firstOrFail();
-
-        $enrollment->delete();
-
-        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil dihapus.');
-    }
-
-
 
 }

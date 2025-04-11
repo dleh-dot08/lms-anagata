@@ -112,4 +112,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->onlyTrashed();
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
 }
