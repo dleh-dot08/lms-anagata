@@ -71,26 +71,36 @@ class BiodataController extends Controller
         // Upload Foto KTP jika ada file baru
         if ($request->hasFile('foto_ktp')) {
             if ($biodata->data_ktp) {
-                Storage::delete('public/' . $biodata->data_ktp);
+                @unlink(public_path('storage/' . $biodata->data_ktp));
             }
-            $biodata->data_ktp = $request->file('foto_ktp')->store('data_file_ktp', 'public');
+
+            $filename = uniqid() . '.' . $request->file('foto_ktp')->getClientOriginalExtension();
+            $request->file('foto_ktp')->move(public_path('storage/data_file_ktp'), $filename);
+            $biodata->data_ktp = 'data_file_ktp/' . $filename;
         }
 
         // Upload Tanda Tangan jika ada file baru
         if ($request->hasFile('data_ttd')) {
             if ($biodata->data_ttd) {
-                Storage::delete('public/' . $biodata->data_ttd);
+                @unlink(public_path('storage/' . $biodata->data_ttd));
             }
-            $biodata->data_ttd = $request->file('data_ttd')->store('data_file_ttd', 'public');
+
+            $filename = uniqid() . '.' . $request->file('data_ttd')->getClientOriginalExtension();
+            $request->file('data_ttd')->move(public_path('storage/data_file_ttd'), $filename);
+            $biodata->data_ttd = 'data_file_ttd/' . $filename;
         }
 
         // Upload foto jika ada file baru
         if ($request->hasFile('foto')) {
             if ($biodata->foto) {
-                Storage::delete('public/' . $biodata->foto);
+                @unlink(public_path('storage/' . $biodata->foto));
             }
-            $biodata->foto = $request->file('foto')->store('data_file_foto_profil', 'public');
+
+            $filename = uniqid() . '.' . $request->file('foto')->getClientOriginalExtension();
+            $request->file('foto')->move(public_path('storage/data_file_foto_profil'), $filename);
+            $biodata->foto = 'data_file_foto_profil/' . $filename;
         }
+
 
         $biodata->save();
 
