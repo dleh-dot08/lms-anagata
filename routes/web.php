@@ -11,6 +11,9 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
+use App\Http\Middleware\PesertaMiddleware;
+use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\BiodataController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -69,6 +72,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
 
     });
+
+    //Biodata 
+    Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
+    Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
+    Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
 });
 
 Route::get('/dashboard', function () {
@@ -100,5 +108,9 @@ Route::prefix('users')->name('users.')->group(function () {
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
     Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
 });
+
+Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
+->name('peserta.dashboard')
+->middleware(PesertaMiddleware::class);
 
 require __DIR__.'/auth.php';

@@ -80,6 +80,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Relasi ke Biodata
+     */
+    public function biodata()
+    {
+        return $this->hasOne(Biodata::class, 'id_user');
+    }
+
+    
+    /**
      * Method untuk soft delete user
      */
     public function deleteUser()
@@ -102,4 +111,5 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->onlyTrashed();
     }
+
 }

@@ -425,35 +425,44 @@
             </a><button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
-            <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto pt-2 pt-lg-0 font-base align-items-lg-center align-items-start">
-                    {{-- <li class="nav-item px-3 px-xl-4"><a class="nav-link fw-medium" aria-current="page" href="#Daftar Kursus">Kategori</a></li> --}}
+                <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto pt-2 pt-lg-0 font-base align-items-lg-center align-items-start">
+                        {{-- <li class="nav-item px-3 px-xl-4"><a class="nav-link fw-medium" aria-current="page" href="#Daftar Kursus">Kategori</a></li> --}}
 
-                    @if (Route::has('login'))
-                    @if (Auth::check())
-                        <li class="nav-item px-3 px-xl-4">
-                            <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" aria-current="page"
-                                href="{{ Auth::user()->role_as == 1 ? url('/admin-dashboard') : (Auth::user()->role_as == 2 ? url('/crew-dashboard') : url('/user-dashboard')) }}">
-                                Home
-                            </a>
-                        </li>
-                    @else
-                        <li class="nav-item px-3 px-xl-1">
-                            <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/login') }}">Login</a>
-                        </li>
-                        <li class="nav-item px-3 px-xl-1">
-                            <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/register') }}">Sign Up</a>
-                        </li>
-                    @endif
-                @endif
+                        @if (Route::has('login'))
+                            @if (Auth::check())
+                                @php
+                                    $role = Auth::user()->role_id;
+                                    $homeRoute = match ($role) {
+                                        1 => route('admin.dashboard'),
+                                        2 => route('crew.dashboard'),
+                                        3 => route('peserta.dashboard'),
+                                        4 => route('vendor.dashboard'),
+                                        default => route('user.dashboard'),
+                                    };
+                                @endphp
+                                <li class="nav-item px-3 px-xl-4">
+                                    <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" aria-current="page"
+                                        href="{{ $homeRoute }}">
+                                        Home
+                                    </a>
+                                </li>
+                            @else
+                                <li class="nav-item px-3 px-xl-1">
+                                    <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/login') }}">Login</a>
+                                </li>
+                                <li class="nav-item px-3 px-xl-1">
+                                    <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/register') }}">Sign Up</a>
+                                </li>
+                            @endif
+                        @endif
 
-
-                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg" style="border-radius:0.3rem;"
-                        aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg" style="border-radius:0.3rem;"
+                            aria-labelledby="navbarDropdown">
+                        </ul>
                     </ul>
-                    </li>
-                </ul>
-            </div>
+                </div>
+
         </div>
     </nav>
     <section style="padding-top: 7rem;">
