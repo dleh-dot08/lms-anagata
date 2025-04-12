@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin routes
-Route::middleware(['auth', 'role:1'])->prefix('admin/attendances')->group(function () {
+Route::middleware(['auth'])->prefix('admin/attendances')->group(function () {
     Route::get('/', [AttendanceController::class, 'adminIndex'])->name('attendances.admin.index');
     Route::get('/{attendance}', [AttendanceController::class, 'show'])->name('attendances.admin.show');
 });
