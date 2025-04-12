@@ -4,22 +4,11 @@
 <div class="container mt-4">
     <h2 class="mb-4">Daftar Absensi</h2>
 
-    {{-- Filter --}}
+    {{-- Filter Tanggal --}}
     <form method="GET" action="{{ route('attendances.admin.index') }}" class="row g-3 mb-4">
         <div class="col-md-3">
             <label for="tanggal" class="form-label">Tanggal</label>
             <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ request('tanggal') }}">
-        </div>
-        <div class="col-md-4">
-            <label for="course_id" class="form-label">Kelas / Kursus</label>
-            <select name="course_id" id="course_id" class="form-select">
-                <option value="">-- Semua Kursus --</option>
-                @foreach($courses as $course)
-                    <option value="{{ $course->id }}" {{ request('course_id') == $course->id ? 'selected' : '' }}>
-                        {{ $course->nama_kelas }}
-                    </option>
-                @endforeach
-            </select>
         </div>
         <div class="col-md-2 align-self-end">
             <button type="submit" class="btn btn-primary w-100">Filter</button>
