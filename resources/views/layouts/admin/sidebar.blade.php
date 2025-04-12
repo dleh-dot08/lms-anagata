@@ -77,7 +77,7 @@
             <span class="menu-header-text"> Attandence Management</span>
         </li>
         <li class="menu-item">
-            <a href="#" class="menu-link">
+            <a href="{{ route('attendances.admin.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Absensi</div>
             </a>
