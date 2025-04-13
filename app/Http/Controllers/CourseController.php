@@ -204,25 +204,47 @@ class CourseController extends Controller
     {
         $user = Auth::user();
 
+        // Pastikan hanya role peserta (role_id = 3)
+        if ($user->role_id != 3) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Mulai query untuk mengambil kursus yang diikuti oleh peserta
         $query = $user->enrolledCourses()
             ->with(['kategori', 'jenjang', 'mentor'])
-            // Filter hanya kursus yang sedang aktif
-            ->where('status', 'aktif')
-            ->whereDate('waktu_mulai', '<=', now())
-            ->whereDate('waktu_akhir', '>=', now())
-            // Pencarian nama kursus
+            ->where('status', 'aktif')  // Filter status aktif
+
+            // Filter pencarian berdasarkan nama kursus
             ->when($request->search, function ($q) use ($request) {
                 $q->where('nama_kelas', 'like', '%' . $request->search . '%');
             })
-            // Filter status (jika ingin override filter status di atas)
-            ->when($request->status, function ($q) use ($request) {
-                $q->where('status', $request->status);
+
+            // Filter berdasarkan kategori jika ada
+            ->when($request->kategori, function ($q) use ($request) {
+                $q->whereHas('kategori', function ($q) use ($request) {
+                    $q->where('id', $request->kategori);
+                });
             })
+
+            // Filter berdasarkan jenjang jika ada
+            ->when($request->jenjang, function ($q) use ($request) {
+                $q->whereHas('jenjang', function ($q) use ($request) {
+                    $q->where('id', $request->jenjang);
+                });
+            })
+            // Filter berdasarkan waktu mulai (jika perlu)
+            ->whereDate('waktu_mulai', '<=', now())
+            ->whereDate('waktu_akhir', '>=', now())
             ->orderBy('waktu_mulai', 'desc');
 
+        // Ambil data kursus yang sesuai dengan query dan pagination
         $courses = $query->paginate(10)->appends($request->all());
 
-        return view('peserta.kursus.index', compact('courses'));
+        // Ambil data kategori dan jenjang untuk filter dropdown
+        $kategoris = Kategori::all(); // Asumsi kamu memiliki model Kategori
+        $jenjangs = Jenjang::all(); // Asumsi kamu memiliki model Jenjang
+
+        return view('courses.peserta.index', compact('courses', 'kategoris', 'jenjangs'));
     }
 
     public function showPeserta($courseId)
