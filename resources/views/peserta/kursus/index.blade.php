@@ -1,58 +1,67 @@
-@extends('layouts.peserta.template')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
-    <h4 class="my-4">Kursus Saya</h4>
+    <h3>Daftar Kursus Anda</h3>
 
-    <!-- Form Search & Filter -->
-    <form method="GET" action="{{ route('courses.indexpeserta') }}" class="mb-4 row g-3 align-items-end">
-        <div class="col-md-4">
-            <label for="search" class="form-label">Cari Nama Kursus</label>
-            <input type="text" name="search" id="search" class="form-control"
-                placeholder="Contoh: Laravel Dasar" value="{{ request('search') }}">
-        </div>
-
-        <div class="col-md-3">
-            <label for="status" class="form-label">Filter Status</label>
-            <select name="status" id="status" class="form-select">
-                <option value="">-- Semua Status --</option>
-                <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="tidak_aktif" {{ request('status') == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
-            </select>
-        </div>
-
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary">Terapkan</button>
+    <!-- Pencarian dan Filter -->
+    <form method="GET" action="{{ route('courses.indexpeserta') }}" class="mb-3">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="Cari kursus...">
+            </div>
+            <div class="col-md-4">
+                <select name="status" class="form-control">
+                    <option value="">Semua Status</option>
+                    <option value="aktif" {{ request()->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="tidak_aktif" {{ request()->status == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
         </div>
     </form>
 
-    @if($courses->count())
-        <div class="row">
-            @foreach($courses as $course)
-                <div class="col-md-6 mb-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $course->nama_kelas }}</h5>
-                            <p class="card-text">{{ Str::limit($course->deskripsi, 100) }}</p>
-                            <p><strong>Mentor:</strong> {{ $course->mentor->name ?? '-' }}</p>
-                            <p><strong>Status:</strong> 
-                                <span class="badge {{ $course->status == 'aktif' ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ ucfirst($course->status) }}
-                                </span>
-                            </p>
-                            <a href="{{ route('courses.show', $course->id) }}" class="btn btn-primary btn-sm">Lihat Kursus</a>
-                        </div>
-                    </div>
-                </div>
+    <!-- Tabel Kursus -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nama Kursus</th>
+                <th>Kategori</th>
+                <th>Mentor</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($courses as $course)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $course->nama_kelas }}</td>
+                <td>{{ $course->kategori->nama_kategori ?? 'N/A' }}</td>
+                <td>{{ $course->mentor->name ?? 'N/A' }}</td>
+                <td>
+                    @if ($course->status == 'aktif' && \Carbon\Carbon::now()->between($course->waktu_mulai, $course->waktu_akhir))
+                        <span class="badge bg-success">Aktif</span>
+                    @else
+                        <span class="badge bg-danger">Tidak Aktif</span>
+                    @endif
+                </td>
+                <td>
+                    @if ($course->status == 'aktif' && \Carbon\Carbon::now()->between($course->waktu_mulai, $course->waktu_akhir))
+                        <a href="{{ route('courses.show', $course->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
+                    @else
+                        <span class="text-muted">Kursus Terkunci</span>
+                    @endif
+                </td>
+            </tr>
             @endforeach
-        </div>
+        </tbody>
+    </table>
 
-        <!-- Pagination -->
-        <div class="d-flex justify-content-center">
-            {{ $courses->links() }}
-        </div>
-    @else
-        <p class="text-muted">Tidak ada kursus yang ditemukan.</p>
-    @endif
+    <!-- Pagination -->
+    {{ $courses->links() }}
 </div>
 @endsection

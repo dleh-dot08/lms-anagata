@@ -225,5 +225,33 @@ class CourseController extends Controller
         return view('peserta.kursus.index', compact('courses'));
     }
 
+    public function showPeserta($courseId)
+    {
+        // Menyaring kursus berdasarkan ID dan relasi yang dibutuhkan
+        $course = Course::with(['kategori', 'jenjang', 'mentor', 'lessons'])
+                        ->findOrFail($courseId);
+
+        // Mengecek apakah kursus aktif
+        if ($course->status != 'aktif' || \Carbon\Carbon::now()->notBetween($course->waktu_mulai, $course->waktu_akhir)) {
+            return view('peserta.kursus.show', ['course' => $course, 'isActive' => false]);
+        }
+
+        return view('peserta.kursus.show', ['course' => $course, 'isActive' => true]);
+    }
+
+    // Menampilkan materi kursus untuk peserta
+    public function showLesson($courseId, $lessonId)
+    {
+        // Menyaring kursus dan pelajaran berdasarkan ID
+        $course = Course::with(['lessons' => function($query) use ($lessonId) {
+                        $query->where('id', $lessonId);
+                    }])
+                    ->findOrFail($courseId);
+
+        $lesson = $course->lessons->first();  // Mengambil materi yang sesuai
+
+        // Menampilkan materi kursus
+        return view('peserta.kursus.showLesson', compact('course', 'lesson'));
+    }
 
 }

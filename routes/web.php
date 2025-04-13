@@ -140,5 +140,15 @@ Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
 Route::get('/peserta/kursus', [CourseController::class, 'indexpeserta'])
     ->name('courses.indexpeserta')
     ->middleware(PesertaMiddleware::class);
-    
+
+// Halaman detail kursus untuk peserta
+Route::get('/peserta/kursus/{course}', [CourseController::class, 'showPeserta'])
+    ->name('courses.showPeserta')
+    ->middleware(PesertaMiddleware::class);
+
+// Halaman detail materi kursus
+Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class, 'showLesson'])
+    ->name('courses.showLesson')
+    ->middleware(PesertaMiddleware::class);
+
 require __DIR__.'/auth.php';
