@@ -43,14 +43,14 @@
                 <td>{{ $course->kategori->nama_kategori ?? 'N/A' }}</td>
                 <td>{{ $course->mentor->name ?? 'N/A' }}</td>
                 <td>
-                    @if ($course->status == 'aktif')
+                    @if ($course->status == 'Aktif')
                         <span class="badge bg-success">Aktif</span>
                     @else
                         <span class="badge bg-danger">Tidak Aktif</span>
                     @endif
                 </td>
                 <td>
-                    @if ($course->status == 'aktif')
+                    @if ($course->status == 'Aktif')
                         <a href="{{ route('courses.show', $course->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
                     @else
                         <span class="text-muted">Kursus Terkunci</span>
