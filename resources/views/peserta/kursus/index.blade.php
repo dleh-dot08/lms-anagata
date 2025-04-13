@@ -43,7 +43,7 @@
                 <td>{{ $course->kategori->nama_kategori ?? 'N/A' }}</td>
                 <td>{{ $course->mentor->name ?? 'N/A' }}</td>
                 <td>
-                    @if ($course->status == 'aktif' && \Carbon\Carbon::now()->between($course->waktu_mulai, $course->waktu_akhir))
+                    @if ($course->status == 'aktif')
                         <span class="badge bg-success">Aktif</span>
                     @else
                         <span class="badge bg-danger">Tidak Aktif</span>
