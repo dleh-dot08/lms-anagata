@@ -4,7 +4,7 @@
 <div class="container">
     <h3>{{ $course->nama_kelas }}</h3>
 
-    @if ($course->status == 'aktif' && \Carbon\Carbon::now()->between($course->waktu_mulai, $course->waktu_akhir))
+    @if ($course->status == 'Aktif' && \Carbon\Carbon::now()->between($course->waktu_mulai, $course->waktu_akhir))
         <div class="alert alert-success">
             Kursus ini sedang aktif dan dapat diikuti.
         </div>
