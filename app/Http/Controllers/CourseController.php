@@ -244,7 +244,7 @@ class CourseController extends Controller
         $kategoris = Kategori::all(); // Asumsi kamu memiliki model Kategori
         $jenjangs = Jenjang::all(); // Asumsi kamu memiliki model Jenjang
 
-        return view('courses.peserta.index', compact('courses', 'kategoris', 'jenjangs'));
+        return view('peserta.kursus.index', compact('courses', 'kategoris', 'jenjangs'));
     }
 
     public function showPeserta($courseId)
