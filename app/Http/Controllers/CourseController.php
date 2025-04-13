@@ -198,4 +198,30 @@ class CourseController extends Controller
         return back()->with('success', 'Peserta berhasil dihapus.');
     }
 
+    public function indexpeserta(Request $request)
+    {
+        $user = Auth::user();
+
+        $query = $user->enrolledCourses()
+            ->with(['kategori', 'jenjang', 'mentor'])
+            // Filter hanya kursus yang sedang aktif
+            ->where('status', 'aktif')
+            ->whereDate('waktu_mulai', '<=', now())
+            ->whereDate('waktu_akhir', '>=', now())
+            // Pencarian nama kursus
+            ->when($request->search, function ($q) use ($request) {
+                $q->where('nama_kelas', 'like', '%' . $request->search . '%');
+            })
+            // Filter status (jika ingin override filter status di atas)
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->orderBy('waktu_mulai', 'desc');
+
+        $courses = $query->paginate(10)->appends($request->all());
+
+        return view('peserta.kursus.index', compact('courses'));
+    }
+
+
 }
