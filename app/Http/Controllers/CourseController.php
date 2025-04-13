@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Kategori;
 use App\Models\Jenjang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class CourseController extends Controller
 {
