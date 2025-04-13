@@ -29,7 +29,7 @@
             </a>
         </li>
         <li class="menu-item">
-            <a href="{{ route('courses.showLesson') }}" class="menu-link">
+            <a href="{{ route('courses.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-book-alt"></i>
                 <div data-i18n="Analytics">Kursus</div>
             </a>
