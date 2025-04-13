@@ -50,7 +50,7 @@
                     @endif
                 </td>
                 <td>
-                    @if ($course->status == 'aktif' && \Carbon\Carbon::now()->between($course->waktu_mulai, $course->waktu_akhir))
+                    @if ($course->status == 'aktif')
                         <a href="{{ route('courses.show', $course->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
                     @else
                         <span class="text-muted">Kursus Terkunci</span>
