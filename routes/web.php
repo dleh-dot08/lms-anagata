@@ -133,13 +133,12 @@ Route::middleware(['auth', AdminMiddleware::class])
     });
 
 
-//Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
-//->name('peserta.dashboard')
-//->middleware(PesertaMiddleware::class);
+Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
+    ->name('peserta.dashboard')
+    ->middleware(PesertaMiddleware::class);
 
-Route::middleware(['auth', 'peserta'])->prefix('peserta')->group(function () {
-    Route::get('/dashboard', [PesertaController::class, 'index'])->name('peserta.dashboard');
-    Route::get('/kursus', [CourseController::class, 'indexpeserta'])->name('courses.indexpeserta');
-    // Tambahkan route lain di sini jika ada fitur lain untuk peserta
-});
+Route::get('/peserta/kursus', [CourseController::class, 'indexpeserta'])
+    ->name('courses.indexpeserta')
+    ->middleware(PesertaMiddleware::class);
+    
 require __DIR__.'/auth.php';
