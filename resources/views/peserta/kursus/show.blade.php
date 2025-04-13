@@ -37,7 +37,7 @@
                         @foreach ($course->lessons as $lesson)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Pertemuan {{ $lesson->pertemuan_ke }}: {{ $lesson->judul }}
-                                <a href="{{ route('courses.showLesson', $lesson->id) }}" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ route('courses.showLesson', [$course->id, $lesson->id]) }}" class="btn btn-sm btn-outline-primary">
                                     Lihat Materi
                                 </a>
                             </li>
