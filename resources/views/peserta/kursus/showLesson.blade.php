@@ -1,4 +1,4 @@
-@extends('layouts.app') <!-- Ganti dengan layout yang sesuai untuk peserta -->
+@extends('layouts.peserta.template') <!-- Ganti dengan layout yang sesuai untuk peserta -->
 
 @section('content')
 <div class="container">
