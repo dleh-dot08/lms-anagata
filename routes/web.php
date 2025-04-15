@@ -191,4 +191,7 @@ Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class,
     ->name('courses.showLesson')
     ->middleware(PesertaMiddleware::class);
 
+Route::get('/faq', [FaqController::class, 'index'])->name('faq.public');
+
+
 require __DIR__.'/auth.php';
