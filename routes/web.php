@@ -17,6 +17,10 @@ use App\Http\Middleware\PesertaMiddleware;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\BiodataController;
 
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\HelpdeskTicketController;
+use App\Http\Controllers\HelpdeskMessageController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -130,6 +134,42 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
         Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
+    });
+
+Route::middleware(AdminMiddleware::class)
+    ->prefix('admin/helpdesk')
+    ->name('admin.helpdesk.')
+    ->group(function () {
+
+        // FAQ CRUD
+        Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
+        Route::get('/faq/create', [FaqController::class, 'create'])->name('faq.create');
+        Route::post('/faq', [FaqController::class, 'store'])->name('faq.store');
+        Route::get('/faq/{faq}/edit', [FaqController::class, 'edit'])->name('faq.edit');
+        Route::put('/faq/{faq}', [FaqController::class, 'update'])->name('faq.update');
+        Route::delete('/faq/{faq}', [FaqController::class, 'destroy'])->name('faq.destroy');
+
+        // Helpdesk Ticket Admin View
+        Route::get('/tickets', [HelpdeskTicketController::class, 'index'])->name('tickets.index');
+        Route::get('/tickets/{id}', [HelpdeskTicketController::class, 'show'])->name('tickets.show');
+        Route::post('/tickets/{id}/close', [HelpdeskTicketController::class, 'close'])->name('tickets.close');
+
+        // Kirim balasan dari Admin
+        Route::post('/messages', [HelpdeskMessageController::class, 'store'])->name('messages.store');
+    });
+
+Route::middleware(PesertaMiddleware::class)
+    ->prefix('peserta/helpdesk')
+    ->name('peserta.helpdesk.')
+    ->group(function () {
+
+        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('index');
+        Route::get('/create', [HelpdeskTicketController::class, 'create'])->name('create');
+        Route::post('/store', [HelpdeskTicketController::class, 'store'])->name('store');
+        Route::get('/{id}', [HelpdeskTicketController::class, 'show'])->name('show');
+
+        // Peserta mengirim pesan
+        Route::post('/message', [HelpdeskMessageController::class, 'store'])->name('message.store');
     });
 
 
