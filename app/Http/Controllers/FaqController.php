@@ -76,7 +76,7 @@ class FaqController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.helpdesk.faq.index')->with('success', 'FAQ berhasil diperbarui.');
+        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -87,6 +87,6 @@ class FaqController extends Controller
             'deleted_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.helpdesk.faq.index')->with('success', 'FAQ berhasil dihapus.');
+        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil dihapus.');
     }
 }
