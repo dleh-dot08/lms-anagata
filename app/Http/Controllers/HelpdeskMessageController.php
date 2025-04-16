@@ -7,15 +7,21 @@ use Illuminate\Http\Request;
 
 class HelpdeskMessageController extends Controller
 {
+    // Simpan pesan/chat pada tiket
     public function store(Request $request)
     {
-        $message = new HelpdeskMessage();
-        $message->ticket_id = $request->ticket_id;
-        $message->user_id = auth()->id();
-        $message->sender_type = 'user';
-        $message->message = $request->message;
-        $message->save();
+        $request->validate([
+            'ticket_id' => 'required|exists:helpdesk_tickets,id',
+            'message' => 'required|string',
+        ]);
 
-        return back();
+        HelpdeskMessage::create([
+            'ticket_id'   => $request->ticket_id,
+            'user_id'     => auth()->id(),
+            'sender_type' => auth()->user()->role_id == 1 ? 'admin' : 'user',
+            'message'     => $request->message,
+        ]);
+
+        return back()->with('success', 'Pesan berhasil dikirim.');
     }
 }
