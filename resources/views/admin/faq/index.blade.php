@@ -30,9 +30,9 @@
                     <td>{{ $faq->is_active ? 'Aktif' : 'Nonaktif' }}</td>
                     <td>{{ $faq->created_at->format('d M Y') }}</td>
                     <td>
-                        <a href="{{ route('admin.helpdesk.faq.show', $faq->id) }}" class="btn btn-info btn-sm">Lihat</a>
-                        <a href="{{ route('admin.helpdesk.faq.edit', $faq->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('admin.helpdesk.faq.destroy', $faq->id) }}" method="POST" class="d-inline">
+                        <a href="{{ route('admin.faq.show', $faq->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('admin.faq.edit', $faq->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" class="d-inline">
                             @csrf @method('DELETE')
                             <button class="btn btn-danger btn-sm">Hapus</button>
                         </form>
