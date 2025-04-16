@@ -8,6 +8,39 @@ use Illuminate\Support\Facades\Auth;
 
 class FaqController extends Controller
 {
+    
+    public function redirectBasedOnRole(Request $request)
+    {
+        // If admin, redirect directly
+        if (Auth::check() && Auth::user()->role_id == 1) {
+            return redirect()->route('admin.faq.index');
+        }
+
+        // For public or non-admin users
+        $query = Faq::where('is_active', 1);
+
+        if ($request->filled('search')) {
+            $query->where('question', 'like', '%' . $request->search . '%');
+        }
+
+        $faqs = $query->latest()->paginate(10);
+
+        return view('faq.public', compact('faqs'));
+    }
+
+
+    // public function showPublicFaqs(Request $request)
+    // {
+    //     $query = Faq::query();
+
+    //     if ($request->filled('search')) {
+    //         $query->where('question', 'like', '%' . $request->search . '%');
+    //     }
+
+    //     $faqs = $query->where('is_active', 1)->latest()->paginate(10);
+
+    //     return view('faq.public', compact('faqs'));
+    // }
     public function index(Request $request)
     {
         $query = Faq::query();

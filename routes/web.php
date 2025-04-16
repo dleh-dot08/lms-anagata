@@ -136,12 +136,14 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
     });
 
+    Route::get('/faq', [FaqController::class, 'redirectBasedOnRole'])->name('faq');
+
 Route::middleware(AdminMiddleware::class)
     ->prefix('admin/faq')
     ->name('admin.faq.')
     ->group(function () {
 
-        // FAQ CRUD
+        // FAQ CRUD 
         Route::get('/', [FaqController::class, 'index'])->name('index');
         Route::get('/create', [FaqController::class, 'create'])->name('create');
         Route::post('/', [FaqController::class, 'store'])->name('store');
@@ -197,8 +199,6 @@ Route::get('/peserta/kursus/{course}', [CourseController::class, 'showPeserta'])
 Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class, 'showLesson'])
     ->name('courses.showLesson')
     ->middleware(PesertaMiddleware::class);
-
-Route::get('/faq', [FaqController::class, 'index'])->name('faq.public');
 
 
 require __DIR__.'/auth.php';
