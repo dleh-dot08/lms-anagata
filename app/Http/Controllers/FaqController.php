@@ -82,10 +82,10 @@ class FaqController extends Controller
     public function destroy($id)
     {
         $faq = Faq::findOrFail($id);
-        $faq->update([
-            'deleted_at' => now(),
-            'deleted_by' => Auth::id(),
-        ]);
+        $faq->deleted_by = Auth::id();
+        $faq->save();
+
+        $faq->delete(); // Soft delete di sini
 
         return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil dihapus.');
     }
