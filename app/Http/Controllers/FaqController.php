@@ -17,7 +17,7 @@ class FaqController extends Controller
 
         $faqs = $query->latest()->paginate(10);
 
-        return view('admin.helpdesk.faq.index', compact('faqs'));
+        return view('admin.faq.index', compact('faqs'));
     }
 
     public function create()
@@ -43,7 +43,7 @@ class FaqController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.helpdesk.faq.index')->with('success', 'FAQ berhasil ditambahkan.');
+        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil ditambahkan.');
     }
 
     public function edit(Faq $faq)
@@ -70,7 +70,7 @@ class FaqController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.helpdesk.faq.index')->with('success', 'FAQ berhasil diubah.');
+        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil diubah.');
     }
     
     public function show($id)
@@ -87,6 +87,6 @@ class FaqController extends Controller
         $faq->save();
         $faq->delete();
 
-        return redirect()->route('admin.helpdesk.faq.index')->with('success', 'FAQ berhasil dihapus.');
+        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil dihapus.');
     }
 }
