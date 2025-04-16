@@ -32,9 +32,10 @@
                     <td>
                         <a href="{{ route('admin.faq.show', $faq->id) }}" class="btn btn-info btn-sm">Lihat</a>
                         <a href="{{ route('admin.faq.edit', $faq->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" class="d-inline">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-danger btn-sm">Hapus</button>
+                        <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus FAQ ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                         </form>
                     </td>
                 </tr>
