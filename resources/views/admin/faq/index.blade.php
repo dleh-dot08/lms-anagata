@@ -6,7 +6,10 @@
         <a href="{{ route('admin.helpdesk.faq.create') }}" class="btn btn-primary">Create New FAQ</a>
 
         <form method="GET" action="{{ route('admin.faq.index') }}" class="mb-3">
-            <input type="text" name="search" class="form-control" placeholder="Cari pertanyaan...">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Cari pertanyaan..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </div>
         </form>
 
         <table class="table table-hover table-bordered">
