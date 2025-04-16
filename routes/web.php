@@ -167,7 +167,7 @@ Route::middleware(['web', PesertaMiddleware::class])
     ->group(function () {
         Route::get('/', [HelpdeskTicketController::class, 'index'])->name('index');               // List tiket peserta
         Route::get('/create', [HelpdeskTicketController::class, 'create'])->name('create');
-        Route::get('/', [HelpdeskTicketController::class, 'store'])->name('store');
+        Route::post('/', [HelpdeskTicketController::class, 'store'])->name('store');
         Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');      // Detail tiket
         Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store'); // Balas
         Route::post('/ticket-with-message', [HelpdeskTicketController::class, 'storeWithMessage'])->name('store.with.message');
