@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5">
     <h2 class="mb-4">Tiket Bantuan Saya</h2>
-    <a href="{{ route('peserta.helpdesk.create') }}" class="btn btn-primary">Create New Massage</a>
+    <a href="{{ route('peserta.helpdesk.create') }}" class="btn btn-primary">Buat Pesan baru</a>
 
     <table class="table table-bordered table-striped">
         <thead class="thead-light">
