@@ -49,13 +49,13 @@ class FaqController extends Controller
     public function show($id)
     {
         $faq = Faq::findOrFail($id);
-        return view('admin.helpdesk.faq.show', compact('faq'));
+        return view('admin.faq.show', compact('faq'));
     }
 
     public function edit($id)
     {
         $faq = Faq::findOrFail($id);
-        return view('admin.helpdesk.faq.edit', compact('faq'));
+        return view('admin.faq.edit', compact('faq'));
     }
 
     public function update(Request $request, $id)
@@ -76,7 +76,7 @@ class FaqController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil diperbarui.');
+        return redirect()->route('admin.helpdesk.faq.index')->with('success', 'FAQ berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -87,6 +87,6 @@ class FaqController extends Controller
             'deleted_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil dihapus.');
+        return redirect()->route('admin.helpdesk.faq.index')->with('success', 'FAQ berhasil dihapus.');
     }
 }
