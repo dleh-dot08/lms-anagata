@@ -136,7 +136,7 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
     });
 
-    Route::middleware(AdminMiddleware::class)
+Route::middleware(AdminMiddleware::class)
     ->prefix('admin/faq')
     ->name('admin.faq.')
     ->group(function () {
@@ -147,23 +147,14 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::post('/', [FaqController::class, 'store'])->name('store');
         Route::get('/{faq}/edit', [FaqController::class, 'edit'])->name('edit');
         Route::put('/{faq}', [FaqController::class, 'update'])->name('update');
-        Route::put('/{faq}', [FaqController::class, 'show'])->name('show');
+        Route::get('/{faq}', [FaqController::class, 'show'])->name('show');
         Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
     });
 
-    Route::middleware(AdminMiddleware::class)
+Route::middleware(AdminMiddleware::class)
     ->prefix('admin')
     ->name('admin.helpdesk.')
     ->group(function () {
-
-        // FAQ CRUD
-        Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
-        Route::get('/faq/create', [FaqController::class, 'create'])->name('faq.create');
-        Route::post('/faq', [FaqController::class, 'store'])->name('faq.store');
-        Route::get('/faq/{faq}/edit', [FaqController::class, 'edit'])->name('faq.edit');
-        Route::put('/faq/{faq}', [FaqController::class, 'update'])->name('faq.update');
-        Route::put('/faq/{faq}', [FaqController::class, 'show'])->name('faq.show');
-        Route::delete('/faq/{faq}', [FaqController::class, 'destroy'])->name('faq.destroy');
 
         // Helpdesk Ticket Admin View
         Route::get('/helpdesk/tickets', [HelpdeskTicketController::class, 'index'])->name('tickets.index');
