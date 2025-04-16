@@ -18,7 +18,7 @@ class FaqController extends Controller
 
         $faqs = $query->whereNull('deleted_at')->latest()->paginate(10);
 
-        return view('admin.helpdesk.faq.index', compact('faqs'));
+        return view('admin.faq.index', compact('faqs'));
     }
 
     public function create()
