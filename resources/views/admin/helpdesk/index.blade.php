@@ -9,8 +9,6 @@
         <button type="submit">Cari</button>
     </form>
 
-    <a href="{{ route('admin.helpdesk.create') }}" class="btn btn-primary">Buat Tiket Baru</a>
-
     <table>
         <thead>
             <tr>

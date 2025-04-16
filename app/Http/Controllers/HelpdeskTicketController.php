@@ -34,19 +34,32 @@ class HelpdeskTicketController extends Controller
     // Simpan tiket baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'subject' => 'required|string|max:255',
+            'guest_name' => 'required|string|max:255',
+            'guest_email' => 'required|email|max:255',
+            'guest_phone' => 'nullable|string|max:15', // Optional phone
         ]);
-
+    
         $ticket = new HelpdeskTicket();
-        $ticket->subject = $request->subject;
-        $ticket->user_id = auth()->id();
-        $ticket->status = 'open';
+        $ticket->subject = $validated['subject'];
+        $ticket->guest_name = $validated['guest_name'];
+        $ticket->guest_email = $validated['guest_email'];
+        $ticket->guest_phone = $validated['guest_phone'];
+        $ticket->status = 'open';  // Status default
         $ticket->save();
-
-        return redirect()->route('peserta.helpdesk.index')->with('success', 'Tiket berhasil dibuat.');
+    
+        // Create a default message (or let the user create a message after ticket creation)
+        $message = new HelpdeskMessage();
+        $message->ticket_id = $ticket->id;
+        $message->user_id = null;  // No user, because it's from guest
+        $message->sender_type = 'guest';
+        $message->message = "Ticket created by guest.";
+        $message->save();
+    
+        return response()->json(['status' => 'ticket_created', 'ticket_id' => $ticket->id]);
     }
-
+    
     // Detail tiket + chat/message
     public function show($id)
     {
