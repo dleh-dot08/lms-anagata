@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Faq;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FaqController extends Controller
 {
@@ -15,14 +16,14 @@ class FaqController extends Controller
             $query->where('question', 'like', '%' . $request->search . '%');
         }
 
-        $faqs = $query->latest()->paginate(10);
+        $faqs = $query->whereNull('deleted_at')->latest()->paginate(10);
 
-        return view('admin.faq.index', compact('faqs'));
+        return view('admin.helpdesk.faq.index', compact('faqs'));
     }
 
     public function create()
     {
-        return view('admin.faq.create');
+        return view('admin.helpdesk.faq.create');
     }
 
     public function store(Request $request)
@@ -31,7 +32,7 @@ class FaqController extends Controller
             'question' => 'required|string|max:255',
             'answer' => 'required|string',
             'category' => 'nullable|string|max:100',
-            'is_active' => 'boolean'
+            'is_active' => 'nullable|boolean',
         ]);
 
         Faq::create([
@@ -40,28 +41,33 @@ class FaqController extends Controller
             'category' => $request->category,
             'is_active' => $request->is_active ?? 1,
             'created_by' => Auth::id(),
-            'updated_by' => Auth::id(),
         ]);
 
         return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil ditambahkan.');
     }
 
-    public function edit(Faq $faq)
+    public function show($id)
     {
-        return view('admin.faq.edit', compact('faq'));
+        $faq = Faq::findOrFail($id);
+        return view('admin.helpdesk.faq.show', compact('faq'));
+    }
+
+    public function edit($id)
+    {
+        $faq = Faq::findOrFail($id);
+        return view('admin.helpdesk.faq.edit', compact('faq'));
     }
 
     public function update(Request $request, $id)
     {
-        $faq = Faq::findOrFail($id);
-
         $request->validate([
             'question' => 'required|string|max:255',
             'answer' => 'required|string',
             'category' => 'nullable|string|max:100',
-            'is_active' => 'boolean'
+            'is_active' => 'nullable|boolean',
         ]);
 
+        $faq = Faq::findOrFail($id);
         $faq->update([
             'question' => $request->question,
             'answer' => $request->answer,
@@ -70,22 +76,16 @@ class FaqController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil diubah.');
-    }
-    
-    public function show($id)
-    {
-        $faq = Faq::findOrFail($id);
-
-        return view('admin.helpdesk.faq.show', compact('faq'));
+        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $faq = Faq::findOrFail($id);
-        $faq->deleted_by = Auth::id();
-        $faq->save();
-        $faq->delete();
+        $faq->update([
+            'deleted_at' => now(),
+            'deleted_by' => Auth::id(),
+        ]);
 
         return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil dihapus.');
     }
