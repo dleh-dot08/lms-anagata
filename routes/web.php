@@ -142,13 +142,13 @@ Route::middleware(['auth', AdminMiddleware::class])
     ->group(function () {
 
         // FAQ CRUD
-        Route::get('/faq', [FaqController::class, 'index'])->name('index');
-        Route::get('/faq/create', [FaqController::class, 'create'])->name('create');
-        Route::post('/faq', [FaqController::class, 'store'])->name('store');
-        Route::get('/faq/{faq}/edit', [FaqController::class, 'edit'])->name('edit');
-        Route::put('/faq/{faq}', [FaqController::class, 'update'])->name('update');
-        Route::put('/faq/{faq}', [FaqController::class, 'show'])->name('show');
-        Route::delete('/faq/{faq}', [FaqController::class, 'destroy'])->name('destroy');
+        Route::get('/', [FaqController::class, 'index'])->name('index');
+        Route::get('/create', [FaqController::class, 'create'])->name('create');
+        Route::post('/', [FaqController::class, 'store'])->name('store');
+        Route::get('/{faq}/edit', [FaqController::class, 'edit'])->name('edit');
+        Route::put('/{faq}', [FaqController::class, 'update'])->name('update');
+        Route::put('/{faq}', [FaqController::class, 'show'])->name('show');
+        Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
     });
 
     Route::middleware(AdminMiddleware::class)
