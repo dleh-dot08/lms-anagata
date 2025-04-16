@@ -137,7 +137,7 @@ Route::middleware(['auth', AdminMiddleware::class])
     });
 
 Route::middleware(AdminMiddleware::class)
-    ->prefix('admin/helpdesk/faq')
+    ->prefix('admin/faq')
     ->name('admin.helpdesk.faq.')
     ->group(function () {
         Route::get('/', [FaqController::class, 'index'])->name('index');
