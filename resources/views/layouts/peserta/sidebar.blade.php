@@ -56,6 +56,14 @@
                 <div data-i18n="Analytics">Sertifikat</div>
             </a>
         </li>
+
+        <!-- Helpdesk -->
+        <li class="menu-item {{ Request::is('helpdesk') ? 'active' : '' }}">
+            <a href="{{ route('peserta.helpdesk.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-badge-check"></i>
+                <div data-i18n="Analytics">Helpdesk</div>
+            </a>
+        </li>
     </ul>
 </aside>
 

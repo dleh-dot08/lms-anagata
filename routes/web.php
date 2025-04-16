@@ -153,32 +153,36 @@ Route::middleware(AdminMiddleware::class)
         Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
     });
 
-Route::middleware(AdminMiddleware::class)
-    ->prefix('admin')
+Route::middleware(['web', AdminMiddleware::class])
+    ->prefix('admin/helpdesk')
     ->name('admin.helpdesk.')
     ->group(function () {
-
-        // Helpdesk Ticket Admin View
-        Route::get('/helpdesk/tickets', [HelpdeskTicketController::class, 'index'])->name('tickets.index');
-        Route::get('/helpdesk/tickets/{id}', [HelpdeskTicketController::class, 'show'])->name('tickets.show');
-        Route::post('/helpdesk/tickets/{id}/close', [HelpdeskTicketController::class, 'close'])->name('tickets.close');
-
-        // Kirim balasan dari Admin
-        Route::post('/helpdesk/messages', [HelpdeskMessageController::class, 'store'])->name('messages.store');
+        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('tickets.index');
+        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('tickets.show');
+        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('tickets.message.store');
+        Route::put('/ticket/{id}/close', [HelpdeskTicketController::class, 'close'])->name('tickets.close');
     });
 
-Route::middleware(PesertaMiddleware::class)
+Route::middleware(['web', PesertaMiddleware::class])
     ->prefix('peserta/helpdesk')
     ->name('peserta.helpdesk.')
     ->group(function () {
+        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('index');               // List tiket peserta
+        Route::get('/create', [HelpdeskTicketController::class, 'create'])->name('create');
+        Route::post('/', [HelpdeskTicketController::class, 'store'])->name('store');
+        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');      // Detail tiket
+        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store'); // Balas
+        Route::post('/ticket-with-message', [HelpdeskTicketController::class, 'storeWithMessage'])->name('store.with.message');
+    });
 
-        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('index');
+
+Route::prefix('guest/helpdesk')
+    ->name('guest.helpdesk.')
+    ->group(function () {
         Route::get('/create', [HelpdeskTicketController::class, 'create'])->name('create');
         Route::post('/store', [HelpdeskTicketController::class, 'store'])->name('store');
-        Route::get('/{id}', [HelpdeskTicketController::class, 'show'])->name('show');
-
-        // Peserta mengirim pesan
-        Route::post('/message', [HelpdeskMessageController::class, 'store'])->name('message.store');
+        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');
+        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store');
     });
 
 
