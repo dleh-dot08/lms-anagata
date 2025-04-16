@@ -3,9 +3,9 @@
 @section('content')
     <div class="container mt-4">
     <h1>FAQ Management</h1>
-        <a href="{{ route('admin.helpdesk.faq.create') }}" class="btn btn-primary">Create New FAQ</a>
+        <a href="{{ route('admin.faq.create') }}" class="btn btn-primary">Create New FAQ</a>
 
-        <form method="GET" action="{{ route('admin.helpdesk.faq.index') }}" class="mb-3">
+        <form method="GET" action="{{ route('admin.faq.index') }}" class="mb-3">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Cari pertanyaan..." value="{{ request('search') }}">
                 <button type="submit" class="btn btn-primary">Cari</button>

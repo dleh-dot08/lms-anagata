@@ -16,6 +16,6 @@
         </div>
     </div>
 
-    <a href="{{ route('admin.helpdesk.faq.index') }}" class="btn btn-secondary">Kembali</a>
+    <a href="{{ route('admin.faq.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection
