@@ -12,18 +12,22 @@ class HelpdeskTicketController extends Controller
     public function index()
     {
         if (auth()->user()->role_id == 1) {
-            $tickets = HelpdeskTicket::latest()->get(); // Admin: semua tiket
+            // Admin: Semua tiket dengan paginasi
+            $tickets = HelpdeskTicket::latest()->paginate(10); // Paginasi 10 tiket per halaman
         } else {
-            $tickets = HelpdeskTicket::where('user_id', auth()->id())->latest()->get(); // Peserta: hanya miliknya
+            // Peserta: Hanya tiket miliknya sendiri dengan paginasi
+            $tickets = HelpdeskTicket::where('user_id', auth()->id())->latest()->paginate(10); // Paginasi 10 tiket per halaman
         }
 
+        // Menentukan view yang akan digunakan berdasarkan role pengguna
         return view(
-            auth()->user()->role_id == 1
-                ? 'admin.helpdesk.index'
-                : 'peserta.helpdesk.index',
+            (auth()->user()->role_id == 1) ? 'admin.helpdesk.index' :
+            ((auth()->user()->role_id == 3) ? 'peserta.helpdesk.index' :
+            ((auth()->user()->role_id == 4) ? 'karyawan.helpdesk.index' : 'guest.helpdesk.index')),
             compact('tickets')
-        );
+        );        
     }
+
 
     // Form membuat tiket baru (hanya untuk peserta)
     public function create()
