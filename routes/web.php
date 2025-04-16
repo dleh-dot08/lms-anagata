@@ -147,6 +147,7 @@ Route::middleware(AdminMiddleware::class)
         Route::post('/faq', [FaqController::class, 'store'])->name('faq.store');
         Route::get('/faq/{faq}/edit', [FaqController::class, 'edit'])->name('faq.edit');
         Route::put('/faq/{faq}', [FaqController::class, 'update'])->name('faq.update');
+        Route::put('/faq/{faq}', [FaqController::class, 'show'])->name('faq.show');
         Route::delete('/faq/{faq}', [FaqController::class, 'destroy'])->name('faq.destroy');
 
         // Helpdesk Ticket Admin View
