@@ -1,30 +1,45 @@
 @extends('layouts.admin.template')
 
 @section('content')
+    <div class="container mt-4">
     <h1>FAQ Management</h1>
-    <a href="{{ route('admin.helpdesk.faq.create') }}" class="btn btn-primary">Create New FAQ</a>
+        <a href="{{ route('admin.helpdesk.faq.create') }}" class="btn btn-primary">Create New FAQ</a>
 
-    <table class="table mt-3">
-        <thead>
-            <tr>
-                <th>Question</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($faqs as $faq)
+        <form method="GET" action="{{ route('admin.faq.index') }}" class="mb-3">
+            <input type="text" name="search" class="form-control" placeholder="Cari pertanyaan...">
+        </form>
+
+        <table class="table table-hover table-bordered">
+            <thead class="table-primary">
                 <tr>
-                    <td>{{ $faq->question }}</td>
+                    <th>Pertanyaan</th>
+                    <th>Kategori</th>
+                    <th>Status</th>
+                    <th>Dibuat</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($faqs as $faq)
+                <tr>
+                    <td>{{ Str::limit($faq->question, 50) }}</td>
+                    <td>{{ $faq->category }}</td>
+                    <td>{{ $faq->is_active ? 'Aktif' : 'Nonaktif' }}</td>
+                    <td>{{ $faq->created_at->format('d M Y') }}</td>
                     <td>
-                        <a href="{{ route('admin.helpdesk.faq.edit', $faq->id) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('admin.helpdesk.faq.destroy', $faq->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger">Delete</button>
+                        <a href="{{ route('admin.faq.show', $faq->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('admin.faq.edit', $faq->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" class="d-inline">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-danger btn-sm">Hapus</button>
                         </form>
                     </td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+                @endforeach
+            </tbody>
+        </table>
+
+        {{ $faqs->links() }}
+
+    </div>
 @endsection
