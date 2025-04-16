@@ -23,7 +23,7 @@ class FaqController extends Controller
 
     public function create()
     {
-        return view('admin.helpdesk.faq.create');
+        return view('admin.faq.create');
     }
 
     public function store(Request $request)
