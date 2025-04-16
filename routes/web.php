@@ -165,12 +165,11 @@ Route::middleware(['web', PesertaMiddleware::class])
     ->prefix('peserta/helpdesk')
     ->name('peserta.helpdesk.')
     ->group(function () {
-        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('index');
-        Route::get('/create', [HelpdeskTicketController::class, 'create'])->name('create');
-        Route::post('/store', [HelpdeskTicketController::class, 'store'])->name('store');
-        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');
-        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store');
+        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('index');               // List tiket peserta
+        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');      // Detail tiket
+        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store'); // Balas
     });
+
 
 Route::prefix('guest/helpdesk')
     ->name('guest.helpdesk.')
