@@ -38,31 +38,47 @@ class HelpdeskTicketController extends Controller
     // Simpan tiket baru
     public function store(Request $request)
     {
+        $isGuest = !auth()->check();
+
+        // Validasi untuk guest & peserta
         $validated = $request->validate([
             'subject' => 'required|string|max:255',
-            'guest_name' => 'required|string|max:255',
-            'guest_email' => 'required|email|max:255',
-            'guest_phone' => 'nullable|string|max:15', // Optional phone
+            'message' => 'required|string',
+            'guest_name' => $isGuest ? 'required|string|max:255' : 'nullable',
+            'guest_email' => $isGuest ? 'required|email|max:255' : 'nullable',
+            'guest_phone' => $isGuest ? 'nullable|string|max:15' : 'nullable',
         ]);
-    
+
         $ticket = new HelpdeskTicket();
         $ticket->subject = $validated['subject'];
-        $ticket->guest_name = $validated['guest_name'];
-        $ticket->guest_email = $validated['guest_email'];
-        $ticket->guest_phone = $validated['guest_phone'];
-        $ticket->status = 'open';  // Status default
+        $ticket->status = 'open';
+
+        if ($isGuest) {
+            $ticket->guest_name = $validated['guest_name'];
+            $ticket->guest_email = $validated['guest_email'];
+            $ticket->guest_phone = $validated['guest_phone'];
+            $ticket->user_id = null;
+        } else {
+            $ticket->user_id = auth()->id();
+        }
+
         $ticket->save();
-    
-        // Create a default message (or let the user create a message after ticket creation)
+
+        // Simpan pesan pertama
         $message = new HelpdeskMessage();
         $message->ticket_id = $ticket->id;
-        $message->user_id = null;  // No user, because it's from guest
-        $message->sender_type = 'guest';
-        $message->message = "Ticket created by guest.";
+        $message->message = $validated['message'];
+        $message->user_id = $isGuest ? null : auth()->id();
+        $message->sender_type = $isGuest ? 'guest' : 'user';
         $message->save();
-    
-        return response()->json(['status' => 'ticket_created', 'ticket_id' => $ticket->id]);
+
+        return response()->json([
+            'status' => 'ticket_created',
+            'ticket_id' => $ticket->id,
+            'message' => 'Tiket berhasil dibuat. Tim kami akan segera menghubungi Anda.'
+        ]);
     }
+
     
     // Detail tiket + chat/message
     public function show($id)
