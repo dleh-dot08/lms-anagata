@@ -11,9 +11,6 @@
                 <button type="submit" class="btn btn-primary ml-2">Cari</button>
             </form>
         </div>
-        <div class="col-md-4 text-right">
-            <a href="{{ route('admin.helpdesk.tickets.create') }}" class="btn btn-success">Buat Tiket Baru</a>
-        </div>
     </div>
 
     <!-- Daftar Tiket -->
