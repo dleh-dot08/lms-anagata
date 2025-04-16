@@ -48,6 +48,11 @@
                         <div data-i18n="Account">Data Kategori</div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="{{ route('admin.faq.index') }}" class="menu-link">
+                        <div data-i18n="Account">Data FAQ</div>
+                    </a>
+                </li>
             </ul>
         </li>
 

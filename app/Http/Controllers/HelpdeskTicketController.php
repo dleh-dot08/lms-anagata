@@ -9,33 +9,33 @@ class HelpdeskTicketController extends Controller
 {
     public function index()
     {
-        $tickets = HelpdeskTicket::latest()->paginate(10);
-        return view('helpdesk.index', compact('tickets'));
+        if (auth()->user()->role_id == 1) {
+            $tickets = HelpdeskTicket::all(); // Admin can view all tickets
+        } else {
+            $tickets = HelpdeskTicket::where('user_id', auth()->id())->get(); // Peserta can view their own tickets
+        }
+        return view('admin.helpdesk.index', compact('tickets'));
     }
 
     public function show($id)
     {
-        $ticket = HelpdeskTicket::with('messages')->findOrFail($id);
-        return view('helpdesk.show', compact('ticket'));
+        $ticket = HelpdeskTicket::findOrFail($id);
+        return view('admin.helpdesk.show', compact('ticket'));
     }
 
     public function create()
     {
-        return view('helpdesk.create');
+        return view('peserta.helpdesk.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'subject' => 'required|string|max:255',
-        ]);
+        $ticket = new HelpdeskTicket();
+        $ticket->subject = $request->subject;
+        $ticket->user_id = auth()->id();
+        $ticket->save();
 
-        $ticket = HelpdeskTicket::create([
-            'user_id' => auth()->id(),
-            'subject' => $request->subject,
-        ]);
-
-        return redirect()->route('helpdesk.show', $ticket->id)->with('success', 'Tiket berhasil dibuat.');
+        return redirect()->route('peserta.helpdesk.index');
     }
 
     public function guestStore(Request $request)
@@ -58,11 +58,10 @@ class HelpdeskTicketController extends Controller
     public function close($id)
     {
         $ticket = HelpdeskTicket::findOrFail($id);
-        $ticket->update([
-            'status' => 'closed',
-            'closed_at' => now(),
-        ]);
+        $ticket->status = 'closed';
+        $ticket->closed_at = now();
+        $ticket->save();
 
-        return back()->with('success', 'Tiket berhasil ditutup.');
+        return redirect()->route('admin.helpdesk.tickets.index');
     }
 }

@@ -9,19 +9,13 @@ class HelpdeskMessageController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'ticket_id' => 'required|exists:helpdesk_tickets,id',
-            'message' => 'required|string',
-        ]);
+        $message = new HelpdeskMessage();
+        $message->ticket_id = $request->ticket_id;
+        $message->user_id = auth()->id();
+        $message->sender_type = 'user';
+        $message->message = $request->message;
+        $message->save();
 
-        HelpdeskMessage::create([
-            'ticket_id' => $request->ticket_id,
-            'user_id' => auth()->id(),
-            'sender_type' => auth()->check() ? 'user' : 'guest',
-            'message' => $request->message,
-            'guest_name' => $request->guest_name ?? null,
-        ]);
-
-        return back()->with('success', 'Pesan berhasil dikirim.');
+        return back();
     }
 }
