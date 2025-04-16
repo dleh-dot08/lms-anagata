@@ -9,7 +9,14 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('public/assets/img/favicon/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset/img/favicons/favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ asset('asset/img/favicons/favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="{{ asset('asset/img/favicons/favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('asset/img/favicons/favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
+    <link rel="manifest" href="{{ asset('asset/img/favicons/manifest.json') }}">
+    <meta name="msapplication-TileImage" content="{{ asset('asset/img/favicons/favicon.ico') }}">
+    <meta name="theme-color" content="#ffffff">
 
     <!-- Fonts & Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -19,10 +26,14 @@
     <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Scripts -->
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
     <script src="{{ asset('assets/js/config.js') }}"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"></script>
 </head>
 
 <body>

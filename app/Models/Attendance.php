@@ -12,6 +12,7 @@ class Attendance extends Model
     protected $fillable = [
         'user_id',
         'course_id',
+        'activity_id',
         'tanggal',
         'waktu_absen',
         'longitude',
@@ -34,4 +35,10 @@ class Attendance extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function activity()
+    {
+        return $this->belongsTo(Activity::class);
+    }
+
 }
