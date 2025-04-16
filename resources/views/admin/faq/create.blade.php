@@ -4,7 +4,7 @@
 <div class="container">
     <h4>Tambah FAQ</h4>
 
-    <form action="{{ route('admin.faq.store') }}" method="POST">
+    <form action="{{ route('admin.helpdesk.faq.store') }}" method="POST">
         @csrf
 
         <div class="form-group mb-3">
@@ -31,7 +31,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="{{ route('admin.faq.index') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('admin.helpdesk.faq.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
 
