@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HelpdeskTicket;
 use App\Models\HelpdeskMessage;
-use App\Models\faq;
+use App\Models\Faq;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,7 +76,7 @@ class HelpdeskTicketController extends Controller
         $message->save();
 
         // Cek apakah mirip dengan FAQ
-        $matchedFaq = FAQ::where('question', 'like', '%' . $validated['message'] . '%')
+        $matchedFaq = Faq::where('question', 'like', '%' . $validated['message'] . '%')
                         ->orWhere('answer', 'like', '%' . $validated['message'] . '%')
                         ->first();
 
