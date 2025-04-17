@@ -1,45 +1,78 @@
 @extends('layouts.peserta.template')
 
 @section('content')
-<div class="container mt-5">
-    <h3 class="mb-3">Detail Tiket: {{ $ticket->subject }}</h3>
+<style>
+    .chat-box {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        height: 500px;
+        overflow-y: auto;
+        padding: 10px;
+        background: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+    }
 
-    <div class="mb-4">
-        <p><strong>Status:</strong> 
-            <span class="badge 
-                @if($ticket->status == 'open') badge-success 
-                @elseif($ticket->status == 'closed') badge-danger 
-                @else badge-secondary @endif">
-                {{ ucfirst($ticket->status) }}
-            </span>
-        </p>
-        <p><strong>Dibuat pada:</strong> {{ $ticket->created_at->format('d M Y H:i') }}</p>
-    </div>
+    .chat-message {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 70%;
+    }
 
-    <h5>Pesan:</h5>
-    <div class="border p-3 mb-4" style="background-color: #f8f9fa">
-        @foreach ($ticket->messages as $message)
-            <div class="mb-3">
-                <strong>{{ $message->user->name ?? $message->guest_name ?? 'Guest' }}:</strong> <br>
-                <p class="mb-1">{{ $message->message }}</p>
-                <small class="text-muted">{{ $message->created_at->format('d M Y H:i') }}</small>
-                <hr>
+    .from-user {
+        background: #e0f7fa;
+        align-self: flex-end;
+    }
+
+    .from-admin {
+        background: #fff3e0;
+        align-self: flex-start;
+    }
+
+    .from-system {
+        background: #eeeeee;
+        align-self: center;
+        font-style: italic;
+        font-size: 14px;
+    }
+
+    .chat-input {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="container">
+    <h3>Subjek: {{ $ticket->subject }}</h3>
+    <div class="chat-box" id="chatBox">
+        @foreach ($ticket->messages as $msg)
+            <div class="chat-message 
+                @if($msg->sender_type == 'user' || $msg->sender_type == 'guest') from-user
+                @elseif($msg->sender_type == 'admin') from-admin
+                @else from-system @endif">
+                @if($msg->sender_type == 'admin')
+                    <strong>Admin</strong>
+                @elseif($msg->sender_type == 'user')
+                    <strong>{{ $msg->user->name ?? 'Peserta' }}</strong>
+                @elseif($msg->sender_type == 'guest')
+                    <strong>{{ $ticket->guest_name ?? 'Tamu' }}</strong>
+                @endif
+
+                <div>{!! $msg->message !!}</div>
+                <small>{{ $msg->created_at->format('d M Y H:i') }}</small>
             </div>
         @endforeach
     </div>
 
-    @if ($ticket->status != 'closed')
-    <form action="{{ route('peserta.helpdesk.message.store', ['id' => $ticket->id]) }}" method="POST">
+    {{-- Form kirim pesan lanjutan --}}
+    <form action="{{ route('peserta.helpdesk.message.store', $ticket->id) }}" method="POST" class="mt-3">
         @csrf
-        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-        <div class="form-group">
-            <label for="message">Balas Pesan:</label>
-            <textarea name="message" class="form-control" rows="4" required></textarea>
+        <div class="chat-input">
+            <textarea name="message" class="form-control" rows="2" required placeholder="Tulis pesan balasan..."></textarea>
+            <button type="submit" class="btn btn-primary">Kirim</button>
         </div>
-        <button type="submit" class="btn btn-primary">Kirim</button>
     </form>
-    @else
-        <div class="alert alert-warning mt-3">Tiket ini sudah ditutup dan tidak bisa dibalas.</div>
-    @endif
 </div>
 @endsection
