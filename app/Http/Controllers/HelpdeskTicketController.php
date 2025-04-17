@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HelpdeskTicket;
 use App\Models\HelpdeskMessage;
-use App\Models\FAQ;
+use App\Models\faq;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
