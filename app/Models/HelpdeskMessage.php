@@ -22,4 +22,22 @@ class HelpdeskMessage extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function getSenderNameAttribute()
+    {
+        if ($this->user) {
+            return $this->user->name . " ({$this->sender_type})";
+        }
+
+        if ($this->sender_type === 'guest') {
+            return ($this->guest_name ?? 'Tamu') . ' (guest)';
+        }
+
+        if ($this->sender_type === 'system') {
+            return 'Sistem (system)';
+        }
+
+        return 'Tidak diketahui';
+    }
+
 }

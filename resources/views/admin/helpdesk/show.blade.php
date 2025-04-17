@@ -11,7 +11,7 @@
     <div class="messages">
         @foreach($ticket->messages as $message)
             <div class="message">
-                <p><strong>{{ $message->user->name }} ({{ $message->sender_type }})</strong></p>
+                <p><strong>({{ $message->sender_name }})</strong></p>
                 <p>{{ $message->message }}</p>
                 <p><small>{{ $message->created_at }}</small></p>
             </div>
