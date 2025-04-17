@@ -34,7 +34,7 @@ class HelpdeskMessage extends Model
         }
 
         if ($this->sender_type === 'system') {
-            return 'Sistem (system)';
+            return 'Sistem';
         }
 
         return 'Tidak diketahui';
