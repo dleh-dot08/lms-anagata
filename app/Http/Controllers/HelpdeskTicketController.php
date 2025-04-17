@@ -41,7 +41,7 @@ class HelpdeskTicketController extends Controller
     {
         $isGuest = !auth()->check();
 
-        // Validasi untuk guest & peserta
+        // Validasi
         $validated = $request->validate([
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
@@ -50,6 +50,7 @@ class HelpdeskTicketController extends Controller
             'guest_phone' => $isGuest ? 'nullable|string|max:15' : 'nullable',
         ]);
 
+        // Simpan tiket
         $ticket = new HelpdeskTicket();
         $ticket->subject = $validated['subject'];
         $ticket->status = 'open';
@@ -65,20 +66,25 @@ class HelpdeskTicketController extends Controller
 
         $ticket->save();
 
-        // Simpan pesan pertama
-        $message = new HelpdeskMessage();
-        $message->ticket_id = $ticket->id;
-        $message->message = $validated['message'];
-        $message->user_id = $isGuest ? null : auth()->id();
-        $message->sender_type = $isGuest ? 'guest' : 'user';
-        $message->save();
-
-        return response()->json([
-            'status' => 'ticket_created',
+        // Simpan pesan pertama (user/guest)
+        HelpdeskMessage::create([
             'ticket_id' => $ticket->id,
-            'message' => 'Tiket berhasil dibuat. Tim kami akan segera menghubungi Anda.'
+            'message' => $validated['message'],
+            'user_id' => $isGuest ? null : auth()->id(),
+            'sender_type' => $isGuest ? 'guest' : 'user',
         ]);
+
+        // Simpan auto-reply dari admin
+        HelpdeskMessage::create([
+            'ticket_id' => $ticket->id,
+            'message' => 'Tiket berhasil dibuat. Tim kami akan segera menghubungi Anda.',
+            'user_id' => null, // admin system
+            'sender_type' => 'system',
+        ]);
+
+        return view('peserta.helpdesk.create', compact('ticket'));
     }
+
 
     
     // Detail tiket + chat/message
