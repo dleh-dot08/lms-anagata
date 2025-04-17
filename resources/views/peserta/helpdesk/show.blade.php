@@ -29,7 +29,7 @@
     </div>
 
     @if ($ticket->status != 'closed')
-    <form action="{{ route('peserta.helpdesk.message.store') }}" method="POST">
+    <form action="{{ route('peserta.helpdesk.message.store', ['id' => $ticket->id]) }}" method="POST">
         @csrf
         <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
         <div class="form-group">
