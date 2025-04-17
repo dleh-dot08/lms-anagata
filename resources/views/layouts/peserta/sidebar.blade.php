@@ -1,6 +1,6 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="user-dashboard" class="app-brand-link">
+        <a href="{{ route('peserta.dashboard') }}" class="app-brand-link">
             <span class="app-brand-logo demo">
                 <div class="sidebar-header">
                     <img src="{{ asset('assets/img/illustrations/logo-asn.png') }}" alt="logo-asn" class="logo-image">
@@ -10,6 +10,7 @@
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
                 <i class="bx bx-chevron-left bx-sm align-middle"></i>
             </a>
+        </a>
     </div>
 
     <div class="menu-inner-shadow"></div>
@@ -60,6 +61,14 @@
             <a href="{{ route('courses.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-badge-check"></i>
                 <div data-i18n="Analytics">Sertifikat</div>
+            </a>
+        </li>
+
+        <!-- Helpdesk -->
+        <li class="menu-item {{ Request::is('helpdesk') ? 'active' : '' }}">
+            <a href="{{ route('peserta.helpdesk.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-badge-check"></i>
+                <div data-i18n="Analytics">Helpdesk</div>
             </a>
         </li>
     </ul>

@@ -20,15 +20,24 @@ class BiodataController extends Controller
     }
 
     public function edit($id)
-    {
-        $user = User::findOrFail($id);
-        $biodata = Biodata::where('id_user', $user->id)->first();
-
-        return view('biodata.edit', compact('user', 'biodata'));
+{
+    // 🛡️ Block if user is not admin and tries to access other user's biodata
+    if (Auth::user()->role_as != '1' && Auth::id() != $id) {
+        abort(403, 'Unauthorized access.');
     }
+
+    $user = User::findOrFail($id);
+    $biodata = Biodata::where('id_user', $user->id)->first();
+
+    return view('biodata.edit', compact('user', 'biodata'));
+}
 
     public function update(Request $request, $id)
     {
+        if (Auth::user()->role_as != '1' && Auth::id() != $id) {
+            abort(403, 'Unauthorized access.');
+        }
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $id,

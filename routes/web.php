@@ -20,6 +20,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ParticipantController;
 
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\HelpdeskTicketController;
+use App\Http\Controllers\HelpdeskMessageController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -135,6 +139,57 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
     });
 
+    Route::get('/faq', [FaqController::class, 'redirectBasedOnRole'])->name('faq');
+
+Route::middleware(AdminMiddleware::class)
+    ->prefix('admin/faq')
+    ->name('admin.faq.')
+    ->group(function () {
+
+        // FAQ CRUD 
+        Route::get('/', [FaqController::class, 'index'])->name('index');
+        Route::get('/create', [FaqController::class, 'create'])->name('create');
+        Route::post('/', [FaqController::class, 'store'])->name('store');
+        Route::get('/{faq}/edit', [FaqController::class, 'edit'])->name('edit');
+        Route::put('/{faq}', [FaqController::class, 'update'])->name('update');
+        Route::get('/{faq}', [FaqController::class, 'show'])->name('show');
+        Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
+    });
+
+Route::middleware(['web', AdminMiddleware::class])
+    ->prefix('admin/helpdesk')
+    ->name('admin.helpdesk.')
+    ->group(function () {
+        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('tickets.index');
+        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('tickets.show');
+        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('tickets.message.store');
+        Route::put('/ticket/{id}/close', [HelpdeskTicketController::class, 'close'])->name('tickets.close');
+    });
+
+Route::middleware(['web', PesertaMiddleware::class])
+    ->prefix('peserta/helpdesk')
+    ->name('peserta.helpdesk.')
+    ->group(function () {
+        Route::get('/', [HelpdeskTicketController::class, 'index'])->name('index');               // List tiket peserta
+        Route::get('/create', [HelpdeskTicketController::class, 'create'])->name('create');
+        Route::post('/', [HelpdeskTicketController::class, 'store'])->name('store');
+        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('tickets.show');      // Detail tiket
+        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store'); // Balas
+        Route::post('/ticket-with-message', [HelpdeskTicketController::class, 'storeWithMessage'])->name('store.with.message');
+        Route::get('/faq/{id}', [FaqController::class, 'show'])->name('faq.show');
+    });
+
+
+Route::prefix('guest/helpdesk')
+    ->name('guest.helpdesk.')
+    ->group(function () {
+        Route::get('/create', [HelpdeskTicketController::class, 'create'])->name('create');
+        Route::post('/store', [HelpdeskTicketController::class, 'store'])->name('store');
+        Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');
+        Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store');
+        Route::get('/faq/{id}', [FaqController::class, 'show'])->name('faq.show');
+    });
+
 
 Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
     ->name('peserta.dashboard')
@@ -154,6 +209,7 @@ Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class,
     ->name('courses.showLesson')
     ->middleware(PesertaMiddleware::class);
 
+<<<<<<< HEAD
 Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
         Route::get('/absensi', [AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('/absensi/kursus', [AttendanceController::class, 'courses'])->name('attendances.courses');
@@ -178,5 +234,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::post('/admin/activities/{activity}/participants', [ActivityController::class, 'storeParticipants'])->name('activities.participants.store');
     Route::delete('/admin/activities/{activity}/participants/{user}', [ActivityController::class, 'removeParticipant'])->name('activities.participants.remove');
 });
+=======
+>>>>>>> 96b8136b3e555e3c4442be97fd63161f5db24ff0
 
 require __DIR__.'/auth.php';

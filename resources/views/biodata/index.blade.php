@@ -46,17 +46,11 @@
                 </div>
             </div>
         </div>
-        <br/>
+        <!-- <br/> -->
 
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs" id="biodataTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="biodata-tab" data-bs-toggle="tab" data-bs-target="#biodata" type="button" role="tab" aria-controls="biodata" aria-selected="true">📄 Biodata Pribadi</button>
-            </li>
-        </ul>
 
         <!-- Tab Content -->
-        <div class="tab-content mt-3" id="biodataTabContent">
+        <div class="p-3 mt-3">
             <!-- Tab Biodata -->
             <div class="tab-pane fade show active" id="biodata" role="tabpanel" aria-labelledby="biodata-tab">
                 <div class="row">
@@ -119,17 +113,9 @@
 
                 <!-- Tombol Edit -->
                 <div class="text-center mt-4">
-                    <a href="{{ route('biodata.edit', $user->id) }}" class="btn btn-primary px-4">
-                        <i class="bx bx-edit"></i> Edit Data
-                    </a>
-                </div>
-            </div>
-
-            <!-- Tab Pengaturan -->
-            <div class="tab-pane fade" id="pengaturan" role="tabpanel" aria-labelledby="pengaturan-tab">
-                <div class="card p-3 border-0 shadow-sm">
-                    <h5 class="fw-bold text-primary">⚙️ Pengaturan</h5>
-                    <p>Pengaturan user akan ditampilkan di sini.</p>
+                <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
+                    <i class="bx bx-edit"></i> Edit Data
+                </a>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mt-4">
         <div class="card-body">
             <h4>{{ $lesson->judul }} (Pertemuan {{ $lesson->pertemuan_ke }})</h4>
 

@@ -48,6 +48,11 @@
                         <div data-i18n="Account">Data Kategori</div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="{{ route('admin.faq.index') }}" class="menu-link">
+                        <div data-i18n="Account">Data FAQ</div>
+                    </a>
+                </li>
             </ul>
         </li>
 
@@ -90,6 +95,16 @@
             <a href="{{ route('attendances.admin.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Absensi</div>
+            </a>
+        </li>
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text"> Helpdesk Management</span>
+        </li>
+        <li class="menu-item">
+            <a href="{{ route('admin.helpdesk.tickets.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div data-i18n="Boxicons">Helpdesk</div>
             </a>
         </li>
     </ul>
