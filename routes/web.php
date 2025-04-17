@@ -173,6 +173,7 @@ Route::middleware(['web', PesertaMiddleware::class])
         Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('tickets.show');      // Detail tiket
         Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store'); // Balas
         Route::post('/ticket-with-message', [HelpdeskTicketController::class, 'storeWithMessage'])->name('store.with.message');
+        Route::get('/faq/{id}', [FaqController::class, 'show'])->name('faq.show');
     });
 
 
