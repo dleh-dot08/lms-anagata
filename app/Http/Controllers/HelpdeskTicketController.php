@@ -40,6 +40,7 @@ class HelpdeskTicketController extends Controller
     // Simpan tiket baru
     public function store(Request $request)
     {
+        // Menentukan apakah pengguna adalah guest
         $isGuest = !auth()->check();
 
         // Validasi untuk guest & peserta
@@ -57,11 +58,13 @@ class HelpdeskTicketController extends Controller
         $ticket->status = 'open';
 
         if ($isGuest) {
+            // Untuk guest, simpan data guest
             $ticket->guest_name = $validated['guest_name'];
             $ticket->guest_email = $validated['guest_email'];
             $ticket->guest_phone = $validated['guest_phone'];
             $ticket->user_id = null;
         } else {
+            // Untuk pengguna yang sudah terautentikasi, simpan user_id
             $ticket->user_id = auth()->id();
         }
 
@@ -81,11 +84,19 @@ class HelpdeskTicketController extends Controller
                         ->first();
 
         if ($matchedFaq) {
+            // Tentukan nama route sesuai dengan role pengguna
+            $routeName = 'peserta.helpdesk.faq.show'; // Default untuk peserta
+            if (auth()->check() && auth()->user()->role_id == 1) {
+                $routeName = 'admin.faq.show'; // Untuk admin
+            } elseif (!auth()->check()) {
+                $routeName = 'guest.helpdesk.faq.show'; // Untuk guest
+            }
+
             HelpdeskMessage::create([
                 'ticket_id' => $ticket->id,
                 'user_id' => null,
                 'sender_type' => 'system',
-                'message' => "Kami menemukan jawaban yang mungkin relevan: <a href='" . route('faq.show', $matchedFaq->id) . "' target='_blank'>" . e($matchedFaq->question) . "</a>",
+                'message' => "Kami menemukan jawaban yang mungkin relevan: <a href='" . route($routeName, $matchedFaq->id) . "' target='_blank'>" . e($matchedFaq->question) . "</a>",
             ]);
 
             HelpdeskMessage::create([
@@ -108,8 +119,6 @@ class HelpdeskTicketController extends Controller
         return redirect()->route('peserta.helpdesk.tickets.show', $ticket->id)
             ->with('success', 'Tiket berhasil dibuat.');
     }
-
-
     
     // Detail tiket + chat/message
     public function show($id)

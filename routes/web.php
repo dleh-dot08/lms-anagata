@@ -184,6 +184,7 @@ Route::prefix('guest/helpdesk')
         Route::post('/store', [HelpdeskTicketController::class, 'store'])->name('store');
         Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');
         Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store');
+        Route::get('/faq/{id}', [FaqController::class, 'show'])->name('faq.show');
     });
 
 
