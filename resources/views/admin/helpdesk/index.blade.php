@@ -1,17 +1,24 @@
 @extends('layouts.admin.template')
 
 @section('content')
+<style>
+    .pagination .page-link {
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+    }
+</style>
 <div class="container mt-5">
     <h1 class="mb-4">Daftar Tiket Helpdesk</h1>
 
     <div class="row mb-4">
         <div class="col-md-8">
-            <form action="{{ route('admin.helpdesk.tickets.index') }}" method="GET" class="form-inline">
-                <input type="text" name="search" class="form-control" placeholder="Cari tiket..." value="{{ request('search') }}" style="width: 80%">
-                <button type="submit" class="btn btn-primary ml-2">Cari</button>
+            <form action="{{ route('admin.helpdesk.tickets.index') }}" method="GET" class="d-flex gap-2">
+                <input type="text" name="search" class="form-control me-2" placeholder="Cari tiket..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Cari</button>
             </form>
         </div>
     </div>
+
 
     <!-- Daftar Tiket -->
     <div class="table-responsive">
@@ -29,22 +36,27 @@
                     <tr>
                         <td>{{ $ticket->subject }}</td>
                         <td>
-                            <span class="badge 
+                            <span class="badge px-3 py-1 fw-bold 
                                 @if($ticket->status == 'open') 
-                                    badge-success
+                                    bg-primary
                                 @elseif($ticket->status == 'closed') 
-                                    badge-danger
+                                    bg-danger
                                 @else 
-                                    badge-warning 
+                                    bg-warning text-dark
                                 @endif">
-                                {{ ucfirst($ticket->status) }}
+                                {{ strtoupper($ticket->status) }}
                             </span>
+
                         </td>
                         <td>{{ $ticket->created_at->format('d M Y, H:i') }}</td>
                         <td>
                             <a href="{{ route('admin.helpdesk.tickets.show', $ticket->id) }}" class="btn btn-info btn-sm">Detail</a>
                             @if($ticket->status !== 'closed')
-                                <a href="{{ route('admin.helpdesk.tickets.close', $ticket->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to close this ticket?')">Tutup</a>
+                            <form action="{{ route('admin.helpdesk.tickets.close', $ticket->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to close this ticket?')">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-danger btn-sm">Tutup</button>
+                            </form>
                             @endif
                         </td>
                     </tr>
@@ -55,7 +67,7 @@
 
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">
-        {{ $tickets->links() }}
+        {{ $tickets->onEachSide(1)->links('pagination.custom') }}
     </div>
 </div>
 @endsection

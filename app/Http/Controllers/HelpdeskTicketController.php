@@ -40,10 +40,8 @@ class HelpdeskTicketController extends Controller
     // Simpan tiket baru
     public function store(Request $request)
     {
-        // Menentukan apakah pengguna adalah guest
         $isGuest = !auth()->check();
-
-        // Validasi
+    
         $validated = $request->validate([
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
@@ -51,74 +49,71 @@ class HelpdeskTicketController extends Controller
             'guest_email' => $isGuest ? 'required|email|max:255' : 'nullable',
             'guest_phone' => $isGuest ? 'nullable|string|max:15' : 'nullable',
         ]);
-
-        // Buat tiket
+    
         $ticket = new HelpdeskTicket();
         $ticket->subject = $validated['subject'];
         $ticket->status = 'open';
-
+    
         if ($isGuest) {
-            // Untuk guest, simpan data guest
             $ticket->guest_name = $validated['guest_name'];
             $ticket->guest_email = $validated['guest_email'];
             $ticket->guest_phone = $validated['guest_phone'];
             $ticket->user_id = null;
         } else {
-            // Untuk pengguna yang sudah terautentikasi, simpan user_id
             $ticket->user_id = auth()->id();
         }
-
+    
         $ticket->save();
-
-        // Pesan pertama dari user/guest
-        $message = new HelpdeskMessage();
-        $message->ticket_id = $ticket->id;
-        $message->message = $validated['message'];
-        $message->user_id = $isGuest ? null : auth()->id();
-        $message->sender_type = $isGuest ? 'guest' : 'user';
-        $message->save();
-
-        // Cek apakah mirip dengan FAQ
-        $matchedFaq = Faq::where('question', 'like', '%' . $validated['message'] . '%')
-                        ->orWhere('answer', 'like', '%' . $validated['message'] . '%')
-                        ->first();
-
-        if ($matchedFaq) {
-            // Tentukan nama route sesuai dengan role pengguna
-            $routeName = 'peserta.helpdesk.faq.show'; // Default untuk peserta
+    
+        HelpdeskMessage::create([
+            'ticket_id' => $ticket->id,
+            'message' => $validated['message'],
+            'user_id' => $isGuest ? null : auth()->id(),
+            'sender_type' => $isGuest ? 'guest' : 'user',
+        ]);
+    
+        // ✅ Cari hingga 3 FAQ yang cocok dari pertanyaan atau jawaban
+        $matchedFaqs = Faq::where('question', 'like', '%' . $validated['message'] . '%')
+            ->orWhere('answer', 'like', '%' . $validated['message'] . '%')
+            ->take(3)
+            ->get();
+    
+        if ($matchedFaqs->isNotEmpty()) {
+            $routeName = 'peserta.helpdesk.faq.show';
             if (auth()->check() && auth()->user()->role_id == 1) {
-                $routeName = 'admin.faq.show'; // Untuk admin
+                $routeName = 'admin.faq.show';
             } elseif (!auth()->check()) {
-                $routeName = 'guest.helpdesk.faq.show'; // Untuk guest
+                $routeName = 'guest.helpdesk.faq.show';
             }
-
+    
+            foreach ($matchedFaqs as $faq) {
+                HelpdeskMessage::create([
+                    'ticket_id' => $ticket->id,
+                    'user_id' => null,
+                    'sender_type' => 'system',
+                    'message' => "Kami menemukan jawaban yang mungkin relevan: <a href='" . route($routeName, $faq->id) . "' target='_blank'>" . e($faq->question) . "</a>",
+                ]);
+            }
+    
             HelpdeskMessage::create([
                 'ticket_id' => $ticket->id,
                 'user_id' => null,
                 'sender_type' => 'system',
-                'message' => "Kami menemukan jawaban yang mungkin relevan: <a href='" . route($routeName, $matchedFaq->id) . "' target='_blank'>" . e($matchedFaq->question) . "</a>",
-            ]);
-
-            HelpdeskMessage::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => null,
-                'sender_type' => 'system',
-                'message' => "Apakah jawaban ini membantu? Jika tidak, silakan tunggu admin membalas pesan Anda.",
+                'message' => "Apakah salah satu jawaban di atas membantu? Jika tidak, silakan tunggu admin membalas pesan Anda.",
             ]);
         } else {
-            // Jika tidak ada FAQ yang cocok
             HelpdeskMessage::create([
                 'ticket_id' => $ticket->id,
                 'user_id' => null,
                 'sender_type' => 'system',
-                'message' => 'Mohon tunggu, admin akan membalas pesan ini.',
-            ]);
+                'message' => 'Tiket berhasil dibuat. Tim kami akan segera menghubungi Anda.',
+            ]);  
         }
 
-        // Redirect ke halaman detail tiket
         return redirect()->route('peserta.helpdesk.tickets.show', $ticket->id)
             ->with('success', 'Tiket berhasil dibuat.');
     }
+    
     
     // Detail tiket + chat/message
     public function show($id)

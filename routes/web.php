@@ -209,7 +209,6 @@ Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class,
     ->name('courses.showLesson')
     ->middleware(PesertaMiddleware::class);
 
-<<<<<<< HEAD
 Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
         Route::get('/absensi', [AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('/absensi/kursus', [AttendanceController::class, 'courses'])->name('attendances.courses');
@@ -234,7 +233,5 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::post('/admin/activities/{activity}/participants', [ActivityController::class, 'storeParticipants'])->name('activities.participants.store');
     Route::delete('/admin/activities/{activity}/participants/{user}', [ActivityController::class, 'removeParticipant'])->name('activities.participants.remove');
 });
-=======
->>>>>>> 96b8136b3e555e3c4442be97fd63161f5db24ff0
 
 require __DIR__.'/auth.php';

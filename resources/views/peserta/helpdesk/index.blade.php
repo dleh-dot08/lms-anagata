@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5">
     <h2 class="mb-4">Tiket Bantuan Saya</h2>
-    <a href="{{ route('peserta.helpdesk.create') }}" class="btn btn-primary">Buat Pesan baru</a>
+    <a href="{{ route('peserta.helpdesk.create') }}" class="btn btn-primary mb-4">Buat Pesan baru</a>
 
     <table class="table table-bordered table-striped">
         <thead class="thead-light">
@@ -19,12 +19,17 @@
                 <tr>
                     <td>{{ $ticket->subject }}</td>
                     <td>
-                        <span class="badge 
-                            @if($ticket->status == 'open') badge-success 
-                            @elseif($ticket->status == 'closed') badge-danger 
-                            @else badge-secondary @endif">
-                            {{ ucfirst($ticket->status) }}
+                        <span class="badge px-3 py-1 fw-bold 
+                            @if($ticket->status == 'open') 
+                                bg-primary
+                            @elseif($ticket->status == 'closed') 
+                                bg-danger
+                            @else 
+                                bg-warning text-dark
+                            @endif">
+                            {{ strtoupper($ticket->status) }}
                         </span>
+
                     </td>
                     <td>{{ $ticket->created_at->format('d M Y') }}</td>
                     <td>
@@ -40,7 +45,7 @@
     </table>
 
     <div class="d-flex justify-content-center">
-        {{ $tickets->links() }}
+        {{ $tickets->onEachSide(1)->links('pagination.custom') }}
     </div>
 </div>
 @endsection
