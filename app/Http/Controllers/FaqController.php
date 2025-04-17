@@ -83,19 +83,18 @@ class FaqController extends Controller
     {
         $faq = Faq::findOrFail($id);
 
-        // Cek apakah user adalah admin
-        if (auth()->check() && auth()->user()->role_id == 1) {
-            // Jika admin, tampilkan FAQ di tampilan admin
-            return view('admin.faq.show', compact('faq'));
+        // Cek role user
+        if (auth()->check()) {
+            $user = auth()->user();
+            // Sesuaikan view berdasarkan role
+            if ($user->role_id == 1) { // Admin
+                return view('admin.faq.show', compact('faq'));
+            } elseif ($user->role_id == 3) { // Peserta
+                return view('peserta.faq.show', compact('faq'));
+            }
         }
 
-        // Cek apakah user adalah peserta
-        if (auth()->check() && auth()->user()->role_id == 3) {
-            // Jika peserta, tampilkan FAQ di tampilan peserta
-            return view('peserta.faq.show', compact('faq'));
-        }
-
-        // Jika guest, tampilkan FAQ di tampilan guest
+        // Default untuk Guest
         return view('guest.faq.show', compact('faq'));
     }
 
