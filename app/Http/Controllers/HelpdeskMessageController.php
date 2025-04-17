@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HelpdeskMessage;
+use App\Models\HelpdeskTicket;
 use Illuminate\Http\Request;
 
 class HelpdeskMessageController extends Controller
