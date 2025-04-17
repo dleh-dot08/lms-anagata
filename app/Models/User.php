@@ -122,4 +122,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id');
     }
 
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class)
+        ->withPivot('tanggal_mulai', 'tanggal_daftar', 'tanggal_selesai', 'status')
+        ->withTimestamps();
+    }
 }

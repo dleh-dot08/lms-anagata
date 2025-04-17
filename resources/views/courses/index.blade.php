@@ -53,8 +53,8 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $course->nama_kelas }}</td>
                 <td>{{ $course->mentor->name ?? 'Tidak Ada' }}</td>
-                <td>{{ $course->kategori->nama ?? 'Tidak Ada' }}</td>
-                <td>{{ $course->jenjang->nama ?? 'Tidak Ada' }}</td>
+                <td>{{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</td>
+                <td>{{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</td>
                 <td>{{ $course->status }}</td>
                 <td>
                     <a href="{{ route('courses.show', $course->id) }}" class="btn btn-info btn-sm">Lihat</a>

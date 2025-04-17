@@ -82,7 +82,20 @@ class FaqController extends Controller
     public function show($id)
     {
         $faq = Faq::findOrFail($id);
-        return view('admin.faq.show', compact('faq'));
+
+        // Cek role user
+        if (auth()->check()) {
+            $user = auth()->user();
+            // Sesuaikan view berdasarkan role
+            if ($user->role_id == 1) { // Admin
+                return view('admin.faq.show', compact('faq'));
+            } elseif ($user->role_id == 3) { // Peserta
+                return view('peserta.faq.show', compact('faq'));
+            }
+        }
+
+        // Default untuk Guest
+        return view('guest.faq.show', compact('faq'));
     }
 
     public function edit($id)

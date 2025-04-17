@@ -16,7 +16,7 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item active">
+        <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <a href="{{ route('admin.dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
@@ -27,23 +27,23 @@
             <span class="menu-header-text">master</span>
         </li>
 
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('users.*', 'jenjang.*', 'kategori.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-menu"></i>
                 <div data-i18n="Account Settings">Data Manajemen</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Pengguna</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('jenjang.*') ? 'active' : '' }}">
                     <a href="{{ route('jenjang.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Jenjang</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
                     <a href="{{ route('kategori.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Kategori</div>
                     </a>
@@ -59,19 +59,19 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Course Management</span>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('courses.*') ? 'active' : '' }}">
             <a href="{{ route('courses.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Kursus</div>
             </a>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('kelas.*') ? 'active' : '' }}">
             <a href="#" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Kelas</div>
             </a>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('sertifikat.*') ? 'active' : '' }}">
             <a href="#" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Sertifikat</div>
@@ -79,9 +79,19 @@
         </li>
 
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text"> Attandence Management</span>
+            <span class="menu-header-text"> Activity Management</span>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ request()->routeIs('activities.*') ? 'active' : '' }}">
+            <a href="{{ route('activities.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div data-i18n="Boxicons">Data Kegiatan</div>
+            </a>
+        </li>
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text"> Attendance Management</span>
+        </li>
+        <li class="menu-item {{ request()->routeIs('attendances.*') ? 'active' : '' }}">
             <a href="{{ route('attendances.admin.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Absensi</div>
@@ -98,7 +108,6 @@
             </a>
         </li>
     </ul>
-
 </aside>
 
 <style>
@@ -113,10 +122,7 @@
 
     .logo-image {
         max-width: 100%;
-        /* Ensure it doesn't overflow the container */
         width: 80%;
-        /* Adjust this value as needed */
         height: auto;
-        /* Maintain the aspect ratio */
     }
 </style>

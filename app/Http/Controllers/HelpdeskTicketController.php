@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HelpdeskTicket;
 use App\Models\HelpdeskMessage;
+use App\Models\Faq;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,6 +40,7 @@ class HelpdeskTicketController extends Controller
     // Simpan tiket baru
     public function store(Request $request)
     {
+        // Menentukan apakah pengguna adalah guest
         $isGuest = !auth()->check();
 
         // Validasi
@@ -50,42 +52,73 @@ class HelpdeskTicketController extends Controller
             'guest_phone' => $isGuest ? 'nullable|string|max:15' : 'nullable',
         ]);
 
-        // Simpan tiket
+        // Buat tiket
         $ticket = new HelpdeskTicket();
         $ticket->subject = $validated['subject'];
         $ticket->status = 'open';
 
         if ($isGuest) {
+            // Untuk guest, simpan data guest
             $ticket->guest_name = $validated['guest_name'];
             $ticket->guest_email = $validated['guest_email'];
             $ticket->guest_phone = $validated['guest_phone'];
             $ticket->user_id = null;
         } else {
+            // Untuk pengguna yang sudah terautentikasi, simpan user_id
             $ticket->user_id = auth()->id();
         }
 
         $ticket->save();
 
-        // Simpan pesan pertama (user/guest)
-        HelpdeskMessage::create([
-            'ticket_id' => $ticket->id,
-            'message' => $validated['message'],
-            'user_id' => $isGuest ? null : auth()->id(),
-            'sender_type' => $isGuest ? 'guest' : 'user',
-        ]);
+        // Pesan pertama dari user/guest
+        $message = new HelpdeskMessage();
+        $message->ticket_id = $ticket->id;
+        $message->message = $validated['message'];
+        $message->user_id = $isGuest ? null : auth()->id();
+        $message->sender_type = $isGuest ? 'guest' : 'user';
+        $message->save();
 
-        // Simpan auto-reply dari admin
-        HelpdeskMessage::create([
-            'ticket_id' => $ticket->id,
-            'message' => 'Tiket berhasil dibuat. Tim kami akan segera menghubungi Anda.',
-            'user_id' => null, // admin system
-            'sender_type' => 'system',
-        ]);
+        // Cek apakah mirip dengan FAQ
+        $matchedFaq = Faq::where('question', 'like', '%' . $validated['message'] . '%')
+                        ->orWhere('answer', 'like', '%' . $validated['message'] . '%')
+                        ->first();
 
-        return view('peserta.helpdesk.create', compact('ticket'));
+        if ($matchedFaq) {
+            // Tentukan nama route sesuai dengan role pengguna
+            $routeName = 'peserta.helpdesk.faq.show'; // Default untuk peserta
+            if (auth()->check() && auth()->user()->role_id == 1) {
+                $routeName = 'admin.faq.show'; // Untuk admin
+            } elseif (!auth()->check()) {
+                $routeName = 'guest.helpdesk.faq.show'; // Untuk guest
+            }
+
+            HelpdeskMessage::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => null,
+                'sender_type' => 'system',
+                'message' => "Kami menemukan jawaban yang mungkin relevan: <a href='" . route($routeName, $matchedFaq->id) . "' target='_blank'>" . e($matchedFaq->question) . "</a>",
+            ]);
+
+            HelpdeskMessage::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => null,
+                'sender_type' => 'system',
+                'message' => "Apakah jawaban ini membantu? Jika tidak, silakan tunggu admin membalas pesan Anda.",
+            ]);
+        } else {
+            // Jika tidak ada FAQ yang cocok
+            HelpdeskMessage::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => null,
+                'sender_type' => 'system',
+                'message' => 'Mohon tunggu, admin akan membalas pesan ini.',
+            ]);
+        }
+
+        // Redirect ke halaman detail tiket
+        return redirect()->route('peserta.helpdesk.tickets.show', $ticket->id)
+            ->with('success', 'Tiket berhasil dibuat.');
     }
-
-
     
     // Detail tiket + chat/message
     public function show($id)

@@ -17,40 +17,47 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item {{ Request::is('peserta/dashboard') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}">
             <a href="{{ route('peserta.dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
 
-        <!-- Biodata -->
-        <li class="menu-item {{ Request::is('biodata*') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('biodata.*') ? 'active' : '' }}">
             <a href="{{ route('biodata.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-user-account"></i>
                 <div data-i18n="Analytics">Biodata</div>
             </a>
         </li>
 
-
-        <!-- Kursus -->
-        <li class="menu-item {{ Request::is('peserta/kursus*') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('courses.indexpeserta') ? 'active' : '' }}">
             <a href="{{ route('courses.indexpeserta') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-book-alt"></i>
                 <div data-i18n="Analytics">Kursus</div>
             </a>
         </li>
 
-        <!-- Absensi -->
-        <li class="menu-item {{ Request::is('courses/absensi') ? 'active' : '' }}">
-            <a href="{{ route('courses.index') }}" class="menu-link">
+        <li class="menu-item {{ request()->routeIs('attendances.courses', 'attendances.activities') ? 'open active' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
                 <div data-i18n="Analytics">Absensi</div>
             </a>
-        </li>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->routeIs('attendances.courses') ? 'active' : '' }}">
+                    <a href="{{ route('attendances.courses') }}" class="menu-link">
+                        <div>Absen Kursus</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('attendances.activities') ? 'active' : '' }}">
+                    <a href="{{ route('attendances.activities') }}" class="menu-link">
+                        <div>Absen Kegiatan</div>
+                    </a>
+                </li>
+            </ul>
+        </li>        
 
-        <!-- Sertifikat -->
-        <li class="menu-item {{ Request::is('courses/sertifikat') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('courses.index') ? 'active' : '' }}">
             <a href="{{ route('courses.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-badge-check"></i>
                 <div data-i18n="Analytics">Sertifikat</div>

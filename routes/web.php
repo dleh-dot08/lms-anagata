@@ -1,21 +1,24 @@
 <?php
 
+use App\Models\Attendance;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\AdminController;
+use App\Http\Middleware\MentorMiddleware;
+use App\Http\Controllers\CourseController;
+//use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\LessonController;
+use App\Http\Middleware\PesertaMiddleware;
+use App\Http\Controllers\BiodataController;
+use App\Http\Controllers\JenjangController;
+use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\JenjangController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
-use App\Http\Middleware\AdminMiddleware;
-//use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\LessonController;
-use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Middleware\PesertaMiddleware;
-use App\Http\Controllers\PesertaController;
-use App\Http\Controllers\BiodataController;
+use App\Http\Controllers\ParticipantController;
 
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HelpdeskTicketController;
@@ -173,6 +176,7 @@ Route::middleware(['web', PesertaMiddleware::class])
         Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('tickets.show');      // Detail tiket
         Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store'); // Balas
         Route::post('/ticket-with-message', [HelpdeskTicketController::class, 'storeWithMessage'])->name('store.with.message');
+        Route::get('/faq/{id}', [FaqController::class, 'show'])->name('faq.show');
     });
 
 
@@ -183,6 +187,7 @@ Route::prefix('guest/helpdesk')
         Route::post('/store', [HelpdeskTicketController::class, 'store'])->name('store');
         Route::get('/ticket/{id}', [HelpdeskTicketController::class, 'show'])->name('show');
         Route::post('/ticket/{id}/message', [HelpdeskMessageController::class, 'store'])->name('message.store');
+        Route::get('/faq/{id}', [FaqController::class, 'show'])->name('faq.show');
     });
 
 
@@ -204,5 +209,32 @@ Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class,
     ->name('courses.showLesson')
     ->middleware(PesertaMiddleware::class);
 
+<<<<<<< HEAD
+Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
+        Route::get('/absensi', [AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('/absensi/kursus', [AttendanceController::class, 'courses'])->name('attendances.courses');
+        Route::get('/absensi/kegiatan', [AttendanceController::class, 'activities'])->name('attendances.activities');
+        Route::get('/absensi/create/{course}', [AttendanceController::class, 'create'])->name('attendances.create');
+        Route::get('/absensi/kegiatan/{activity}/buat', [AttendanceController::class, 'createActivity'])->name('attendances.activity.create');
+        Route::post('/absensi/kegiatan/{activity}/simpan', [AttendanceController::class, 'storeActivity'])->name('attendances.activity.store');
+        Route::post('/absensi/store', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('/absensi/rekap', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
+    });
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('/admin/activities', [ActivityController::class, 'index'])->name('activities.index');
+    Route::get('/admin/activities/create', [ActivityController::class, 'create'])->name('activities.create');
+    Route::post('/admin/activities', [ActivityController::class, 'store'])->name('activities.store');
+    Route::get('/admin/activities/{activity}', [ActivityController::class, 'show'])->name('activities.show');
+    Route::get('/admin/activities/{activity}/edit', [ActivityController::class, 'edit'])->name('activities.edit');
+    Route::put('/admin/activities/{activity}', [ActivityController::class, 'update'])->name('activities.update');
+    Route::delete('/admin/activities/{activity}', [ActivityController::class, 'destroy'])->name('activities.destroy');
+
+    Route::get('/admin/activities/{activity}/participants', [ActivityController::class, 'manageParticipants'])->name('activities.participants');
+    Route::get('/admin/activities/{activity}/participants/add', [ActivityController::class, 'addParticipantForm'])->name('activities.participants.add');
+    Route::post('/admin/activities/{activity}/participants', [ActivityController::class, 'storeParticipants'])->name('activities.participants.store');
+    Route::delete('/admin/activities/{activity}/participants/{user}', [ActivityController::class, 'removeParticipant'])->name('activities.participants.remove');
+});
+=======
+>>>>>>> 96b8136b3e555e3c4442be97fd63161f5db24ff0
 
 require __DIR__.'/auth.php';

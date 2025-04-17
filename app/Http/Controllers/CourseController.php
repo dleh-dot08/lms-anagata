@@ -90,7 +90,7 @@ class CourseController extends Controller
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
             'kategori_id' => 'required|exists:kategoris,id',
-            'jenjang_id' => 'required|exists:jenjangs,id', // <- perbaikan di sini
+            'jenjang_id' => 'required|exists:jenjang,id', // <- perbaikan di sini
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
@@ -205,7 +205,7 @@ class CourseController extends Controller
         $user = Auth::user();
 
         $query = $user->enrolledCourses()
-            ->with(['kategori', 'jenjang', 'mentor'])
+        ->with(['kategori', 'jenjang', 'mentor'])
             // Filter hanya kursus yang sedang aktif
             ->where('status', 'aktif')
             ->whereDate('waktu_mulai', '<=', now())

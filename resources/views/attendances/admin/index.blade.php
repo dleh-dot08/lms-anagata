@@ -18,7 +18,7 @@
     {{-- Table --}}
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
-            <thead class="table-light">
+            <thead class="table-primary">
                 <tr>
                     <th>#</th>
                     <th>Nama</th>
