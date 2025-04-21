@@ -96,9 +96,9 @@ Route::middleware('auth')->group(function () {
     });
 
     //Biodata 
-    //Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
-    //Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
-    //Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
+    Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
+    Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
+    Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
 });
 
 // Admin routes
@@ -197,7 +197,7 @@ Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
     ->name('peserta.dashboard')
     ->middleware(PesertaMiddleware::class);
 
-Route::middleware(['web', PesertaMiddleware::class])
+/*Route::middleware(['web', PesertaMiddleware::class])
     ->prefix('layouts/peserta')
     ->name('layouts.peserta.')
     ->group(function () {
@@ -213,7 +213,7 @@ Route::middleware(['web', KaryawanMiddleware::class])
         Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
         Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
         Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
-    });
+    });*/
 
 Route::get('/Karyawan/dashboard', [KaryawanController::class, 'index'])
     ->name('karyawan.dashboard')
