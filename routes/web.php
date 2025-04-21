@@ -201,9 +201,9 @@ Route::middleware(['web', PesertaMiddleware::class])
     ->prefix('layouts/peserta')
     ->name('layouts.peserta.')
     ->group(function () {
-        Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
-        Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
-        Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
+        Route::get('/layouts/peserta/biodata', [BiodataController::class, 'index'])->name('biodata.index');
+        Route::get('/layouts/peserta/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
+        Route::put('/layouts/peserta/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
     });
 
 Route::middleware(['web', KaryawanMiddleware::class])

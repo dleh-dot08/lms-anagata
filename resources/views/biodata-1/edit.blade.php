@@ -1,4 +1,6 @@
-@extends('layouts.karyawan.template')
+@extends(
+    Auth::user()->role_as == '4' ? 'layouts.karyawan.template' : 'layouts.peserta.template'
+)
 
 @section('content')
 <div class="container">
