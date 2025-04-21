@@ -29,7 +29,7 @@
                                         1 => route('admin.dashboard'),
                                         2 => route('crew.dashboard'),
                                         3 => route('peserta.dashboard'),
-                                        4 => route('vendor.dashboard'),
+                                        4 => route('karyawan.dashboard'),
                                         default => route('user.dashboard'),
                                     };
                                 @endphp
