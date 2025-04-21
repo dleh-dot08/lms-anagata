@@ -113,7 +113,7 @@
 
                 <!-- Tombol Edit -->
                 <div class="text-center mt-4">
-                <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
+                <a href="{{ route('layouts.peserta.biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
                     <i class="bx bx-edit"></i> Edit Data
                 </a>
                 </div>
