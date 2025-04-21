@@ -17,7 +17,7 @@ class BiodataController extends Controller
         $biodata = $user->biodata; // Mengambil biodata yang berelasi dengan user
 
         // Tentukan view berdasarkan role
-        $view = $user->role_as == '3' ? 'peserta.biodata.index' : 'karyawan.biodata.index';
+        $view = $user->role_as == '3' ? 'layouts.peserta.biodata.index' : 'layouts.karyawan.biodata.index';
     
         return view($view, compact('user', 'biodata'));
     }
@@ -32,7 +32,7 @@ class BiodataController extends Controller
     $user = User::findOrFail($id);
     $biodata = Biodata::where('id_user', $user->id)->first();
 
-    $view = $user->role_as == '3' ? 'peserta.biodata.index' : 'karyawan.biodata.index';
+    $view = $user->role_as == '3' ? 'layouts.peserta.biodata.index' : 'layouts.karyawan.biodata.index';
 
     return view($view, compact('user', 'biodata'));
 }
@@ -118,8 +118,8 @@ class BiodataController extends Controller
 
         $biodata->save();
 
-        $route = $user->role_as == '3' ? 'peserta.biodata.index' :
-        ($user->role_as == '4' ? 'karyawan.biodata.index' : 'biodata.index');
+        $route = $user->role_as == '3' ? 'layouts.peserta.biodata.index' :
+        ($user->role_as == '4' ? 'layouts.karyawan.biodata.index' : 'biodata.index');
 
         return redirect()->route($route)->with('success', 'Biodata berhasil diperbarui.');
     }
