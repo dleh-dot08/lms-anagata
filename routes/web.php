@@ -197,8 +197,17 @@ Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
     ->name('peserta.dashboard')
     ->middleware(PesertaMiddleware::class);
 
+Route::middleware(['web', PesertaMiddleware::class])
+    ->prefix('peserta')
+    ->name('peserta.')
+    ->group(function () {
+        Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
+        Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
+        Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
+    });
+
 Route::middleware(['web', KaryawanMiddleware::class])
-    ->prefix('karyawan/biodata')
+    ->prefix('karyawan')
     ->name('karyawan.')
     ->group(function () {
         Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
