@@ -39,10 +39,10 @@
 <body>
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
-            @include('layouts.peserta.sidebar') <!-- Sidebar -->
+            @include('layouts.karyawan.sidebar') <!-- Sidebar -->
 
             <div class="layout-page">
-                @include('layouts.peserta.navbar') <!-- Navbar -->
+                @include('layouts.karyawan.navbar') <!-- Navbar -->
                 <div class="content-wrapper">
                     <section>
                         @yield('content')
