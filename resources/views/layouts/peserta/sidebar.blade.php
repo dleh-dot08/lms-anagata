@@ -25,7 +25,7 @@
         </li>
 
         <li class="menu-item {{ request()->routeIs('biodata.*') ? 'active' : '' }}">
-            <a href="{{ route('peserta.biodata.index') }}" class="menu-link">
+            <a href="{{ route('layouts.peserta.biodata.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-user-account"></i>
                 <div data-i18n="Analytics">Biodata</div>
             </a>
