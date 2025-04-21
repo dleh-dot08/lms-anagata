@@ -1,5 +1,5 @@
 @extends(
-    Auth::user()->role_as == '3' ? 'layouts.peserta.template' : 'layouts.karyawan.template'
+    Auth::user()->role_as == '4' ? 'layouts.karyawan.template' : 'layouts.peserta.template'
 )
 
 @section('content')
