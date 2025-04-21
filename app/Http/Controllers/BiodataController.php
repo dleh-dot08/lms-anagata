@@ -16,26 +16,21 @@ class BiodataController extends Controller
         $user = Auth::user(); // Mendapatkan user yang sedang login
         $biodata = $user->biodata; // Mengambil biodata yang berelasi dengan user
 
-        // Tentukan view berdasarkan role
-        $view = $user->role_as == '3' ? 'layouts.peserta.biodata.index' : 'layouts.karyawan.biodata.index';
-    
-        return view($view, compact('user', 'biodata'));
+        return view('biodata.index', compact('user', 'biodata'));
     }
 
     public function edit($id)
-    {
-        // 🛡️ Block if user is not admin and tries to access other user's biodata
-        if (Auth::user()->role_as != '1' && Auth::id() != $id) {
-            abort(403, 'Unauthorized access.');
-        }
-
-        $user = User::findOrFail($id);
-        $biodata = Biodata::where('id_user', $user->id)->first();
-
-        $view = $user->role_as == '3' ? 'layouts.peserta.biodata.edit' : 'layouts.karyawan.biodata.edit';
-
-        return view($view, compact('user', 'biodata'));
+{
+    // 🛡️ Block if user is not admin and tries to access other user's biodata
+    if (Auth::user()->role_as != '1' && Auth::id() != $id) {
+        abort(403, 'Unauthorized access.');
     }
+
+    $user = User::findOrFail($id);
+    $biodata = Biodata::where('id_user', $user->id)->first();
+
+    return view('biodata.edit', compact('user', 'biodata'));
+}
 
     public function update(Request $request, $id)
     {
@@ -118,10 +113,7 @@ class BiodataController extends Controller
 
         $biodata->save();
 
-        $route = $user->role_as == '3' ? 'layouts.peserta.biodata.index' :
-        ($user->role_as == '4' ? 'layouts.karyawan.biodata.index' : 'biodata.index');
-
-        return redirect()->route($route)->with('success', 'Biodata berhasil diperbarui.');
+        return redirect()->route('biodata.index')->with('success', 'Biodata berhasil diperbarui.');
     }
 
 }
