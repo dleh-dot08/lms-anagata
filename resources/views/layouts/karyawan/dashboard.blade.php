@@ -10,7 +10,7 @@
                         <div class="card-body">
                             <h3 class="card-title text-primary"><b>Halo, Selamat Datang! &#128516; &#10024;</b></h3>
                             <p class="mb-4">
-                                Anda telah menjadi, <span class="fw-bold">Peserta.</span>
+                                Anda telah menjadi, <span class="fw-bold">Karyawan.</span>
                                 <br>sekarang anda bisa
                                 <br>mengakses modul yang ada
                                 <br>dalam website

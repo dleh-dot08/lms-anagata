@@ -1,6 +1,6 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="{{ route('peserta.dashboard') }}" class="app-brand-link">
+        <a href="{{ route('karyawan.dashboard') }}" class="app-brand-link">
             <span class="app-brand-logo demo">
                 <div class="sidebar-header">
                     <img src="{{ asset('assets/img/illustrations/logo-asn.png') }}" alt="logo-asn" class="logo-image">
@@ -17,7 +17,7 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('karyawan.dashboard') ? 'active' : '' }}">
             <a href="{{ route('karyawan.dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
