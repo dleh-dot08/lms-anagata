@@ -4,7 +4,9 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Middleware\MentorMiddleware;
 use App\Http\Controllers\CourseController;
 //use App\Http\Controllers\Admin\UserController;
@@ -194,6 +196,10 @@ Route::prefix('guest/helpdesk')
 Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
     ->name('peserta.dashboard')
     ->middleware(PesertaMiddleware::class);
+
+Route::get('/Karyawan/dashboard', [KaryawanController::class, 'index'])
+    ->name('karyawan.dashboard')
+    ->middleware(KaryawanMiddleware::class);
 
 Route::get('/peserta/kursus', [CourseController::class, 'indexpeserta'])
     ->name('courses.indexpeserta')
