@@ -32,7 +32,7 @@ class BiodataController extends Controller
     $user = User::findOrFail($id);
     $biodata = Biodata::where('id_user', $user->id)->first();
 
-    $view = $user->role_as == '3' ? 'layouts.peserta.biodata.index' : 'layouts.karyawan.biodata.index';
+    $view = $user->role_as == '3' ? 'layouts.peserta.biodata.edit' : 'layouts.karyawan.biodata.edit';
 
     return view($view, compact('user', 'biodata'));
 }
