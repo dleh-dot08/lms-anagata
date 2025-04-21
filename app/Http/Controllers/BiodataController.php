@@ -17,15 +17,11 @@ class BiodataController extends Controller
         $biodata = $user->biodata; // Mengambil biodata yang berelasi dengan user
 
         // Tentukan view berdasarkan role
-        switch ($user->role_as) {
-            case '3': // Peserta
-                $view = 'peserta.biodata.index';
-                break;
-            case '4': // Karyawan
-                $view = 'karyawan.biodata.index';
-                break;
-        }
-
+        $view = match ($user->role_as) {
+            '3' => 'peserta.biodata.index',
+            '4' => 'karyawan.biodata.index',
+        };
+    
         return view($view, compact('user', 'biodata'));
     }
 
@@ -39,14 +35,10 @@ class BiodataController extends Controller
     $user = User::findOrFail($id);
     $biodata = Biodata::where('id_user', $user->id)->first();
 
-    switch ($user->role_as) {
-        case '3': // Peserta
-            $view = 'peserta.biodata.edit';
-            break;
-        case '4': // Karyawan
-            $view = 'karyawan.biodata.edit';
-            break;
-    }
+    $view = match ($user->role_as) {
+        '3' => 'peserta.biodata.index',
+        '4' => 'karyawan.biodata.index',
+    };
 
     return view($view, compact('user', 'biodata'));
 }
