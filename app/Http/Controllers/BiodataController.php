@@ -16,7 +16,17 @@ class BiodataController extends Controller
         $user = Auth::user(); // Mendapatkan user yang sedang login
         $biodata = $user->biodata; // Mengambil biodata yang berelasi dengan user
 
-        return view('biodata.index', compact('user', 'biodata'));
+        // Tentukan view berdasarkan role
+        switch ($user->role_as) {
+            case '3': // Peserta
+                $view = 'peserta.biodata.index';
+                break;
+            case '4': // Karyawan
+                $view = 'karyawan.biodata.index';
+                break;
+        }
+
+        return view($view, compact('user', 'biodata'));
     }
 
     public function edit($id)
@@ -29,7 +39,16 @@ class BiodataController extends Controller
     $user = User::findOrFail($id);
     $biodata = Biodata::where('id_user', $user->id)->first();
 
-    return view('biodata.edit', compact('user', 'biodata'));
+    switch ($user->role_as) {
+        case '3': // Peserta
+            $view = 'peserta.biodata.edit';
+            break;
+        case '4': // Karyawan
+            $view = 'karyawan.biodata.edit';
+            break;
+    }
+
+    return view($view, compact('user', 'biodata'));
 }
 
     public function update(Request $request, $id)
@@ -113,7 +132,10 @@ class BiodataController extends Controller
 
         $biodata->save();
 
-        return redirect()->route('biodata.index')->with('success', 'Biodata berhasil diperbarui.');
+        $route = $user->role_as == '3' ? 'peserta.biodata.index' :
+        ($user->role_as == '4' ? 'karyawan.biodata.index' : 'biodata.index');
+
+        return redirect()->route($route)->with('success', 'Biodata berhasil diperbarui.');
     }
 
 }
