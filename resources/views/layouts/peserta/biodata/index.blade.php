@@ -1,10 +1,4 @@
-@extends(
-    Auth::user()->role_id == '1' ? 'layouts.admin.template' :
-    (Auth::user()->role_id == '2' ? 'layouts.mentor.template' :
-    (Auth::user()->role_id == '4' ? 'layouts.karyawan.template' :
-    'layouts.peserta.template'))
-)
-
+@extends('layouts.peserta.template')
 
 @section('content')
 <div class="container">
@@ -119,7 +113,7 @@
 
                 <!-- Tombol Edit -->
                 <div class="text-center mt-4">
-                <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
+                <a href="{{ route('layouts.peserta.biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
                     <i class="bx bx-edit"></i> Edit Data
                 </a>
                 </div>

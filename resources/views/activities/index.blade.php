@@ -38,7 +38,7 @@
                             <td>{{ \Carbon\Carbon::parse($activity->waktu_mulai)->format('d M Y H:i') }}</td>
                             <td>{{ \Carbon\Carbon::parse($activity->waktu_akhir)->format('d M Y H:i') }}</td>
                             <td>
-                                <span class="badge bg-{{ $activity->status == 'aktif' ? 'success' : 'secondary' }}">
+                                <span class="badge bg-{{ $activity->status == 'Aktif' ? 'success' : 'secondary' }}">
                                     {{ ucfirst($activity->status) }}
                                 </span>
                             </td>

@@ -4,7 +4,9 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Middleware\MentorMiddleware;
 use App\Http\Controllers\CourseController;
 //use App\Http\Controllers\Admin\UserController;
@@ -70,7 +72,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', [CourseController::class, 'show'])->name('show');
         Route::get('/{course}/edit', [CourseController::class, 'edit'])->name('edit');
         Route::put('/{course}', [CourseController::class, 'update'])->name('update');
-        Route::delete('/{id}', [CourseController::class, 'destroy'])->name('destroy');
+        Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
         
         // Form untuk tambah peserta ke kursus tertentu
@@ -195,6 +197,28 @@ Route::prefix('guest/helpdesk')
 Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
     ->name('peserta.dashboard')
     ->middleware(PesertaMiddleware::class);
+
+/*Route::middleware(['web', PesertaMiddleware::class])
+    ->prefix('layouts/peserta')
+    ->name('layouts.peserta.')
+    ->group(function () {
+        Route::get('/layouts/peserta/biodata', [BiodataController::class, 'index'])->name('biodata.index');
+        Route::get('/layouts/peserta/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
+        Route::put('/layouts/peserta/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
+    });
+
+Route::middleware(['web', KaryawanMiddleware::class])
+    ->prefix('layouts/karyawan')
+    ->name('layouts.karyawan.')
+    ->group(function () {
+        Route::get('/biodata', [BiodataController::class, 'index'])->name('biodata.index');
+        Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
+        Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
+    });*/
+
+Route::get('/Karyawan/dashboard', [KaryawanController::class, 'index'])
+    ->name('karyawan.dashboard')
+    ->middleware(KaryawanMiddleware::class);
 
 Route::get('/peserta/kursus', [CourseController::class, 'indexpeserta'])
     ->name('courses.indexpeserta')

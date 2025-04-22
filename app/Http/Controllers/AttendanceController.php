@@ -202,18 +202,21 @@ class AttendanceController extends Controller
     public function activities()
     {
         $user = auth()->user();
-        $today = Carbon::today()->toDateString();
-    
+        $now = Carbon::now(); 
+        
         // Ambil kegiatan aktif yang diikuti user dan masih dalam rentang waktu
         $activities = $user->activities()
-            ->wherePivot('status', 'aktif')
-            ->where(function ($query) use ($today) {
-                $query->whereDate('waktu_mulai', '<=', $today)
-                      ->whereDate('waktu_akhir', '>=', $today);
+            ->wherePivot('status', 'Aktif')
+            ->where(function ($query) use ($now) {
+                $query->whereDate('waktu_mulai', '<=', $now)
+                      ->whereDate('waktu_akhir', '>=', $now)
+                      ->whereTime('waktu_mulai', '<=', $now->format('H:i'))
+                      ->whereTime('waktu_akhir', '>=', $now->format('H:i'));
             })
-            ->whereDoesntHave('attendances', function ($query) use ($user, $today) {
+            ->whereDoesntHave('attendances', function ($query) use ($user, $now) {
+                // Pastikan user belum absen pada kegiatan yang dimaksud di hari yang sama
                 $query->where('user_id', $user->id)
-                      ->whereDate('tanggal', $today);
+                      ->whereDate('tanggal', $now->toDateString());
             })
             ->get();
     
@@ -226,6 +229,7 @@ class AttendanceController extends Controller
     
         return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
     }
+    
     
 
     public function createActivity(Activity $activity)

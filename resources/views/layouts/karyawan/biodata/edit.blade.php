@@ -1,16 +1,10 @@
-@extends(
-    Auth::user()->role_id == '1' ? 'layouts.admin.template' :
-    (Auth::user()->role_id == '2' ? 'layouts.mentor.template' :
-    (Auth::user()->role_id == '4' ? 'layouts.karyawan.template' :
-    'layouts.peserta.template'))
-)
-
+@extends('layouts.karyawan.template')
 
 @section('content')
 <div class="container">
     <div class="card shadow-sm p-4">
         <h3 class="fw-bold text-center mb-4">Edit Biodata</h3>
-        <form action="{{ route('biodata.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route(biodata.update', $user->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 

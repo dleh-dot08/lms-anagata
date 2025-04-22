@@ -139,6 +139,7 @@ class CourseController extends Controller
     // Menghapus kursus (soft delete)
     public function destroy(Course $course)
     {
+
         $course->delete();
 
         return redirect()->route('courses.index')->with('success', 'Kursus berhasil dihapus.');
