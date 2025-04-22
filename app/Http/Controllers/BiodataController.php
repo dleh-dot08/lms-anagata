@@ -12,11 +12,20 @@ class BiodataController extends Controller
 {
     public function index()
     {
-        // Mengambil data user dan biodata berdasarkan user yang login
-        $user = Auth::user(); // Mendapatkan user yang sedang login
-        $biodata = $user->biodata; // Mengambil biodata yang berelasi dengan user
-
-        return view('biodata.index', compact('user', 'biodata'));
+        $user = Auth::user();
+        $biodata = $user->biodata;
+    
+        switch ($user->role_id) {
+            case 2: // Karyawan
+                return view('layouts.mentor.biodata.index', compact('user', 'biodata'));
+    
+            case 4: // Mentor
+                return view('layouts.karyawan.biodata.index', compact('user', 'biodata'));
+    
+            case 3: // Peserta
+            default:
+                return view('layouts.peserta.biodata.index', compact('user', 'biodata'));
+        }
     }
 
     public function edit($id)

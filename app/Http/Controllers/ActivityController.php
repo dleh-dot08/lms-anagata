@@ -30,7 +30,7 @@ class ActivityController extends Controller
             'waktu_mulai' => 'required|date',
             'waktu_akhir' => 'required|date|after_or_equal:waktu_mulai',
             'jumlah_peserta' => 'nullable|integer',
-            'status' => 'required|in:aktif,tidak aktif',
+            'status' => 'required|in:Aktif,Nonaktif',
         ]);
 
         Activity::create($request->all());
@@ -59,7 +59,7 @@ class ActivityController extends Controller
             'waktu_mulai' => 'required|date',
             'waktu_akhir' => 'required|date|after_or_equal:waktu_mulai',
             'jumlah_peserta' => 'nullable|integer',
-            'status' => 'required|in:aktif,tidak aktif',
+            'status' => 'required|in:Aktif,Nonaktif',
         ]);
 
         $activity->update($request->all());
@@ -148,7 +148,7 @@ class ActivityController extends Controller
                 $userId => [
                     'tanggal_daftar' => $now,
                     'tanggal_mulai' => $now,
-                    'status' => 'aktif',
+                    'status' => 'Aktif',
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]

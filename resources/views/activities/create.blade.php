@@ -60,8 +60,8 @@
                 <label for="status" class="form-label">Status</label>
                 <select name="status" class="form-select" required>
                     <option value="">-- Pilih Status --</option>
-                    <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                    <option value="tidak aktif" {{ old('status') == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                    <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>Tidak Aktif</option>
                 </select>
             </div>
         </div>
