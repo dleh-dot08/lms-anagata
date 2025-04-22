@@ -44,6 +44,12 @@
                     <small class="text-muted">Gunakan link Google Drive versi <code>/preview</code> agar bisa ditampilkan menggunakan iframe.</small>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Link Attachment (Seperti Google Form dll)</label>
+                    <input type="text" name="attachment_url1" class="form-control mb-2" placeholder="Link 1" value="{{ old('attachment_url1', $lesson->attachment_url1 ?? '') }}">
+                    <input type="text" name="attachment_url2" class="form-control mb-2" placeholder="Link 2" value="{{ old('attachment_url2', $lesson->attachment_url2 ?? '') }}">
+                    <input type="text" name="attachment_url3" class="form-control mb-2" placeholder="Link 3" value="{{ old('attachment_url3', $lesson->attachment_url3 ?? '') }}">
+                </div>
                 <button type="submit" class="btn btn-success">Simpan</button>
             </form>
         </div>

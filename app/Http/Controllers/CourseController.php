@@ -254,4 +254,46 @@ class CourseController extends Controller
         return view('peserta.kursus.showLesson', compact('course', 'lesson'));
     }
 
+    // Menampilkan kursus yang diajarkan oleh mentor
+    public function indexMentor(Request $request)
+    {
+        $user = Auth::user();
+
+        $courses = Course::with(['kategori', 'jenjang'])
+            ->where('mentor_id', $user->id)
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('nama_kelas', 'like', '%' . $request->search . '%');
+            })
+            ->orderBy('waktu_mulai', 'desc')
+            ->paginate(10);
+
+        return view('mentor.kursus.index', compact('courses'));
+    }
+
+    // Detail kursus untuk mentor
+    public function showMentor($id)
+    {
+        $course = Course::with(['kategori', 'jenjang', 'lessons', 'enrollments.user'])->findOrFail($id);
+
+        // Optional: check if this mentor owns the course
+        if ($course->mentor_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        return view('mentor.kursus.show', compact('course'));
+    }
+
+    // Detail materi untuk mentor
+    public function showLessonMentor($courseId, $lessonId)
+    {
+        $course = Course::findOrFail($courseId);
+
+        if ($course->mentor_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $lesson = $course->lessons()->where('id', $lessonId)->firstOrFail();
+
+        return view('mentor.kursus.showLesson', compact('course', 'lesson'));
+    }
 }

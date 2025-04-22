@@ -23,6 +23,7 @@ use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HelpdeskTicketController;
 use App\Http\Controllers\HelpdeskMessageController;
+use App\Http\Controllers\MentorController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -234,4 +235,18 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::delete('/admin/activities/{activity}/participants/{user}', [ActivityController::class, 'removeParticipant'])->name('activities.participants.remove');
 });
 
+Route::get('/mentor/dashboard', [MentorController::class, 'index'])
+    ->name('mentor.dashboard')
+    ->middleware(MentorMiddleware::class);
+
+    Route::middleware(['auth', MentorMiddleware::class])
+    ->prefix('mentor')
+    ->name('mentor.')
+    ->group(function () {
+        Route::get('/kursus', [CourseController::class, 'indexMentor'])->name('kursus.index');
+        Route::get('/kursus/{course}', [CourseController::class, 'showMentor'])->name('kursus.show');
+        Route::get('/kursus/{course}/lesson/{lesson}', [CourseController::class, 'showLessonMentor'])->name('kursus.lesson.show');
+    });
+
+    
 require __DIR__.'/auth.php';

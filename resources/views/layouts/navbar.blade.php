@@ -27,7 +27,7 @@
                                     $role = Auth::user()->role_id;
                                     $homeRoute = match ($role) {
                                         1 => route('admin.dashboard'),
-                                        2 => route('crew.dashboard'),
+                                        2 => route('mentor.dashboard'),
                                         3 => route('peserta.dashboard'),
                                         4 => route('vendor.dashboard'),
                                         default => route('user.dashboard'),

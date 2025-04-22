@@ -95,6 +95,7 @@
                         <th>Pertemuan Ke</th>
                         <th>Video</th>
                         <th>File</th>
+                        <th>URL Lampiran</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -114,6 +115,13 @@
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if($lesson["file_materi$i"])
                                         <a href="{{ asset('storage/' . $lesson["file_materi$i"]) }}" target="_blank">File {{ $i }}</a><br>
+                                    @endif
+                                @endfor
+                            </td>
+                            <td>
+                                @for ($i = 1; $i <= 3; $i++)
+                                    @if($lesson["attachment_url$i"])
+                                        <a href="{{ $lesson["attachment_url$i"] }}" target="_blank">Lampiran {{ $i }}</a><br>
                                     @endif
                                 @endfor
                             </td>

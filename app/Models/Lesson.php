@@ -22,6 +22,9 @@ class Lesson extends Model
         'file_materi4',
         'file_materi5',
         'pertemuan_ke',
+        'attachment_url1',
+        'attachment_url2',
+        'attachment_url3',
     ];
 
     public function course()

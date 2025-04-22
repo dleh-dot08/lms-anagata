@@ -1,4 +1,4 @@
-@extends(Auth::user()->role_as == '1' ? 'layouts.admin.template' : 'layouts.peserta.template')
+@extends(Auth::user()->role_id == '1' ? 'layouts.admin.template' : 'layouts.peserta.template')
 
 @section('content')
 <div class="container">

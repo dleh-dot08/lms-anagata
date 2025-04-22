@@ -53,9 +53,9 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect()->route('admin.dashboard')->with('status', 'Welcome to your dashboard');
         }
-        if ($user->role_id == '2') // 2 = Crew
+        if ($user->role_id == '2') // 2 = Mentor    
         {
-            return redirect()->route('crew.dashboard')->with('status', 'Welcome to your dashboard');
+            return redirect()->route('mentor.dashboard')->with('status', 'Welcome to your dashboard');
         }
         if ($user->role_id == '3') // 3 = Peserta
         {
