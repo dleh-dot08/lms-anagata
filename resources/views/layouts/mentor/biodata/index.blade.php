@@ -1,10 +1,4 @@
-@extends(
-    Auth::user()->role_id == '1' ? 'layouts.admin.template' :
-    (Auth::user()->role_id == '2' ? 'layouts.mentor.template' :
-    (Auth::user()->role_id == '4' ? 'layouts.karyawan.template' :
-    'layouts.peserta.template'))
-)
-
+@extends('layouts.mentor.template')
 
 @section('content')
 <div class="container">

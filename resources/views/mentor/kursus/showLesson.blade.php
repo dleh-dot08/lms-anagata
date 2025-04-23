@@ -1,4 +1,4 @@
-@extends('layouts.peserta.template')
+@extends('layouts.mentor.template')
 
 @section('content')
 <div class="container">
@@ -88,6 +88,6 @@
     </div>
 
     {{-- Kembali ke halaman kursus --}}
-    <a href="{{ route('courses.showPeserta', $course->id) }}" class="btn btn-secondary mt-3">Kembali ke Kursus</a>
+    <a href="{{ route('mentor.kursus.show', $course->id) }}" class="btn btn-secondary mt-3">Kembali ke Kursus</a>
 </div>
 @endsection

@@ -31,7 +31,7 @@ class BiodataController extends Controller
     public function edit($id)
 {
     // 🛡️ Block if user is not admin and tries to access other user's biodata
-    if (Auth::user()->role_as != '1' && Auth::id() != $id) {
+    if (Auth::user()->role_id != '1' && Auth::id() != $id) {
         abort(403, 'Unauthorized access.');
     }
 
@@ -43,7 +43,7 @@ class BiodataController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->role_as != '1' && Auth::id() != $id) {
+        if (Auth::user()->role_id != '1' && Auth::id() != $id) {
             abort(403, 'Unauthorized access.');
         }
         
