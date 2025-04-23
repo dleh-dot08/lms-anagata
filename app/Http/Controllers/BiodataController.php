@@ -23,23 +23,35 @@ class BiodataController extends Controller
                 return view('layouts.karyawan.biodata.index', compact('user', 'biodata'));
     
             case 3: // Peserta
+                return view('layouts.peserta.biodata.index', compact('user', 'biodata'));
             default:
                 return view('layouts.peserta.biodata.index', compact('user', 'biodata'));
         }
     }
 
     public function edit($id)
-{
-    // 🛡️ Block if user is not admin and tries to access other user's biodata
-    if (Auth::user()->role_id != '1' && Auth::id() != $id) {
-        abort(403, 'Unauthorized access.');
+    {
+        // 🛡️ Block if user is not admin and tries to access other user's biodata
+        if (Auth::user()->role_id != '1' && Auth::id() != $id) {
+            abort(403, 'Unauthorized access.');
+        }
+    
+        $user = User::findOrFail($id);
+        $biodata = Biodata::where('id_user', $user->id)->first();
+    
+        switch ($user->role_id) {
+            case 2: // Karyawan
+                return view('layouts.mentor.biodata.edit', compact('user', 'biodata'));
+    
+            case 4: // Mentor
+                return view('layouts.karyawan.biodata.edit', compact('user', 'biodata'));
+    
+            case 3: // Peserta
+                return view('layouts.peserta.biodata.edit', compact('user', 'biodata'));
+            default:
+                return view('layouts.peserta.biodata.edit', compact('user', 'biodata'));
+        }
     }
-
-    $user = User::findOrFail($id);
-    $biodata = Biodata::where('id_user', $user->id)->first();
-
-    return view('biodata.edit', compact('user', 'biodata'));
-}
 
     public function update(Request $request, $id)
     {

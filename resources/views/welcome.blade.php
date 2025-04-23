@@ -39,7 +39,7 @@
                     <div class="col-md-7 col-lg-6 text-md-start text-center py-6">
                         <h4 class="fw-bold text-primary mb-3">Learning Management System</h4>
                         <h1>Anagata</h1>
-                        <h1>Academy - RuangAnagata</h1>
+                        <h1>Academy</h1>
                         <b>
                             <p class="mb-4 fw-medium-primary">Dokumentasi berbagai keperluan pembelajaran! <br>
                                 Modul, Pembelajaran, dan berbagai fungsi untuk kebutuhan internal.</p>
