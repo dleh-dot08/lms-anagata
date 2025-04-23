@@ -2,12 +2,12 @@
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
-                <!-- Register 
+                <!-- Register -->
                 <div class="card">
                     <div class="card-body">
                         <svg class="center logo" style="align" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 595.3 595.3" xml:space="preserve">
-                            <image style="overflow:visible;"
+                           <!-- <image style="overflow:visible;"
                                 xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAE
         +GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczpt
         ZXRhLyc+CiAgICAgICAgPHJkZjpSREYgeG1sbnM6cmRmPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5
