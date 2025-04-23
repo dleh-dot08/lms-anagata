@@ -49,6 +49,13 @@ class AuthenticatedSessionController extends Controller
     protected function authenticated(Request $request, $user)
     {
         Cache::flush();
+
+        // ✅ Cek verifikasi email
+        if (!$user->hasVerifiedEmail()) {
+            Auth::logout();
+            return redirect('/login')->with('error', 'Akun Anda belum memverifikasi email. Silakan cek inbox Anda untuk verifikasi.');
+        }
+
         if ($user->role_id == '1') // 1 = Admin
         {
             return redirect()->route('admin.dashboard')->with('status', 'Welcome to your dashboard');
