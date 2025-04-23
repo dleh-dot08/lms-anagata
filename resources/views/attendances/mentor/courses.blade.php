@@ -2,40 +2,40 @@
 
 @section('content')
 <div class="container py-4">
-    <h4 class="mb-4 fw-bold">Daftar Kegiatan yang Belum Diabsen Hari Ini</h4>
+    <h4 class="mb-4 fw-bold">Daftar Kelas yang Belum Diabsen Hari Ini</h4>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
             <thead class="table-primary">
                 <tr>
                     <th>#</th>
-                    <th>Nama Kegiatan</th>
-                    <th>Tanggal Mulai</th>
-                    <th>Tanggal Selesai</th>
+                    <th>Nama Kelas</th>
+                    <th>Mentor</th>
+                    <th>Kategori</th>
+                    <th>Jenjang</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($activities as $index => $activity)
+                @forelse ($courses as $index => $course)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $activity->nama_kegiatan }}</td>
-                        <td>{{ \Carbon\Carbon::parse($activity->pivot->tanggal_mulai)->format('d-m-Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($activity->pivot->tanggal_selesai)->format('d-m-Y') }}</td>
+                        <td>{{ $course->nama_kelas }}</td>
+                        <td>{{ $course->mentor->name ?? '-' }}</td>
+                        <td>{{ $course->kategori->nama_kategori }}</td>
+                        <td>{{ $course->jenjang->nama_jenjang }}</td>
+                        <td><span class="badge bg-warning text-dark">Belum Absen</span></td>
                         <td>
-                            <span class="badge bg-warning text-dark">Belum Absen</span>
-                        </td>
-                        <td>
-                            <a href="{{ route('attendances.activity.create', $activity->id) }}" class="btn btn-sm btn-primary">
+                            <a href="{{ route('attendances.create', $course->id) }}" class="btn btn-sm btn-primary">
                                 <i class="bi bi-pencil-square me-1"></i>Absen
                             </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-4">
-                            <span class="text-success fs-5">Semua kegiatan sudah diabsen hari ini 🎉</span>
+                        <td colspan="7" class="text-center py-4">
+                            <span class="text-success fs-5">Semua kelas sudah diabsen hari ini 🎉</span>
                         </td>
                     </tr>
                 @endforelse
@@ -43,23 +43,22 @@
         </table>
     </div>
 
-    <h4 class="mt-5 mb-4 fw-bold">Riwayat Absensi Kegiatan</h4>
-
+    <h4 class="mt-5 mb-4 fw-bold">Riwayat Absensi</h4>
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
                     <th>#</th>
-                    <th>Nama Kegiatan</th>
+                    <th>Nama Kelas</th>
                     <th>Tanggal</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($activityAttendances as $index => $attendance)
+                @forelse ($attendances as $index => $attendance)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $attendance->activity->nama_kegiatan }}</td>
+                        <td>{{ $attendance->course->nama_kelas }}</td>
                         <td>{{ \Carbon\Carbon::parse($attendance->tanggal)->format('d-m-Y') }}</td>
                         <td>
                             @php
@@ -78,7 +77,7 @@
                 @empty
                     <tr>
                         <td colspan="4" class="text-center py-4">
-                            <span class="text-muted">Belum ada riwayat absensi kegiatan.</span>
+                            <span class="text-muted">Belum ada riwayat absensi.</span>
                         </td>
                     </tr>
                 @endforelse

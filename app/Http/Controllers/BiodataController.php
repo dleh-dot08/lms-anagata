@@ -16,12 +16,10 @@ class BiodataController extends Controller
         $biodata = $user->biodata;
     
         switch ($user->role_id) {
-            case 2: // Karyawan
+            case 2: // Mentor
                 return view('layouts.mentor.biodata.index', compact('user', 'biodata'));
-    
-            case 4: // Mentor
+            case 4: // Karyawan
                 return view('layouts.karyawan.biodata.index', compact('user', 'biodata'));
-    
             case 3: // Peserta
                 return view('layouts.peserta.biodata.index', compact('user', 'biodata'));
             default:

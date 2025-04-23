@@ -244,6 +244,16 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
         Route::post('/absensi/store', [AttendanceController::class, 'store'])->name('attendances.store');
         Route::get('/absensi/rekap', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
     });
+    Route::middleware(['auth', MentorMiddleware::class])->group(function () {
+        Route::get('/absensi', [AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('/absensi/kursus', [AttendanceController::class, 'courses'])->name('attendances.courses');
+        Route::get('/absensi/kegiatan', [AttendanceController::class, 'activities'])->name('attendances.activities');
+        Route::get('/absensi/create/{course}', [AttendanceController::class, 'create'])->name('attendances.create');
+        Route::get('/absensi/kegiatan/{activity}/buat', [AttendanceController::class, 'createActivity'])->name('attendances.activity.create');
+        Route::post('/absensi/kegiatan/{activity}/simpan', [AttendanceController::class, 'storeActivity'])->name('attendances.activity.store');
+        Route::post('/absensi/store', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('/absensi/rekap', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
+    });
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('/admin/activities/create', [ActivityController::class, 'create'])->name('activities.create');

@@ -165,27 +165,45 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $today = Carbon::today()->toDateString();
-    
-        // Ambil kursus yang diikuti oleh user
-        $enrolledCourses = $user->enrolledCourses;
-    
-        // Ambil daftar course_id yang sudah diabsen oleh user hari ini
-        $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
-            ->whereDate('tanggal', $today)
-            ->pluck('course_id')
-            ->toArray();
-    
-        // Filter kursus yang:
-        // - belum diabsen hari ini
-        // - sedang berlangsung hari ini (berdasarkan waktu_mulai dan waktu_akhir)
-        $courses = $enrolledCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
-            $start = Carbon::parse($course->waktu_mulai)->toDateString();
-            $end = Carbon::parse($course->waktu_akhir)->toDateString();
-    
-            return !in_array($course->id, $alreadyAbsentCourses)
-                && $start <= $today
-                && $end >= $today;
-        });
+
+        if($user->role_id == 3) { // Peserta
+            // Ambil kursus yang diikuti oleh user
+            $enrolledCourses = $user->enrolledCourses;
+            
+            // Ambil daftar course_id yang sudah diabsen oleh user hari ini
+            $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
+                ->whereDate('tanggal', $today)
+                ->pluck('course_id')
+                ->toArray();
+        
+            // Filter kursus yang:
+            // - belum diabsen hari ini
+            // - sedang berlangsung hari ini (berdasarkan waktu_mulai dan waktu_akhir)
+            $courses = $enrolledCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
+                $start = Carbon::parse($course->waktu_mulai)->toDateString();
+                $end = Carbon::parse($course->waktu_akhir)->toDateString();
+        
+                return !in_array($course->id, $alreadyAbsentCourses)
+                    && $start <= $today
+                    && $end >= $today;
+            });
+        } elseif ($user->role_id == 2) { // Mentor
+            $taughtCourses = $user->coursesTaught;
+
+            $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
+                ->whereDate('tanggal', $today)
+                ->pluck('course_id')
+                ->toArray();
+
+            $courses = $taughtCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
+                return !in_array($course->id, $alreadyAbsentCourses)
+                    && $course->waktu_mulai <= $today
+                    && $course->waktu_akhir >= $today;
+            });
+        } else {
+            $courses = collect(); // Fallback for other roles
+        }
+        
     
         // Ambil riwayat absensi user yang terkait dengan course
         $attendances = Attendance::where('user_id', $user->id)
@@ -194,7 +212,14 @@ class AttendanceController extends Controller
             ->orderByDesc('tanggal')
             ->get();
     
-        return view('attendances.peserta.courses', compact('courses', 'attendances'));
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('attendances.mentor.courses', compact('courses', 'attendances'));
+            case 3: // Peserta
+                return view('attendances.peserta.courses', compact('courses', 'attendances'));
+            default:
+                return view('attendances.peserta.courses', compact('courses', 'attendances'));
+        }
     }
     
     
@@ -227,14 +252,30 @@ class AttendanceController extends Controller
             ->latest('tanggal')
             ->get();
     
-        return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+        
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('attendances.mentor.activities', compact('activities', 'activityAttendances'));
+            case 3: // Peserta
+                return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+            default:
+            return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+        }
     }
     
     
 
     public function createActivity(Activity $activity)
     {
-        return view('attendances.peserta.create-activity', compact('activity'));
+        $user = auth()->user();
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('attendances.mentor.create-activity', compact('activity'));
+            case 3: // Peserta
+                return view('attendances.peserta.create-activity', compact('activity'));
+            default:
+            return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+        }
     }
 
     public function storeActivity(Request $request, Activity $activity)
