@@ -2,7 +2,7 @@
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
-                <!-- Register -->
+                <!-- Register 
                 <div class="card">
                     <div class="card-body">
                         <svg class="center logo" style="align" xmlns="http://www.w3.org/2000/svg"
@@ -410,6 +410,8 @@
         iEgCVOgiIiIJUKGLiIgkQIUuIiKSABW6iIhIAlToIiIiCVChi4iIJECFLiIikgAVuoiISAJU6CIi
         IglQoYuIiCTg/wFUtdJ3d7smcQAAAABJRU5ErkJggg==" />
                         </svg>
+
+                        -->
 
                         <h4 class="mb-2"><b>Verifikasi Alamat Email-mu!</b></h4>
                         <br>
