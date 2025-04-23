@@ -38,7 +38,7 @@
                 <div class="card p-3 border-0 shadow-sm text-center">
                     <h5 class="fw-bold text-primary">Foto User</h5>
                     <img 
-                    src="{{ $biodata && $biodata->foto ? asset('public/storage/' . $biodata->foto) : asset('assets/img/elements/default-avatar.png') }}" 
+                    src="{{ $biodata && $biodata->foto ? asset('storage/' . $biodata->foto) : asset('assets/img/elements/default-avatar.png') }}" 
                     alt="Foto User" 
                     class="img-fluid rounded-circle border shadow" 
                     style="width: 150px; height: 150px; object-fit: cover;">
