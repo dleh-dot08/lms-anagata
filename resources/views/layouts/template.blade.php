@@ -10,7 +10,7 @@
         <!-- ===============================================-->
         <!--    Document Title-->
         <!-- ===============================================-->
-        <title>Anagata Sisedu Nusantara | Internal Documenter Needs </title>
+        <title>Ruang Anagata | Learning Management System </title>
 
 
         <!-- ===============================================-->
