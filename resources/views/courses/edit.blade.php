@@ -14,14 +14,13 @@
         </div>
 
         <div class="mb-3">
-            <label>Mentor</label>
-            <select name="mentor_id" class="form-control">
-                @foreach ($mentors as $mentor)
-                    <option value="{{ $mentor->id }}" {{ (isset($course) && $course->mentor_id == $mentor->id) ? 'selected' : '' }}>
-                        {{ $mentor->name }}
-                    </option>
-                @endforeach
-            </select>
+            <label for="mentor_id">Mentor</label>
+            <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;">
+            @if($course->mentor)
+                <option value="{{ $course->mentor->id }}" selected>{{ $course->mentor->name }}</option>
+            @endif
+</select>
+
         </div>
 
         <div class="mb-3">
@@ -95,3 +94,32 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#mentor_id').select2({
+            placeholder: 'Cari Mentor',
+            allowClear: true,
+            width: 'resolve',
+            minimumInputLength: 1, // ✅ only start searching after 1 character
+            ajax: {
+                url: @json(route('courses.searchMentor')),
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
+                }
+            }
+        });
+    });
+
+</script>
+@endpush
