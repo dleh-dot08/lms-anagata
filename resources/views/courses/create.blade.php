@@ -90,22 +90,20 @@
     <script>
         $(document).ready(function() {
             $('#mentor_id').select2({
-                placeholder: 'Cari mentor...',
+                placeholder: 'Cari Mentor',
                 ajax: {
-                    url: '{{ route("courses.searchMentor") }}',
+                    url: '{{ route('courses.searchMentor') }}', // URL untuk pencarian
                     dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            q: params.term // pencarian keyword
-                        };
-                    },
                     processResults: function(data) {
                         return {
-                            results: data
+                            results: data.map(function(mentor) {
+                                return {
+                                    id: mentor.id,
+                                    text: mentor.name // Tampilkan nama mentor di autocomplete
+                                };
+                            })
                         };
-                    },
-                    cache: true
+                    }
                 }
             });
         });

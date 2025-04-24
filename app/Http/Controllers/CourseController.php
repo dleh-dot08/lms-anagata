@@ -300,28 +300,17 @@ class CourseController extends Controller
 
     public function searchMentor(Request $request)
     {
-        $keyword = $request->q;
-
-        $mentors = \App\Models\User::where('role_id', 2) // role_id mentor
-            ->where(function ($query) use ($keyword) {
-                $query->where('name', 'like', "%$keyword%")
-                    ->orWhere('email', 'like', "%$keyword%");
-            })
-            ->select('id', 'name', 'email')
-            ->limit(10)
-            ->get();
-
-        $results = [];
-        foreach ($mentors as $mentor) {
-            $results[] = [
-                'id' => $mentor->id,
-                'text' => $mentor->name . ' (' . $mentor->email . ')'
-            ];
-        }
-
-        return response()->json($results);
+        $searchTerm = $request->get('search'); // Ambil data pencarian
+    
+        // Cari mentor berdasarkan nama atau email
+        $mentors = User::where('role_id', 2)
+                       ->where(function ($query) use ($searchTerm) {
+                           $query->where('name', 'LIKE', "%{$searchTerm}%")
+                                 ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+                       })
+                       ->get();
+    
+        return response()->json($mentors);
     }
-
-
 
 }

@@ -79,6 +79,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    public static function getMentors()
+    {
+        return self::where('role_id', 2)->get(); // Role mentor
+    }
+
     /**
      * Relasi ke Biodata
      */
