@@ -5,8 +5,24 @@
     <div class="">
     <h3 class="fw-bold py-3 mb-1 mt-2">Daftar Kursus Anda</h3>
     <div class="card shadow-sm p-4"> 
-        
 
+        <!-- Menampilkan Pesan Sukses atau Info -->
+        @if(session('errors'))
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
+        <div class="mb-3">
+            <a href="{{ route('courses.joinPeserta') }}" class="btn btn-success">
+                <i class="bi bi-door-open me-1"></i> Gabung Kursus
+            </a>
+        </div>
+        
         <!-- Pencarian dan Filter -->
         <form method="GET" action="{{ route('courses.indexpeserta') }}" class="mb-3">
             <div class="row">

@@ -138,4 +138,12 @@ class User extends Authenticatable implements MustVerifyEmail
         ->withPivot('tanggal_mulai', 'tanggal_daftar', 'tanggal_selesai', 'status')
         ->withTimestamps();
     }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments')
+                    ->withPivot('mentor_id', 'tanggal_daftar', 'tanggal_mulai', 'tanggal_selesai')
+                    ->withTimestamps();
+    }
+
 }

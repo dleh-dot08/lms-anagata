@@ -2,11 +2,20 @@
 
 @section('content')
 <div class="container mt-4">
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @elseif(session('info'))
+        <div class="alert alert-info">
+            {{ session('info') }}
+        </div>
+    @endif
     <h2>Detail Kursus</h2>
-
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h3>{{ $course->nama_kelas }}</h3>
+            <p><strong>Kode Unik:</strong> {{ $course->kode_unik ?? 'Tidak Ada' }}</p>
             <p><strong>Mentor:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
             <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</p>
             <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</p>

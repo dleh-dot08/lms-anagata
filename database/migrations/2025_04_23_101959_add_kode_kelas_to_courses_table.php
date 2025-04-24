@@ -9,17 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->softDeletes(); // ini akan membuat kolom deleted_at
+            $table->string('kode_kelas')->unique()->after('nama_kelas');
         });
     }
     
-    public function down()
+    public function down(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+            $table->dropColumn('kode_kelas');
         });
     }
     

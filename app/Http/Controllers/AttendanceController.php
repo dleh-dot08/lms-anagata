@@ -20,22 +20,30 @@ class AttendanceController extends Controller
     // ADMIN - Lihat semua absensi dengan filter tanggal
     public function adminIndex(Request $request)
     {
-        // Batasi hanya admin (role_id = 1) yang bisa akses
-        if (auth()->user()->role_id !== 1) {
-            abort(403, 'Unauthorized');
-        }
+        $query = Attendance::with(['user', 'course', 'activity']);
 
-        $query = Attendance::with(['user', 'course'])->latest('tanggal');
-
-        if ($request->has('tanggal')) {
+        if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
-        } else {
-            // Default: hanya tampilkan absensi hari ini
-            $query->whereDate('tanggal', now()->toDateString());
+        }
+    
+        if ($request->tipe === 'kursus') {
+            $query->whereNotNull('course_id')->whereNull('activity_id');
+        } elseif ($request->tipe === 'kegiatan') {
+            $query->whereNotNull('activity_id')->whereNull('course_id');
         }
 
-        $attendances = $query->paginate(20);
-
+        if ($request->role === 'mentor') {
+            $query->whereHas('user', function ($q) {
+                $q->where('role_id', 2);
+            });
+        } elseif ($request->role === 'peserta') {
+            $query->whereHas('user', function ($q) {
+                $q->where('role_id', 3);
+            });
+        }
+    
+        $attendances = $query->latest()->paginate(10);
+    
         return view('attendances.admin.index', compact('attendances'));
     }
 

@@ -37,7 +37,17 @@ class CourseController extends Controller
 
         $courses = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('courses.index', compact('courses'));
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('courses.index', compact('courses'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kursus.index', compact('courses'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     // Menampilkan halaman pembuatan kursus
@@ -48,7 +58,17 @@ class CourseController extends Controller
         $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
 
-        return view('courses.create', compact('mentors', 'kategoris', 'jenjangs'));
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('courses.create', compact('mentors', 'kategoris', 'jenjangs'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kursus.create', compact('mentors', 'kategoris', 'jenjangs'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     // Menyimpan kursus baru ke database
@@ -66,11 +86,25 @@ class CourseController extends Controller
             'harga' => 'nullable|numeric',
             'jumlah_peserta' => 'required|integer|min:0',
         ]);
+    
+        $data = $request->all();
+        $data['kode_unik'] = Course::generateKodeKelas();
+    
+        Course::create($data);
 
-        Course::create($request->all());
+        $user = auth()->user();
 
-        return redirect()->route('courses.index')->with('success', 'Kursus berhasil dibuat.');
+        if ($user->role_id === 1) {
+            return redirect()->route('courses.index')->with('success', 'kursus berhasil dibuat');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('courses.apd.index')->with('success', 'kursus berhasil dibuat');
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
+    
 
     // Menampilkan halaman untuk mengedit kursus
     public function edit(Course $course)
@@ -80,7 +114,17 @@ class CourseController extends Controller
         $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
 
-        return view('courses.edit', compact('course', 'mentors', 'kategoris', 'jenjangs'));
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('courses.edit', compact('course', 'mentors', 'kategoris', 'jenjangs'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kursus.edit', compact('course', 'mentors', 'kategoris', 'jenjangs'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     // Memperbarui kursus yang sudah ada
@@ -112,7 +156,17 @@ class CourseController extends Controller
             'jumlah_peserta',
         ]));
 
-        return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     // Menampilkan halaman detail kursus
@@ -133,7 +187,17 @@ class CourseController extends Controller
 
         $enrollments = $query->paginate(10);
 
-        return view('courses.show', compact('course', 'enrollments'));
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('courses.show', compact('course', 'enrollments'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kursus.show', compact('course', 'enrollments'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     // Menghapus kursus (soft delete)
@@ -142,7 +206,17 @@ class CourseController extends Controller
 
         $course->delete();
 
-        return redirect()->route('courses.index')->with('success', 'Kursus berhasil dihapus.');
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('courses.apd.index')->with('success', 'Kursus berhasil dihapus.');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('courses.apd.index')->with('success', 'Kursus berhasil dihapus.');
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function searchPeserta(Request $request, Course $course)
@@ -297,6 +371,48 @@ class CourseController extends Controller
 
         return view('mentor.kursus.showLesson', compact('course', 'lesson'));
     }
+
+        // Tampilkan form gabung
+        public function showJoinFormPeserta()
+        {
+            return view('peserta.kursus.join');
+        }
+    
+        // Proses input kode
+        public function joinWithCodePeserta(Request $request)
+        {
+            $request->validate([
+                'kode_unik' => 'required|string|exists:courses,kode_unik',
+            ], [
+                'kode_unik.exists' => 'Kode kursus tidak ditemukan.',
+            ]);
+    
+            $course = Course::where('kode_unik', $request->kode_unik)->first();
+            $user   = auth()->user();
+
+            // Cek apakah jenjang peserta sesuai dengan jenjang kursus
+            if ($user->jenjang_id !== $course->jenjang_id) {
+                return redirect()->route('courses.indexpeserta')
+                                 ->withErrors(['kode_unik' => 'Kamu tidak memiliki jenjang yang sesuai untuk mengikuti kursus ini.']);
+            }
+    
+            // Cek sudah terdaftar?
+            if ($user->courses()->where('course_id', $course->id)->exists()) {
+                return redirect()->route('courses.showPeserta', $course->id)
+                                 ->with('info', 'Kamu sudah terdaftar di kursus ini.');
+            }
+    
+            // Daftarkan user ke kursus
+            $user->courses()->attach($course->id, [
+                'mentor_id' => $course->mentor_id,
+                'tanggal_daftar' => now(),
+                'tanggal_mulai' => $course->waktu_mulai,
+                'tanggal_selesai' => null,
+            ]);
+    
+            return redirect()->route('courses.showPeserta', $course->id)
+                             ->with('success', 'Berhasil bergabung ke kursus!');
+        }
 
 public function searchMentor(Request $request)
 {

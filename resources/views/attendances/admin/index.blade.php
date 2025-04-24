@@ -10,11 +10,26 @@
             <label for="tanggal" class="form-label">Tanggal</label>
             <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ request('tanggal') }}">
         </div>
+        <div class="col-md-3">
+            <label for="tipe" class="form-label">Jenis Absensi</label>
+            <select name="tipe" id="tipe" class="form-select">
+                <option value="">Semua</option>
+                <option value="kursus" {{ request('tipe') == 'kursus' ? 'selected' : '' }}>Kursus</option>
+                <option value="kegiatan" {{ request('tipe') == 'kegiatan' ? 'selected' : '' }}>Kegiatan</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="role" class="form-label">Role</label>
+            <select name="role" id="role" class="form-select">
+                <option value="">Semua</option>
+                <option value="mentor" {{ request('role') == 'mentor' ? 'selected' : '' }}>Mentor</option>
+                <option value="peserta" {{ request('role') == 'peserta' ? 'selected' : '' }}>Peserta</option>
+            </select>
+        </div>
         <div class="col-md-2 align-self-end">
             <button type="submit" class="btn btn-primary w-100">Filter</button>
         </div>
     </form>
-
     {{-- Table --}}
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
@@ -23,7 +38,7 @@
                     <th>#</th>
                     <th>Nama</th>
                     <th>Role</th>
-                    <th>Kursus</th>
+                    <th>Kursus / Kegiatan</th>
                     <th>Status</th>
                     <th>Tanggal</th>
                     <th>Aksi</th>
@@ -41,7 +56,15 @@
                                 <span class="badge bg-success">Peserta</span>
                             @endif
                         </td>
-                        <td>{{ $attendance->course->nama_kelas ?? '-' }}</td>
+                        <td>    
+                            @if($attendance->course_id && $attendance->course)
+                            {{ $attendance->course->nama_kelas }}
+                        @elseif($attendance->activity_id && $attendance->activity)
+                            {{ $attendance->activity->nama_kegiatan }}
+                        @else
+                            <em>Tidak diketahui</em>
+                        @endif
+                        </td>
                         <td>
                             <span class="badge 
                                 @if($attendance->status == 'Hadir') bg-success
