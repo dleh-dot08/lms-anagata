@@ -302,7 +302,7 @@ class CourseController extends Controller
     {
         $keyword = $request->q;
 
-        $mentors = User::where('role_id', 2)
+        $mentors = \App\Models\User::where('role_id', 2) // role_id mentor
             ->where(function ($query) use ($keyword) {
                 $query->where('name', 'like', "%$keyword%")
                     ->orWhere('email', 'like', "%$keyword%");
@@ -311,8 +311,17 @@ class CourseController extends Controller
             ->limit(10)
             ->get();
 
-        return response()->json($mentors);
+        $results = [];
+        foreach ($mentors as $mentor) {
+            $results[] = [
+                'id' => $mentor->id,
+                'text' => $mentor->name . ' (' . $mentor->email . ')'
+            ];
+        }
+
+        return response()->json($results);
     }
+
 
 
 }
