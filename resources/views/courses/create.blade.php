@@ -89,7 +89,8 @@
         $('#mentor_id').select2({
             placeholder: 'Cari Mentor',
             allowClear: true,
-            width: 'resolve', // <- ensures width matches the parent select
+            width: 'resolve',
+            minimumInputLength: 1, // ✅ only start searching after 1 character
             ajax: {
                 url: @json(route('courses.searchMentor')),
                 dataType: 'json',
