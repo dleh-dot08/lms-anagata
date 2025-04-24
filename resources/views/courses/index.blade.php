@@ -20,13 +20,6 @@
             <div class="col-md-4">
                 <input type="text" name="search" class="form-control" placeholder="Cari Nama Kursus" value="{{ request('search') }}">
             </div>
-            <div class="col-md-3">
-                <select name="status" class="form-control">
-                    <option value="">Pilih Status</option>
-                    <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                    <option value="Nonaktif" {{ request('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-                </select>
-            </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary">Cari</button>
             </div>

@@ -18,11 +18,16 @@ class CourseController extends Controller
     {
         $query = Course::with(['mentor', 'kategori', 'jenjang']);
 
-        // Filter berdasarkan tab aktif/nonaktif
+        // Filter berdasarkan tab aktif/nonaktif + waktu_akhir
         if ($request->tab === 'nonaktif') {
-            $query->where('status', '!=', 'Aktif');
+            $query->where(function ($q) {
+                $q->where('status', '!=', 'Aktif')
+                ->orWhere('waktu_akhir', '<', Carbon::now());
+            });
         } else {
-            $query->where('status', 'Aktif');
+            // Default: kursus aktif dan belum lewat waktu_akhir
+            $query->where('status', 'Aktif')
+                ->where('waktu_akhir', '>=', Carbon::now());
         }
 
         // Filter berdasarkan pencarian nama kursus
