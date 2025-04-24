@@ -82,31 +82,38 @@ class AttendanceController extends Controller
             'file_attache' => 'nullable|file|max:2048',
             'ttd_digital' => 'nullable|string',
         ]);
-    
+
         if (!$request->course_id && !$request->activity_id) {
             return redirect()->back()->with('error', 'Absensi harus terkait dengan Course atau Activity.');
         }
-    
+
         $today = \Carbon\Carbon::today()->toDateString();
         $user_id = Auth::id();
-    
+
         $query = Attendance::where('user_id', $user_id)
             ->whereDate('tanggal', $today);
-    
+
         if ($request->course_id) {
             $query->where('course_id', $request->course_id)
-                  ->whereNull('activity_id');
+                ->whereNull('activity_id');
         } elseif ($request->activity_id) {
             $query->where('activity_id', $request->activity_id)
-                  ->whereNull('course_id');
+                ->whereNull('course_id');
         }
-    
+
         if ($query->exists()) {
             return redirect()->back()->with('error', 'Sudah absen hari ini untuk entitas ini.');
         }
-    
-        $file = $request->file('file_attache')?->store('absensi/foto', 'public');
-    
+
+        $file = null;
+        if ($request->hasFile('file_attache')) {
+            $filename = uniqid() . '.' . $request->file('file_attache')->getClientOriginalExtension();
+            $filePath = public_path('storage/absensi/foto');
+            if (!file_exists($filePath)) mkdir($filePath, 0755, true);
+            $request->file('file_attache')->move($filePath, $filename);
+            $file = 'absensi/foto/' . $filename;
+        }
+
         $ttd = null;
         if ($request->filled('ttd_digital')) {
             $ttd = $this->saveBase64Image($request->ttd_digital, 'absensi/ttd');
@@ -124,7 +131,7 @@ class AttendanceController extends Controller
             'ttd_digital' => $ttd,
             'status' => $request->status,
         ]);
-    
+
         return redirect()->route('attendances.index')->with('success', 'Absensi berhasil disimpan.');
     }
     
@@ -148,13 +155,21 @@ class AttendanceController extends Controller
             throw new \Exception('Did not match data URI with image data');
         }
 
-        $fileName = Str::uuid() . '.' . $type;
-        $filePath = $path . '/' . $fileName;
+        $fileName = \Str::uuid() . '.' . $type;
+        $publicPath = public_path('storage/' . $path);
 
-        Storage::disk('public')->put($filePath, $data);
+        // Create directory if not exists
+        if (!file_exists($publicPath)) {
+            mkdir($publicPath, 0755, true);
+        }
 
-        return $filePath;
+        $fullPath = $publicPath . '/' . $fileName;
+
+        file_put_contents($fullPath, $data);
+
+        return $path . '/' . $fileName;
     }
+
 
 
     // PESERTA / MENTOR - Rekap pribadi
@@ -173,27 +188,45 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $today = Carbon::today()->toDateString();
-    
-        // Ambil kursus yang diikuti oleh user
-        $enrolledCourses = $user->enrolledCourses;
-    
-        // Ambil daftar course_id yang sudah diabsen oleh user hari ini
-        $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
-            ->whereDate('tanggal', $today)
-            ->pluck('course_id')
-            ->toArray();
-    
-        // Filter kursus yang:
-        // - belum diabsen hari ini
-        // - sedang berlangsung hari ini (berdasarkan waktu_mulai dan waktu_akhir)
-        $courses = $enrolledCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
-            $start = Carbon::parse($course->waktu_mulai)->toDateString();
-            $end = Carbon::parse($course->waktu_akhir)->toDateString();
-    
-            return !in_array($course->id, $alreadyAbsentCourses)
-                && $start <= $today
-                && $end >= $today;
-        });
+
+        if($user->role_id == 3) { // Peserta
+            // Ambil kursus yang diikuti oleh user
+            $enrolledCourses = $user->enrolledCourses;
+            
+            // Ambil daftar course_id yang sudah diabsen oleh user hari ini
+            $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
+                ->whereDate('tanggal', $today)
+                ->pluck('course_id')
+                ->toArray();
+        
+            // Filter kursus yang:
+            // - belum diabsen hari ini
+            // - sedang berlangsung hari ini (berdasarkan waktu_mulai dan waktu_akhir)
+            $courses = $enrolledCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
+                $start = Carbon::parse($course->waktu_mulai)->toDateString();
+                $end = Carbon::parse($course->waktu_akhir)->toDateString();
+        
+                return !in_array($course->id, $alreadyAbsentCourses)
+                    && $start <= $today
+                    && $end >= $today;
+            });
+        } elseif ($user->role_id == 2) { // Mentor
+            $taughtCourses = $user->coursesTaught;
+
+            $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
+                ->whereDate('tanggal', $today)
+                ->pluck('course_id')
+                ->toArray();
+
+            $courses = $taughtCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
+                return !in_array($course->id, $alreadyAbsentCourses)
+                    && $course->waktu_mulai <= $today
+                    && $course->waktu_akhir >= $today;
+            });
+        } else {
+            $courses = collect(); // Fallback for other roles
+        }
+        
     
         // Ambil riwayat absensi user yang terkait dengan course
         $attendances = Attendance::where('user_id', $user->id)
@@ -202,7 +235,14 @@ class AttendanceController extends Controller
             ->orderByDesc('tanggal')
             ->get();
     
-        return view('attendances.peserta.courses', compact('courses', 'attendances'));
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('attendances.mentor.courses', compact('courses', 'attendances'));
+            case 3: // Peserta
+                return view('attendances.peserta.courses', compact('courses', 'attendances'));
+            default:
+                return view('attendances.peserta.courses', compact('courses', 'attendances'));
+        }
     }
     
     
@@ -235,14 +275,30 @@ class AttendanceController extends Controller
             ->latest('tanggal')
             ->get();
     
-        return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+        
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('attendances.mentor.activities', compact('activities', 'activityAttendances'));
+            case 3: // Peserta
+                return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+            default:
+            return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+        }
     }
     
     
 
     public function createActivity(Activity $activity)
     {
-        return view('attendances.peserta.create-activity', compact('activity'));
+        $user = auth()->user();
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('attendances.mentor.create-activity', compact('activity'));
+            case 3: // Peserta
+                return view('attendances.peserta.create-activity', compact('activity'));
+            default:
+            return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+        }
     }
 
     public function storeActivity(Request $request, Activity $activity)

@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{course}', [CourseController::class, 'update'])->name('update');
         Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
+        Route::get('/search-mentor', [CourseController::class, 'searchMentor'])->name('searchMentor');
         
         // Form untuk tambah peserta ke kursus tertentu
         Route::get('{course}/formparticipant', [ParticipantController::class, 'form'])->name('formparticipant');
@@ -88,13 +89,22 @@ Route::middleware('auth')->group(function () {
         Route::delete('{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('participants.destroy');
 
         // Lesson
+        //Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
+        //Route::post('/{course}/lessons', [LessonController::class, 'store'])->name('storeLesson');
+        //Route::get('/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('editLesson');
+        //Route::put('/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('updateLesson');
+        //Route::delete('/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('deleteLesson');
+        //Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
+
+    });
+
+    Route::middleware(AdminMiddleware::class)->prefix('courses')->name('courses.admin.')->group(function () {
         Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
         Route::post('/{course}/lessons', [LessonController::class, 'store'])->name('storeLesson');
         Route::get('/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('editLesson');
         Route::put('/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('updateLesson');
         Route::delete('/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('deleteLesson');
         Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
-
     });
 
     //Biodata 
@@ -102,7 +112,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
     Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
 });
-
+    
 // Admin routes
 Route::middleware(['auth'])->prefix('admin/attendances')->group(function () {
     Route::get('/', [AttendanceController::class, 'adminIndex'])->name('attendances.admin.index');
@@ -298,7 +308,16 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
         Route::post('/absensi/store', [AttendanceController::class, 'store'])->name('attendances.store');
         Route::get('/absensi/rekap', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
     });
-
+    Route::middleware(['auth', MentorMiddleware::class])->group(function () {
+        Route::get('/absensi', [AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('/absensi/kursus', [AttendanceController::class, 'courses'])->name('attendances.courses');
+        Route::get('/absensi/kegiatan', [AttendanceController::class, 'activities'])->name('attendances.activities');
+        Route::get('/absensi/create/{course}', [AttendanceController::class, 'create'])->name('attendances.create');
+        Route::get('/absensi/kegiatan/{activity}/buat', [AttendanceController::class, 'createActivity'])->name('attendances.activity.create');
+        Route::post('/absensi/kegiatan/{activity}/simpan', [AttendanceController::class, 'storeActivity'])->name('attendances.activity.store');
+        Route::post('/absensi/store', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('/absensi/rekap', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
+    });
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('/admin/activities/create', [ActivityController::class, 'create'])->name('activities.create');

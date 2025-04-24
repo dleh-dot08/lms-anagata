@@ -96,7 +96,7 @@
     <!-- Materi -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <a href="{{ route('courses.createLessonForm', $course->id) }}" class="btn btn-primary mb-3">Tambah Materi Pembelajaran</a>
+            <a href="{{ route('courses.admin.createLessonForm', $course->id) }}" class="btn btn-primary mb-3">Tambah Materi Pembelajaran</a>
             <table class="table table-hover table-bordered">
                 <thead class="table-primary">
                     <tr>
@@ -135,9 +135,9 @@
                                 @endfor
                             </td>
                             <td>
-                                <a href="{{ route('courses.editLesson', [$course->id, $lesson->id]) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="{{ route('courses.showLesson', [$course->id, $lesson->id]) }}" class="btn btn-sm btn-info">Lihat</a>
-                                <form action="{{ route('courses.deleteLesson', [$course->id, $lesson->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                <a href="{{ route('courses.admin.editLesson', [$course->id, $lesson->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('courses.admin.showLesson', [$course->id, $lesson->id]) }}" class="btn btn-sm btn-info">Lihat</a>
+                                <form action="{{ route('courses.admin.deleteLesson', [$course->id, $lesson->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm">Hapus</button>

@@ -6,6 +6,7 @@
 
         <form action="{{ route('courses.store') }}" method="POST">
             @csrf
+
             <div class="form-group">
                 <label for="nama_kelas">Nama Kelas</label>
                 <input type="text" name="nama_kelas" id="nama_kelas" class="form-control" required>
@@ -13,12 +14,7 @@
 
             <div class="form-group">
                 <label for="mentor_id">Mentor</label>
-                <select name="mentor_id" id="mentor_id" class="form-control" required>
-                    <option value="">Pilih Mentor</option>
-                    @foreach($mentors as $mentor)
-                        <option value="{{ $mentor->id }}">{{ $mentor->name }}</option>
-                    @endforeach
-                </select>
+                <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;"></select>
             </div>
 
             <div class="form-group">
@@ -82,3 +78,35 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <!-- Pastikan jQuery di-load terlebih dahulu -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Kemudian Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <!-- Inisialisasi Select2 setelah jQuery dan Select2 ter-load -->
+    <script>
+        $(document).ready(function() {
+            // Gantilah dengan ID select yang benar
+            $('#mentor_id').select2({
+                placeholder: 'Cari Mentor',
+                ajax: {
+                    url: '{{ route('courses.searchMentor') }}', // URL untuk pencarian
+                    dataType: 'json',
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(mentor) {
+                                return {
+                                    id: mentor.id,
+                                    text: mentor.name // Tampilkan nama mentor di autocomplete
+                                };
+                            })
+                        };
+                    }
+                }
+            });
+        });
+    </script>
+@endpush

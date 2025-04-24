@@ -7,7 +7,7 @@
                     <div class="card-body">
                         <svg class="center logo" style="align" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 595.3 595.3" xml:space="preserve">
-                            <image style="overflow:visible;"
+                           <!-- <image style="overflow:visible;"
                                 xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAE
         +GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczpt
         ZXRhLyc+CiAgICAgICAgPHJkZjpSREYgeG1sbnM6cmRmPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5
@@ -411,6 +411,8 @@
         IglQoYuIiCTg/wFUtdJ3d7smcQAAAABJRU5ErkJggg==" />
                         </svg>
 
+                        -->
+
                         <h4 class="mb-2"><b>Verifikasi Alamat Email-mu!</b></h4>
                         <br>
                         <p class="mb-4">Terimakasih sudah mendaftar! Untuk melengkapi pendaftaran, tolong
@@ -435,7 +437,7 @@
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <p><button type="submit" class="btn-link">Log Out</button></p>
+                            <p><button class="btn btn-primary d-grid w-100" type="submit">Log Out</button></p>
                         </form>
                     </div>
 

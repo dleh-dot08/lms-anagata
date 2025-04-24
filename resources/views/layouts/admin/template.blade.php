@@ -42,6 +42,7 @@
                 <div class="content-wrapper">
                     <section>
                         @yield('content')
+                        @stack('scripts')
                     </section>
 
                     <footer class="content-footer footer bg-footer-theme">

@@ -413,4 +413,20 @@ class CourseController extends Controller
             return redirect()->route('courses.showPeserta', $course->id)
                              ->with('success', 'Berhasil bergabung ke kursus!');
         }
+
+    public function searchMentor(Request $request)
+    {
+        $searchTerm = $request->get('search'); // Ambil data pencarian
+    
+        // Cari mentor berdasarkan nama atau email
+        $mentors = User::where('role_id', 2)
+                       ->where(function ($query) use ($searchTerm) {
+                           $query->where('name', 'LIKE', "%{$searchTerm}%")
+                                 ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+                       })
+                       ->get();
+    
+        return response()->json($mentors);
+    }
+
 }
