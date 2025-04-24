@@ -5,7 +5,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <h5 class="mb-4">{{ isset($lesson) ? 'Edit Materi' : 'Tambah Materi' }}</h5>
-            <form action="{{ isset($lesson) ? route('courses.updateLesson', [$course->id, $lesson->id]) : route('courses.storeLesson', $course->id) }}" method="POST">
+            <form action="{{ isset($lesson) ? route('courses.admin.updateLesson', [$course->id, $lesson->id]) : route('courses.admin.storeLesson', $course->id) }}" method="POST">
                 @csrf
                 @if(isset($lesson))
                     @method('PUT')
