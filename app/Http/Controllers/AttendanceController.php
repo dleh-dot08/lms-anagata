@@ -74,31 +74,38 @@ class AttendanceController extends Controller
             'file_attache' => 'nullable|file|max:2048',
             'ttd_digital' => 'nullable|string',
         ]);
-    
+
         if (!$request->course_id && !$request->activity_id) {
             return redirect()->back()->with('error', 'Absensi harus terkait dengan Course atau Activity.');
         }
-    
+
         $today = \Carbon\Carbon::today()->toDateString();
         $user_id = Auth::id();
-    
+
         $query = Attendance::where('user_id', $user_id)
             ->whereDate('tanggal', $today);
-    
+
         if ($request->course_id) {
             $query->where('course_id', $request->course_id)
-                  ->whereNull('activity_id');
+                ->whereNull('activity_id');
         } elseif ($request->activity_id) {
             $query->where('activity_id', $request->activity_id)
-                  ->whereNull('course_id');
+                ->whereNull('course_id');
         }
-    
+
         if ($query->exists()) {
             return redirect()->back()->with('error', 'Sudah absen hari ini untuk entitas ini.');
         }
-    
-        $file = $request->file('file_attache')?->store('absensi/foto', 'public');
-    
+
+        $file = null;
+        if ($request->hasFile('file_attache')) {
+            $filename = uniqid() . '.' . $request->file('file_attache')->getClientOriginalExtension();
+            $filePath = public_path('storage/absensi/foto');
+            if (!file_exists($filePath)) mkdir($filePath, 0755, true);
+            $request->file('file_attache')->move($filePath, $filename);
+            $file = 'absensi/foto/' . $filename;
+        }
+
         $ttd = null;
         if ($request->filled('ttd_digital')) {
             $ttd = $this->saveBase64Image($request->ttd_digital, 'absensi/ttd');
@@ -116,7 +123,7 @@ class AttendanceController extends Controller
             'ttd_digital' => $ttd,
             'status' => $request->status,
         ]);
-    
+
         return redirect()->route('attendances.index')->with('success', 'Absensi berhasil disimpan.');
     }
     
@@ -140,13 +147,21 @@ class AttendanceController extends Controller
             throw new \Exception('Did not match data URI with image data');
         }
 
-        $fileName = Str::uuid() . '.' . $type;
-        $filePath = $path . '/' . $fileName;
+        $fileName = \Str::uuid() . '.' . $type;
+        $publicPath = public_path('storage/' . $path);
 
-        Storage::disk('public')->put($filePath, $data);
+        // Create directory if not exists
+        if (!file_exists($publicPath)) {
+            mkdir($publicPath, 0755, true);
+        }
 
-        return $filePath;
+        $fullPath = $publicPath . '/' . $fileName;
+
+        file_put_contents($fullPath, $data);
+
+        return $path . '/' . $fileName;
     }
+
 
 
     // PESERTA / MENTOR - Rekap pribadi
