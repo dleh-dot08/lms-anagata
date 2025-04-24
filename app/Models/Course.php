@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Course extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'kode_unik',
         'mentor_id',
         'nama_kelas',
         'deskripsi',
@@ -55,6 +57,22 @@ class Course extends Model
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public static function generateKodeKelas($length = 5)
+    {
+        do {
+            $kode = 'CDM-' . strtoupper(Str::random($length));
+        } while (self::where('kode_unik', $kode)->exists());
+
+        return $kode;
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'enrollments')
+                    ->withPivot('mentor_id', 'tanggal_daftar', 'tanggal_mulai', 'tanggal_selesai')
+                    ->withTimestamps();
     }
 
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];

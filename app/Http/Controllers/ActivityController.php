@@ -12,13 +12,35 @@ class ActivityController extends Controller
     public function index()
     {
         $activities = Activity::with('jenjang')->latest()->paginate(10);
-        return view('activities.index', compact('activities'));
+
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('activities.index', compact('activities'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kegiatan.index', compact('activities'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function create()
     {
         $jenjangs = Jenjang::all();
-        return view('activities.create', compact('jenjangs'));
+
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('activities.create', compact('jenjangs'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kegiatan.create', compact('jenjangs'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function store(Request $request)
@@ -35,13 +57,34 @@ class ActivityController extends Controller
 
         Activity::create($request->all());
 
-        return redirect()->route('activities.index')->with('success', 'Kegiatan berhasil ditambahkan.');
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('activities.index')->with('success', 'Kegiatan berhasil ditambahkan.');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('activities.apd.index')->with('success', 'Kegiatan berhasil ditambahkan.');
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function show(Activity $activity)
     {
         $participants = $activity->users()->with('jenjang')->paginate(10);
-        return view('activities.show', compact('activity', 'participants'));
+
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('activities.show', compact('activity', 'participants'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kegiatan.show', compact('activity', 'participants'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function edit(Activity $activity)

@@ -26,6 +26,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HelpdeskTicketController;
 use App\Http\Controllers\HelpdeskMessageController;
 use App\Http\Controllers\MentorController;
+use App\Http\Middleware\DivisiMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
@@ -220,6 +221,52 @@ Route::get('/Karyawan/dashboard', [KaryawanController::class, 'index'])
     ->name('karyawan.dashboard')
     ->middleware(KaryawanMiddleware::class);
 
+Route::middleware(['auth', DivisiMiddleware::class . ':APD'])->group(function () {
+    Route::get('/karyawan/kursus', [CourseController::class , 'index'])->name('courses.apd.index');
+    Route::get('/karyawan/kursus/create', [CourseController::class, 'create'])->name('courses.apd.create');
+    Route::post('/', [CourseController::class, 'store'])->name('courses.apd.store');
+    Route::get('/karyawan/kursus/{id}', [CourseController::class, 'show'])->name('courses.apd.show');
+    Route::get('karyawan/{course}/edit', [CourseController::class, 'edit'])->name('courses.apd.edit');
+    Route::put('karyawan/{course}', [CourseController::class, 'update'])->name('courses.apd.update');
+    Route::delete('karyawan/{course}', [CourseController::class, 'destroy'])->name('courses.apd.destroy');
+    Route::post('karyawan/{id}/restore', [CourseController::class, 'restore'])->name('courses.apd.restore');
+
+    Route::get('karyawan/{course}/lessons/create', [LessonController::class, 'create'])->name('courses.apd.createLessonForm');
+    Route::post('karyawan/{course}/lessons', [LessonController::class, 'store'])->name('courses.apd.storeLesson');
+    Route::get('karyawan/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('courses.apd.editLesson');
+    Route::put('karyawan/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('courses.apd.updateLesson');
+    Route::delete('karyawan/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('courses.apd.deleteLesson');
+    Route::get('karyawan/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('courses.apd.showLesson');
+
+    Route::get('karyawan/{course}/formparticipant', [ParticipantController::class, 'form'])->name('courses.apd.formparticipant');
+    Route::post('karyawan/{course}/participants', [ParticipantController::class, 'store'])->name('courses.apd.participants.store');
+    Route::get('karyawan/search-peserta', [ParticipantController::class, 'search'])->name('courses.apd.participants.search');
+    Route::delete('karyawan/{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('courses.apd.participants.destroy');
+
+    Route::get('karyawan/activities', [ActivityController::class, 'index'])->name('activities.apd.index');
+    Route::get('karyawan/activities/create', [ActivityController::class, 'create'])->name('activities.apd.create');
+    Route::post('karyawan/activities', [ActivityController::class, 'store'])->name('activities.apd.store');
+    Route::get('karyawan/activities/{activity}', [ActivityController::class, 'show'])->name('activities.apd.show');
+    Route::get('karyawan/activities/{activity}/edit', [ActivityController::class, 'edit'])->name('activities.apd.edit');
+    Route::put('karyaan/activities/{activity}', [ActivityController::class, 'update'])->name('activities.apd.update');
+    Route::delete('karyawan/activities/{activity}', [ActivityController::class, 'destroy'])->name('activities.apd.destroy');
+
+    Route::get('karyawan/activities/{activity}/participants', [ActivityController::class, 'manageParticipants'])->name('activities.apd.participants');
+    Route::get('karyawan/activities/{activity}/participants/add', [ActivityController::class, 'addParticipantForm'])->name('activities.apd.participants.add');
+    Route::post('karyawan/activities/{activity}/participants', [ActivityController::class, 'storeParticipants'])->name('activities.apd.participants.store');
+    Route::delete('karyawan/activities/{activity}/participants/{user}', [ActivityController::class, 'removeParticipant'])->name('activities.apd.participants.remove');
+});
+
+
+Route::middleware(['auth','divisi:MRC'])->group(function(){
+    Route::resource('faqs', FaqController::class);
+});
+
+Route::middleware(['auth','divisi:Help Desk'])->group(function(){
+    Route::resource('helpdesk', HelpdeskTicketController::class);
+});
+
+
 Route::get('/peserta/kursus', [CourseController::class, 'indexpeserta'])
     ->name('courses.indexpeserta')
     ->middleware(PesertaMiddleware::class);
@@ -235,6 +282,13 @@ Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class,
     ->middleware(PesertaMiddleware::class);
 
 Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
+        //route kursus untuk peserta
+        Route::get('/peserta/gabung-kursus', [CourseController::class, 'showJoinFormPeserta'])
+        ->name('courses.joinPeserta');
+        Route::post('/peserta/gabung-kursus', [CourseController::class, 'joinWithCodePeserta'])
+        ->name('courses.joinPeserta.submit');
+
+        //route absensi untuk peserta
         Route::get('/absensi', [AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('/absensi/kursus', [AttendanceController::class, 'courses'])->name('attendances.courses');
         Route::get('/absensi/kegiatan', [AttendanceController::class, 'activities'])->name('attendances.activities');
@@ -244,6 +298,7 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
         Route::post('/absensi/store', [AttendanceController::class, 'store'])->name('attendances.store');
         Route::get('/absensi/rekap', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
     });
+
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('/admin/activities/create', [ActivityController::class, 'create'])->name('activities.create');

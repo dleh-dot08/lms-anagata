@@ -29,6 +29,7 @@ class ParticipantController extends Controller
                 $q->where('name', 'like', '%' . $request->q . '%')
                 ->orWhere('email', 'like', '%' . $request->q . '%');
             });
+        
         }
 
         // Pilihan per halaman: 10, 50, 100, all
@@ -41,7 +42,17 @@ class ParticipantController extends Controller
 
         $jenjangList = Jenjang::all();
 
-        return view('courses.formparticipant', compact('course', 'participants', 'jenjangList', 'perPage'));
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('courses.formparticipant', compact('course', 'participants', 'jenjangList', 'perPage'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kursus.formparticipant', compact('course', 'participants', 'jenjangList', 'perPage'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function store(Request $request, $courseId)
@@ -61,7 +72,17 @@ class ParticipantController extends Controller
             ]);
         }
 
-        return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil ditambahkan!');
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('courses.show', $courseId)->with('success', 'Peserta berhasil ditambahkan!');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('courses.apd.show', $courseId)->with('success', 'Peserta berhasil ditambahkan!');
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function destroy($courseId, $userId)
