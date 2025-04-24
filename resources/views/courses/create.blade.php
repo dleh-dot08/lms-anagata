@@ -6,6 +6,7 @@
 
         <form action="{{ route('courses.store') }}" method="POST">
             @csrf
+
             <div class="form-group">
                 <label for="nama_kelas">Nama Kelas</label>
                 <input type="text" name="nama_kelas" id="nama_kelas" class="form-control" required>
@@ -14,35 +15,6 @@
             <div class="form-group">
                 <label for="mentor_id">Mentor</label>
                 <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;"></select>
-                @push('scripts')
-                    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
-
-                    <script>
-                        $(document).ready(function() {
-                            $('#mentor_id').select2({
-                                placeholder: 'Cari mentor...',
-                                ajax: {
-                                    url: '{{ route("courses.searchMentor") }}',
-                                    dataType: 'json',
-                                    delay: 250,
-                                    data: function (params) {
-                                        return {
-                                            q: params.term // pencarian keyword
-                                        };
-                                    },
-                                    processResults: function (data) {
-                                        return {
-                                            results: data
-                                        };
-                                    },
-                                    cache: true
-                                }
-                            });
-                        });
-                    </script>
-                @endpush
             </div>
 
             <div class="form-group">
@@ -106,3 +78,40 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <!-- Select2 CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#mentor_id').select2({
+                placeholder: 'Cari mentor...',
+                allowClear: true,
+                ajax: {
+                    url: '{{ route("courses.searchMentor") }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(function(mentor) {
+                                return {
+                                    id: mentor.id,
+                                    text: mentor.name + ' (' + mentor.email + ')'
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+    </script>
+@endpush
