@@ -297,4 +297,25 @@ class CourseController extends Controller
 
         return view('mentor.kursus.showLesson', compact('course', 'lesson'));
     }
+
+    public function searchMentor(Request $request)
+    {
+        $term = $request->get('q');
+
+        $mentors = User::where('role_id', 2)
+            ->where(function ($query) use ($term) {
+                $query->where('name', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%");
+            })
+            ->limit(10)
+            ->get();
+
+        return response()->json($mentors->map(function ($mentor) {
+            return [
+                'id' => $mentor->id,
+                'text' => "{$mentor->name} ({$mentor->email})"
+            ];
+        }));
+    }
+
 }
