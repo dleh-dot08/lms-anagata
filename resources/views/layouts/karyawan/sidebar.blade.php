@@ -51,12 +51,12 @@
 
         {{-- MRC: FAQ --}}
         @if($divisi === 'MRC')
-            <li class="menu-item {{ request()->routeIs('faqs.*') ? 'active' : '' }}">
-                <a href="{{ route('faqs.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-help-circle"></i>
-                    <div data-i18n="FAQ">FAQ</div>
-                </a>
-            </li>
+        <li class="menu-item {{ request()->routeIs('faq.mrc.*') ? 'active' : '' }}">
+            <a href="{{ route('faq.mrc.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-help-circle"></i>
+                <div data-i18n="FAQ">FAQ</div>
+            </a>
+        </li>
         @endif
 
         {{-- Help Desk: Helpdesk --}}

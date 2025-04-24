@@ -271,8 +271,14 @@ Route::middleware(['auth', DivisiMiddleware::class . ':APD'])->group(function ()
 });
 
 
-Route::middleware(['auth','divisi:MRC'])->group(function(){
-    Route::resource('faqs', FaqController::class);
+Route::middleware(['auth',DivisiMiddleware::class . ':MRC'])->prefix('karyawan/faq')->name('faq.mrc.')->group(function () {
+    Route::get('/', [FaqController::class, 'index'])->name('index');
+    Route::get('/create', [FaqController::class, 'create'])->name('create');
+    Route::post('/', [FaqController::class, 'store'])->name('store');
+    Route::get('/{faq}/edit', [FaqController::class, 'edit'])->name('edit');
+    Route::put('/{faq}', [FaqController::class, 'update'])->name('update');
+    Route::get('/{faq}', [FaqController::class, 'show'])->name('show');
+    Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
 });
 
 Route::middleware(['auth','divisi:Help Desk'])->group(function(){

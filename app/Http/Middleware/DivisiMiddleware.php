@@ -13,12 +13,15 @@ class DivisiMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next, ...$allowedDivisi)
+    public function handle(Request $request, Closure $next, ...$allowedDivisi): Response
     {
-        $userDiv = auth()->user()->divisi;
-        if (! in_array($userDiv, $allowedDivisi)) {
+        $user = auth()->user();
+
+        // Prevent access if not logged in or user has no divisi field
+        if (! $user || ! in_array($user->divisi, $allowedDivisi)) {
             abort(403, 'Akses dilarang untuk divisi Anda.');
         }
+
         return $next($request);
     }
     
