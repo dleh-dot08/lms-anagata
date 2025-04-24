@@ -55,7 +55,18 @@
                 <td>{{ $course->mentor->name ?? 'Tidak Ada' }}</td>
                 <td>{{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</td>
                 <td>{{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</td>
-                <td>{{ $course->status }}</td>
+                <td>
+                    @php
+                        use Carbon\Carbon;
+
+                        $isExpired = Carbon::now()->gt(Carbon::parse($course->waktu_akhir));
+                        $finalStatus = $isExpired && $course->status == 'Aktif' ? 'Nonaktif' : $course->status;
+                    @endphp
+
+                    <span class="badge {{ $finalStatus == 'Aktif' ? 'bg-success' : 'bg-danger' }}">
+                        {{ $finalStatus }}
+                    </span>
+                </td>
                 <td>
                     <a href="{{ route('courses.show', $course->id) }}" class="btn btn-info btn-sm">Lihat</a>
                     <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-warning btn-sm">Edit</a>
