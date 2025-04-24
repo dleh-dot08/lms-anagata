@@ -65,12 +65,6 @@
                 <div data-i18n="Boxicons">Data Kursus</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->routeIs('kelas.*') ? 'active' : '' }}">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Boxicons">Data Kelas</div>
-            </a>
-        </li>
         <li class="menu-item {{ request()->routeIs('sertifikat.*') ? 'active' : '' }}">
             <a href="#" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
