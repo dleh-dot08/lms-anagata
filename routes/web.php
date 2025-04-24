@@ -87,13 +87,22 @@ Route::middleware('auth')->group(function () {
         Route::delete('{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('participants.destroy');
 
         // Lesson
+        //Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
+        //Route::post('/{course}/lessons', [LessonController::class, 'store'])->name('storeLesson');
+        //Route::get('/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('editLesson');
+        //Route::put('/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('updateLesson');
+        //Route::delete('/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('deleteLesson');
+        //Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
+
+    });
+
+    Route::middleware(AdminMiddleware::class)->prefix('courses')->name('courses.admin.')->group(function () {
         Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
         Route::post('/{course}/lessons', [LessonController::class, 'store'])->name('storeLesson');
         Route::get('/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('editLesson');
         Route::put('/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('updateLesson');
         Route::delete('/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('deleteLesson');
         Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
-
     });
 
     //Biodata 
@@ -101,18 +110,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/biodata/{id}/edit', [BiodataController::class, 'edit'])->name('biodata.edit');
     Route::put('/biodata/{id}', [BiodataController::class, 'update'])->name('biodata.update');
 });
-
-Route::middleware(['auth', AdminMiddleware::class])
-    ->prefix('courses')
-    ->name('courses.admin')
-    ->group(function () {
-        Route::get('/{course}/lessons/create', [LessonController::class, 'create'])->name('createLessonForm');
-        Route::post('/{course}/lessons', [LessonController::class, 'store'])->name('storeLesson');
-        Route::get('/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('editLesson');
-        Route::put('/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('updateLesson');
-        Route::delete('/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('deleteLesson');
-        Route::get('/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('showLesson');
-    });
     
 // Admin routes
 Route::middleware(['auth'])->prefix('admin/attendances')->group(function () {
