@@ -80,31 +80,29 @@
 @endsection
 
 @push('scripts')
-    <!-- Link to CSS Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-    <!-- jQuery should be loaded first -->
+    <!-- Load jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Link to JS Select2 -->
+    <!-- Load Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    <!-- Script untuk Select2 -->
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#mentor_id').select2({
                 placeholder: 'Cari mentor...',
                 ajax: {
                     url: '{{ route("courses.searchMentor") }}',
                     dataType: 'json',
                     delay: 250,
-                    data: function (params) {
+                    data: function(params) {
                         return {
-                            q: params.term // term pencarian
+                            q: params.term // pencarian keyword
                         };
                     },
-                    processResults: function (data) {
+                    processResults: function(data) {
                         return {
-                            results: data // data hasil pencarian
+                            results: data
                         };
                     },
                     cache: true
