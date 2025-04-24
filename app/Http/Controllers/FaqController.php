@@ -43,20 +43,40 @@ class FaqController extends Controller
     // }
     public function index(Request $request)
     {
+        $user = auth()->user();
         $query = Faq::query();
-
+    
         if ($request->filled('search')) {
             $query->where('question', 'like', '%' . $request->search . '%');
         }
-
         $faqs = $query->whereNull('deleted_at')->latest()->paginate(10);
-
-        return view('admin.faq.index', compact('faqs'));
+        // Only fetch non-deleted
+        $query->whereNull('deleted_at');
+    
+        // Optional: customize visibility based on division
+        if ($user->role->name === 'Admin') {
+            $faqs = $query->latest()->paginate(10);
+            return view('admin.faq.index', compact('faqs'));
+        } elseif ($user->divisi === 'MRC') {
+            // If MRC-specific filtering is needed, you can add conditions here
+            return view('layouts.karyawan.faq.index', compact('faqs'));
+        }
+    
+        abort(403, 'Unauthorized access');
     }
+    
 
     public function create()
     {
-        return view('admin.faq.create');
+        $user = auth()->user();
+
+        if ($user->role->name === 'Admin') {
+            return view('admin.faq.create');
+        } elseif ($user->divisi === 'MRC') {
+            return view('layouts.karyawan.faq.create');
+        }
+
+        abort(403, 'Unauthorized access');
     }
 
     public function store(Request $request)
@@ -76,7 +96,7 @@ class FaqController extends Controller
             'created_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil ditambahkan.');
+        return $this->redirectToIndexWithSuccess('FAQ berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -89,6 +109,8 @@ class FaqController extends Controller
             // Sesuaikan view berdasarkan role
             if ($user->role_id == 1) { // Admin
                 return view('admin.faq.show', compact('faq'));
+            } elseif ($user->divisi === 'MRC') {
+                return view('layouts.karyawan.faq.show', compact('faq'));
             } elseif ($user->role_id == 3) { // Peserta
                 return view('peserta.faq.show', compact('faq'));
             }
@@ -101,7 +123,15 @@ class FaqController extends Controller
     public function edit($id)
     {
         $faq = Faq::findOrFail($id);
-        return view('admin.faq.edit', compact('faq'));
+        $user = auth()->user();
+
+        if ($user->role->name === 'Admin') {
+            return view('admin.faq.edit', compact('faq'));
+        } elseif ($user->divisi === 'MRC') {
+            return view('layouts.karyawan.faq.edit', compact('faq'));
+        }
+
+        abort(403, 'Unauthorized access');
     }
 
     public function update(Request $request, $id)
@@ -122,7 +152,7 @@ class FaqController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil diperbarui.');
+        return $this->redirectToIndexWithSuccess('FAQ berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -133,6 +163,19 @@ class FaqController extends Controller
 
         $faq->delete(); // Soft delete di sini
 
-        return redirect()->route('admin.faq.index')->with('success', 'FAQ berhasil dihapus.');
+        return $this->redirectToIndexWithSuccess('FAQ berhasil dihapus.');
+    }
+
+    private function redirectToIndexWithSuccess($message)
+    {
+        $user = auth()->user();
+
+        if ($user->role->name === 'Admin') {
+            return redirect()->route('admin.faq.index')->with('success', $message);
+        } elseif ($user->divisi === 'MRC') {
+            return redirect()->route('faq.mrc.index')->with('success', $message);
+        }
+
+        abort(403, 'Unauthorized access');
     }
 }
