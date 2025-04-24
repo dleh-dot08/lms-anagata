@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <h3 class="mb-4">Detail Kegiatan</h3>
 
-    <div class="card shadow-sm">
+    <div class="card shadow-sm">s
         <div class="card-body">
             <h5 class="card-title">{{ $activity->nama_kegiatan }}</h5>
 
@@ -39,13 +39,13 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4>Daftar Peserta</h4>
-                <a href="{{ route('activities.participants.add', $activity->id) }}" class="btn btn-success">
+                <a href="{{ route('activities.apd.participants.add', $activity->id) }}" class="btn btn-success">
                     + Tambah Peserta
                 </a>
             </div>
 
             <!-- Form pencarian -->
-            <form method="GET" action="{{ route('activities.show', $activity->id) }}" class="mb-3">
+            <form method="GET" action="{{ route('activities.apd.show', $activity->id) }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Cari peserta..." value="{{ request('search') }}">
                     <button class="btn btn-primary" type="submit">Cari</button>
@@ -76,7 +76,7 @@
                                 @endif
                             </td>
                             <td>
-                                <form action="{{ route('activities.participants.remove', ['activity' => $activity->id, 'user' => $user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                <form action="{{ route('activities.apd.participants.remove', ['activity' => $activity->id, 'user' => $user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm">Hapus</button>
@@ -98,7 +98,7 @@
         </div>
     </div>
     <div class="mt-4">
-        <a href="{{ route('activities.index') }}" class="btn btn-secondary">
+        <a href="{{ route('activities.apd.index') }}" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Kembali
         </a>
     </div>

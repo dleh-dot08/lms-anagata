@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="card shadow-sm p-4">
-        <h3 class="fw-bold text-center mb-4">Biodata Karyawan</h3>
+        <h3 class="fw-bold text-center mb-4">Biodata Peserta</h3>
         <!-- Kolom User -->
         <div class="row">
             <!-- Kolom Kiri: Informasi User -->

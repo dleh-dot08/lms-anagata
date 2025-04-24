@@ -70,12 +70,18 @@ class ActivityController extends Controller
         }
     }
 
-    public function show(Activity $activity)
+    public function show(Activity $activity, Request $request)
     {
-        $participants = $activity->users()->with('jenjang')->paginate(10);
-
+        $query = $activity->users()->with('jenjang');
+    
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+    
+        $participants = $query->paginate(10)->appends($request->all());
+    
         $user = auth()->user();
-
+    
         if ($user->role_id === 1) {
             return view('activities.show', compact('activity', 'participants'));
     
@@ -86,11 +92,23 @@ class ActivityController extends Controller
             abort(403, 'Akses dilarang.');
         }
     }
+    
 
     public function edit(Activity $activity)
     {
         $jenjangs = Jenjang::all();
-        return view('activities.edit', compact('activity', 'jenjangs'));
+
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return view('activities.edit', compact('activity', 'jenjangs'));
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kegiatan.edit', compact('activity', 'jenjangs'));
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function update(Request $request, Activity $activity)
@@ -107,13 +125,34 @@ class ActivityController extends Controller
 
         $activity->update($request->all());
 
-        return redirect()->route('activities.index')->with('success', 'Kegiatan berhasil diperbarui.');
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('activities.index')->with('success', 'Kegiatan berhasil diperbarui.');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('activities.apd.index')->with('success', 'Kegiatan berhasil diperbarui.');
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function destroy(Activity $activity)
     {
         $activity->delete();
-        return redirect()->route('activities.index')->with('success', 'Kegiatan berhasil dihapus.');
+
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('activities.index')->with('success', 'Kegiatan berhasil dihapus.');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('activities.apd.index')->with('success', 'Kegiatan berhasil dihapus.');
+    
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function manageParticipants(Activity $activity)
@@ -156,27 +195,39 @@ class ActivityController extends Controller
     public function addParticipantForm(Activity $activity, Request $request)
     {
         $jenjangId = $activity->jenjang_id;
-
+    
+        // Ambil semua user_id yang sudah terdaftar di kegiatan ini
+        $alreadyAddedUserIds = $activity->users()->pluck('users.id');
+    
         $query = User::whereHas('jenjang', function ($q) use ($jenjangId) {
             $q->where('id', $jenjangId);
-        });
-
+        })->whereNotIn('id', $alreadyAddedUserIds);
+    
         if ($request->filled('q')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->q . '%')
-                ->orWhere('email', 'like', '%' . $request->q . '%');
+                  ->orWhere('email', 'like', '%' . $request->q . '%');
             });
         }
-
+    
         $perPage = $request->input('perPage', 10);
         if ($perPage === 'all') {
             $participants = $query->get();
         } else {
             $participants = $query->paginate((int)$perPage)->appends($request->all());
         }
-
-        return view('activities.participants', compact('activity', 'participants', 'perPage'));
+    
+        $user = auth()->user();
+    
+        if ($user->role_id === 1) {
+            return view('activities.participants', compact('activity', 'participants', 'perPage'));
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kegiatan.participants', compact('activity', 'participants', 'perPage'));
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
+    
     public function storeParticipants(Request $request, Activity $activity)
     {
         $request->validate([
@@ -198,8 +249,18 @@ class ActivityController extends Controller
             ]);
         }
     
-        return redirect()->route('activities.show', $activity->id)
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('activities.show', $activity->id)
                          ->with('success', 'Peserta berhasil ditambahkan.');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('activities.apd.show', $activity->id)
+                         ->with('success', 'Peserta berhasil ditambahkan.');
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     public function removeParticipant(Activity $activity, User $user)
@@ -207,6 +268,15 @@ class ActivityController extends Controller
         // Hapus relasi user dari activity
         $activity->users()->detach($user->id);
 
-        return redirect()->route('activities.show', $activity->id)->with('success', 'Peserta berhasil dihapus.');
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            return redirect()->route('activities.show', $activity->id)->with('success', 'Peserta berhasil dihapus.');
+    
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return redirect()->route('activities.apd.show', $activity->id)->with('success', 'Peserta berhasil dihapus.');
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 }
