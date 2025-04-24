@@ -74,7 +74,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{course}', [CourseController::class, 'update'])->name('update');
         Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
-        Route::get('/courses/search-mentor', [CourseController::class, 'searchMentor'])->name('searchMentor');
+        Route::get('/search-mentor', [CourseController::class, 'searchMentor'])->name('searchMentor');
         
         // Form untuk tambah peserta ke kursus tertentu
         Route::get('{course}/formparticipant', [ParticipantController::class, 'form'])->name('formparticipant');
