@@ -298,19 +298,29 @@ class CourseController extends Controller
         return view('mentor.kursus.showLesson', compact('course', 'lesson'));
     }
 
-    public function searchMentor(Request $request)
-    {
-        $searchTerm = $request->get('search'); // Ambil data pencarian
-    
-        // Cari mentor berdasarkan nama atau email
-        $mentors = User::where('role_id', 2)
-                       ->where(function ($query) use ($searchTerm) {
-                           $query->where('name', 'LIKE', "%{$searchTerm}%")
-                                 ->orWhere('email', 'LIKE', "%{$searchTerm}%");
-                       })
-                       ->get();
-    
-        return response()->json($mentors);
-    }
+public function searchMentor(Request $request)
+{
+    $searchTerm = $request->get('q'); // Fix: match Select2's param name "q"
+
+    // Find mentors (assuming role_id 2 is Mentor)
+    $mentors = User::where('role_id', 2)
+        ->where(function ($query) use ($searchTerm) {
+            $query->where('name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+        })
+        ->select('id', 'name')
+        ->get();
+
+    // Return formatted for Select2: [{ id: 1, text: 'Name' }, ...]
+    $results = $mentors->map(function ($mentor) {
+        return [
+            'id' => $mentor->id,
+            'text' => $mentor->name
+        ];
+    });
+
+    return response()->json($results);
+}
+
 
 }

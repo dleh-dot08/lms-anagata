@@ -64,6 +64,9 @@ Route::middleware('auth')->group(function () {
 
     // Course Management (Admin Only
     Route::middleware(AdminMiddleware::class)->get('/courses/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
+    Route::prefix('courses')->name('courses.')->group(function () {
+        Route::get('/search-mentor', [CourseController::class, 'searchMentor'])->name('searchMentor');
+    });
     Route::middleware(AdminMiddleware::class)->prefix('courses')->name('courses.')->group(function () {
         Route::get('/search-peserta', [CourseController::class, 'searchPeserta'])->name('searchPeserta');
         Route::get('/', [CourseController::class, 'index'])->name('index');
@@ -74,7 +77,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{course}', [CourseController::class, 'update'])->name('update');
         Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
-        Route::get('/search-mentor', [CourseController::class, 'searchMentor'])->name('searchMentor');
+
         
         // Form untuk tambah peserta ke kursus tertentu
         Route::get('{course}/formparticipant', [ParticipantController::class, 'form'])->name('formparticipant');

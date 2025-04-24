@@ -80,32 +80,29 @@
 @endsection
 
 @push('scripts')
-    <!-- Pastikan jQuery di-load terlebih dahulu -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-    <!-- Kemudian Select2 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-    <!-- Script untuk Select2 -->
-    <script>
-        $(document).ready(function() {
-            $('#mentor_id').select2({
-                placeholder: 'Cari Mentor',
-                ajax: {
-                    url: '{{ route('courses.searchMentor') }}', // URL untuk pencarian
-                    dataType: 'json',
-                    processResults: function(data) {
-                        return {
-                            results: data.map(function(mentor) {
-                                return {
-                                    id: mentor.id,
-                                    text: mentor.name // Tampilkan nama mentor di autocomplete
-                                };
-                            })
-                        };
-                    }
+<script>
+    $(document).ready(function() {
+        $('#mentor_id').select2({
+            placeholder: 'Cari Mentor',
+            allowClear: true,
+            width: 'resolve', // <- ensures width matches the parent select
+            ajax: {
+                url: @json(route('courses.searchMentor')),
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
                 }
-            });
+            }
         });
-    </script>
+    });
+
+</script>
 @endpush
