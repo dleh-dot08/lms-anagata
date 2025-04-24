@@ -86,9 +86,10 @@
     <!-- Kemudian Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-    <!-- Script untuk Select2 -->
+    <!-- Inisialisasi Select2 setelah jQuery dan Select2 ter-load -->
     <script>
         $(document).ready(function() {
+            // Gantilah dengan ID select yang benar
             $('#mentor_id').select2({
                 placeholder: 'Cari Mentor',
                 ajax: {
