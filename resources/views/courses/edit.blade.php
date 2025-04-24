@@ -59,6 +59,38 @@
             </select>
         </div>
 
+        <div class="mb-3">
+            <label>Level</label>
+            <select name="level" class="form-control">
+                <option value="Beginner" {{ $course->level == 'Beginner' ? 'selected' : '' }}>Beginner</option>
+                <option value="Intermediate" {{ $course->level == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
+                <option value="Advanced" {{ $course->level == 'Advanced' ? 'selected' : '' }}>Advanced</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Waktu Mulai</label>
+            <input type="datetime-local" name="waktu_mulai" class="form-control"
+                value="{{ old('waktu_mulai', \Carbon\Carbon::parse($course->waktu_mulai)->format('Y-m-d\TH:i')) }}">
+        </div>
+
+        <div class="mb-3">
+            <label>Waktu Akhir</label>
+            <input type="datetime-local" name="waktu_akhir" class="form-control"
+                value="{{ old('waktu_akhir', \Carbon\Carbon::parse($course->waktu_akhir)->format('Y-m-d\TH:i')) }}">
+        </div>
+
+        <div class="mb-3">
+            <label>Harga</label>
+            <input type="number" name="harga" class="form-control" value="{{ old('harga', $course->harga ?? '') }}">
+        </div>
+
+        <div class="mb-3">
+            <label>Jumlah Peserta</label>
+            <input type="number" name="jumlah_peserta" class="form-control" value="{{ old('jumlah_peserta', $course->jumlah_peserta ?? '') }}">
+        </div>
+
+
         <button type="submit" class="btn btn-primary">Perbarui</button>
     </form>
 </div>
