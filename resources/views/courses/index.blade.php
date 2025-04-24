@@ -57,9 +57,7 @@
                 <td>{{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</td>
                 <td>
                     @php
-                        use Carbon\Carbon;
-
-                        $isExpired = Carbon::now()->gt(Carbon::parse($course->waktu_akhir));
+                        $isExpired = \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($course->waktu_akhir));
                         $finalStatus = $isExpired && $course->status == 'Aktif' ? 'Nonaktif' : $course->status;
                     @endphp
 
