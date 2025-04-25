@@ -19,11 +19,36 @@ class CertificateController extends Controller
     }
 
     // INDEX untuk PESERTA
-    public function indexPeserta()
+    public function indexPeserta(Request $request)
     {
-        $certificates = Certificate::where('user_id', Auth::id())
-            ->with('course', 'activity')
-            ->latest()->get();
+        // Filter pencarian berdasarkan nama kursus/kegiatan dan tipe sertifikat (kursus/aktivitas)
+        $query = Certificate::query();
+
+        // Pencarian berdasarkan nama kursus atau kegiatan
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereHas('course', function ($q) use ($searchTerm) {
+                    $q->where('nama_kelas', 'like', "%{$searchTerm}%");
+                })
+                ->orWhereHas('activity', function ($q) use ($searchTerm) {
+                    $q->where('nama_kegiatan', 'like', "%{$searchTerm}%");
+                });
+            });
+        }
+
+        // Filter berdasarkan tipe (kursus atau aktivitas)
+        if ($request->has('type') && $request->type != '') {
+            $type = $request->type;
+            if ($type == 'course') {
+                $query->whereNotNull('course_id');
+            } elseif ($type == 'activity') {
+                $query->whereNotNull('activities_id');
+            }
+        }
+
+        // Ambil sertifikat yang sesuai dengan filter dan paginate
+        $certificates = $query->where('user_id', auth()->id())->paginate(10);
 
         return view('certificates.peserta.index', compact('certificates'));
     }
