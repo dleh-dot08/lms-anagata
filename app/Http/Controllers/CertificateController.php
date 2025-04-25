@@ -97,7 +97,7 @@ class CertificateController extends Controller
     }
 
     // SHOW - admin bisa lihat semua, peserta hanya bisa lihat miliknya
-    public function show($id)
+    /* public function showAdmin($id)
     {
         $certificate = Certificate::with('user', 'course', 'activity')->findOrFail($id);
 
@@ -106,6 +106,20 @@ class CertificateController extends Controller
         }
 
         return view('certificates.show', compact('certificate'));
+    } */
+
+    public function showAdmin($id)
+    {
+        $certificate = Certificate::with('user', 'course', 'activity')->findOrFail($id);
+
+        return view('certificates.showAdmin', compact('certificate'));
+    }
+
+    public function showPeserta($id)
+    {
+        $certificate = Certificate::with('user', 'course', 'activity')->findOrFail($id);
+
+        return view('certificates.showPeserta', compact('certificate'));
     }
 
     // FORM EDIT
