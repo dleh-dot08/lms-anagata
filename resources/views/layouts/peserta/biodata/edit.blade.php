@@ -68,7 +68,7 @@
                     <select name="jenjang_id" class="form-select">
                         <option value="">-- Pilih Jenjang --</option>
                         @foreach($jenjangs as $jenjang)
-                            <option value="{{ $jenjang->id }}" {{ $users?->jenjang_id == $jenjang->id ? 'selected' : '' }}>
+                            <option value="{{ $jenjang->id }}" {{ $user?->jenjang_id == $jenjang->id ? 'selected' : '' }}>
                                 {{ $jenjang->nama }}
                             </option>
                         @endforeach
