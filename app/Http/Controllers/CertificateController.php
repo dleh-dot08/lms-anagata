@@ -112,14 +112,14 @@ class CertificateController extends Controller
     {
         $certificate = Certificate::with('user', 'course', 'activity')->findOrFail($id);
 
-        return view('certificates.showAdmin', compact('certificate'));
+        return view('certificates.admin.show', compact('certificate'));
     }
 
     public function showPeserta($id)
     {
         $certificate = Certificate::with('user', 'course', 'activity')->findOrFail($id);
 
-        return view('certificates.showPeserta', compact('certificate'));
+        return view('certificates.peserta.show', compact('certificate'));
     }
 
     // FORM EDIT
