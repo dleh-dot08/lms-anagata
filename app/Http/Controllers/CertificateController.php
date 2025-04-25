@@ -71,6 +71,20 @@ class CertificateController extends Controller
         return view('certificates.peserta.index', compact('certificates'));
     }
 
+    public function createCourses($courseId)
+    {
+        // Ambil data kursus
+        $course = Course::findOrFail($courseId);
+        
+        // Ambil peserta yang belum memiliki sertifikat
+        $participants = $course->enrollments()
+            ->whereNull('tanggal_selesai') // Filter peserta yang belum selesai
+            ->whereDoesntHave('certificates') // Peserta yang belum memiliki sertifikat
+            ->get();
+
+        return view('certificates.admin.createCourses', compact('course', 'participants'));
+    }
+
     // FORM CREATE - hanya untuk admin
     public function create()
     {

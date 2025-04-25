@@ -351,6 +351,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/certificates', [CertificateController::class, 'indexAdmin'])->name('certificates.indexAdmin');
     Route::get('/certificates/create', [CertificateController::class, 'create'])->name('certificates.create');
+    Route::get('/certificates/create', [CertificateController::class, 'createCourses'])->name('certificates.createCourses');
     Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
     Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('certificates.edit');
     Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('certificates.update');
