@@ -361,6 +361,12 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
     Route::get('/my-certificates', [CertificateController::class, 'indexPeserta'])->name('certificates.indexPeserta');
 });
 
+// Khusus untuk Peserta
+Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
+    Route::get('certificates', [CertificateController::class, 'indexPeserta'])->name('certificates.indexpeserta');
+    Route::get('certificates/{id}', [CertificateController::class, 'showPeserta'])->name('certificates.showpeserta');
+});
+
 // SHARED (ADMIN & PESERTA)
 Route::middleware(['auth'])->group(function () {
     Route::get('/certificates/{id}', [CertificateController::class, 'show'])->name('certificates.show');
