@@ -92,7 +92,7 @@
 
     {{-- Pagination --}}
     <div class="d-flex justify-content-center mt-4">
-        {{ $tickets->onEachSide(1)->links('pagination.custom') }}
+        {{ $attendances->onEachSide(1)->links('pagination.custom') }}
     </div>
 </div>
 @endsection
