@@ -61,6 +61,7 @@
                                 <tr><th>NIP</th><td>: {{ $biodata->nip ?? '-' }}</td></tr>
                                 <tr><th>Nama Lengkap</th><td>: {{ $biodata->nama_lengkap ?? '-' }}</td></tr>
                                 <tr><th>NIK</th><td>: {{ $biodata->nik ?? '-' }}</td></tr>
+                                <tr><th>jenis_kelamin</th><td>: {{ $users->jenis_kelamin ?? '-' }}</td></tr>
                                 <tr>
                                     <th>Tempat, Tanggal Lahir</th>
                                     <td>
@@ -75,7 +76,8 @@
                                 <tr><th>Jabatan</th><td>: {{ $user->jabatan->nama_jabatan ?? '-' }}</td></tr>
                                 <tr><th>Divisi</th><td>: {{ $user->divisi->nama_divisi ?? '-' }}</td></tr>
                                 <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
-
+                                <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
+                                <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
                                 <!-- Foto KTP -->
                                 <tr>
                                     <th>Foto KTP</th>
