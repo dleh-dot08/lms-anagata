@@ -24,8 +24,12 @@
                     <input type="text" name="no_telepon" class="form-control" value="{{ $user->no_telepon }}">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Alamat</label>
-                    <textarea name="alamat" class="form-control">{{ $user->alamat }}</textarea>
+                    <label class="form-label">Alamat KTP</label>
+                    <textarea name="alamat" class="form-control">{{ $biodata?->alamat }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Alamat Domisili</label>
+                    <textarea name="alamat_tempat_tinggal" class="form-control">{{ $user?->alamat_tempat_tinggal }}</textarea>
                 </div>
             </div>
 
@@ -80,7 +84,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Bidang pengajaran</label>
-                    <input type="text" name="bidang_pengajaran" class="form-control" value="{{ $user?->bidang_Pengajaran }}">
+                    <input type="text" name="bidang_pengajaran" class="form-control" value="{{ $user?->bidang_pengajaran}}">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Pendidikan Terakhir</label>
