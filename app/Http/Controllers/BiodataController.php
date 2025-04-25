@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Biodata;
+use App\Models\Jenjang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -29,6 +30,7 @@ class BiodataController extends Controller
 
     public function edit($id)
     {
+        $jenjangs = \App\Models\Jenjang::all(); // ambil semua jenjang
         // 🛡️ Block if user is not admin and tries to access other user's biodata
         if (Auth::user()->role_id != '1' && Auth::id() != $id) {
             abort(403, 'Unauthorized access.');
