@@ -2,9 +2,8 @@
 
 @section('content')
 <div class="container">
+    <h3 class="fw-bold py-3 mb-1 mt-2">Daftar Sertifikat</h3>
     <div class="card shadow-sm p-4">
-        <h3 class="fw-bold py-3 mb-1 mt-2">Daftar Sertifikat</h3>
-
         <!-- Menampilkan Pesan Sukses atau Info -->
         @if(session('errors'))
             <div class="alert alert-danger">
@@ -16,6 +15,19 @@
             </div>
         @endif
 
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Tombol untuk menambah sertifikat -->
+        <div class="mb-3">
+            <a href="{{ route('certificates.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Tambah Sertifikat Baru
+            </a>
+        </div>
+        
         <!-- Pencarian dan Filter -->
         <form method="GET" action="{{ route('certificates.indexAdmin') }}" class="mb-3">
             <div class="row">
