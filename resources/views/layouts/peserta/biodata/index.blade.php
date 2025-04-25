@@ -47,17 +47,17 @@
                 <table class="table">
                     <tr><th>Nama Lengkap</th><td>: {{ $biodata->nama_lengkap ?? '-' }}</td></tr>
                     <tr><th>NIK</th><td>: {{ $biodata->nik ?? '-' }}</td></tr>
-                    <tr><th>Jenis Kelamin</th><td>: {{ $biodata->jenis_kelamin ?? '-' }}</td></tr>
+                    <tr><th>Jenis Kelamin</th><td>: {{ $user->jenis_kelamin ?? '-' }}</td></tr>
                     <tr>
                         <th>Tempat, Tanggal Lahir</th>
                         <td>: {{ $biodata->tempat_lahir ?? '-' }}, {{ $biodata->tanggal_lahir ? date('d M Y', strtotime($biodata->tanggal_lahir)) : '-' }}</td>
                     </tr>
                     <tr><th>No HP</th><td>: {{ $biodata->no_hp ?? '-' }}</td></tr>
                     <tr><th>Alamat</th><td>: {{ $biodata->alamat ?? '-' }}</td></tr>
-                    <tr><th>Instansi</th><td>: {{ $biodata->instansi ?? '-' }}</td></tr>
-                    <tr><th>Jenjang</th><td>: {{ $biodata->jenjang->nama ?? '-' }}</td></tr>
-                    <tr><th>Pekerjaan</th><td>: {{ $biodata->pekerjaan ?? '-' }}</td></tr>
-                    <tr><th>Pendidikan Terakhir</th><td>: {{ $biodata->pendidikan_terakhir ?? '-' }}</td></tr>
+                    <tr><th>Instansi</th><td>: {{ $user->instansi ?? '-' }}</td></tr>
+                    <tr><th>Jenjang</th><td>: {{ $user->jenjang->nama ?? '-' }}</td></tr>
+                    <tr><th>Pekerjaan</th><td>: {{ $user->pekerjaan ?? '-' }}</td></tr>
+                    <tr><th>Pendidikan Terakhir</th><td>: {{ $user->pendidikan_terakhir ?? '-' }}</td></tr>
                     <tr><th>Media Sosial</th><td>: {{ $biodata->media_sosial ?? '-' }}</td></tr>
                     <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
                     <tr>

@@ -44,8 +44,8 @@
                     <label class="form-label">Jenis Kelamin</label>
                     <select name="jenis_kelamin" class="form-select">
                         <option value="">-- Pilih --</option>
-                        <option value="Laki-laki" {{ $biodata?->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="Perempuan" {{ $biodata?->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                        <option value="Laki-laki" {{ $user?->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="Perempuan" {{ $user?->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Instansi</label>
-                    <input type="text" name="instansi" class="form-control" value="{{ $biodata?->instansi }}">
+                    <input type="text" name="instansi" class="form-control" value="{{ $user?->instansi }}">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Jenjang</label>
@@ -76,15 +76,15 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Pekerjaan</label>
-                    <input type="text" name="pekerjaan" class="form-control" value="{{ $biodata?->pekerjaan }}">
+                    <input type="text" name="pekerjaan" class="form-control" value="{{ $user?->pekerjaan }}">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Pendidikan Terakhir</label>
-                    <input type="text" name="pendidikan_terakhir" class="form-control" value="{{ $biodata?->pendidikan_terakhir }}">
+                    <input type="text" name="pendidikan_terakhir" class="form-control" value="{{ $user?->pendidikan_terakhir }}">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Media Sosial (Instagram/Facebook/LinkedIn)</label>
-                    <input type="text" name="media_sosial" class="form-control" value="{{ $biodata?->media_sosial }}">
+                    <input type="text" name="media_sosial" class="form-control" value="{{ $user?->media_sosial }}">
                 </div>
             </div>
 
