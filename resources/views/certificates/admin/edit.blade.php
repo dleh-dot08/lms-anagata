@@ -78,3 +78,30 @@
                 <label for="status" class="form-label">Status</label>
                 <select name="status" class="form-control" required>
                     <option value="Diterbitkan" {{ $certificate->status == 'Diterbitkan' ? 'selected' : '' }}>Diterbitkan</option>
+                    <option value="Belum Diterbitkan" {{ $certificate->status == 'Belum Diterbitkan' ? 'selected' : '' }}>Belum Diterbitkan</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Sertifikat</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Fungsi untuk menampilkan atau menyembunyikan pilihan berdasarkan tipe sertifikat
+    function toggleCourseOrActivity() {
+        const type = document.getElementById('type').value;
+        const courseContainer = document.getElementById('course-container');
+        const activityContainer = document.getElementById('activity-container');
+
+        if (type === 'course') {
+            courseContainer.style.display = 'block';
+            activityContainer.style.display = 'none';
+        } else {
+            courseContainer.style.display = 'none';
+            activityContainer.style.display = 'block';
+        }
+    }
+</script>
+
+@endsection
