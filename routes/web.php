@@ -354,7 +354,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
     Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('certificates.edit');
     Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('certificates.update');
-    Route::get('/certificates/{id}', [CertificateController::class, 'showPeserta'])->name('certificates.showAdmin');
+    Route::get('/certificates/{id}', [CertificateController::class, 'showAdmin'])->name('certificates.showAdmin');
 });
 
 // Khusus untuk Peserta
