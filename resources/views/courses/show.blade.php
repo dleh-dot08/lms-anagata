@@ -155,7 +155,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4>Sertifikat</h4>
-                <a href="{{ route('certificates.createCourses', ['course_id' => $course->id]) }}" class="btn btn-primary">
+                <a href="{{ route('certificates.createCourses', ['courseId' => $course->id]) }}" class="btn btn-primary">
                     + Buat Sertifikat
                 </a>
             </div>
