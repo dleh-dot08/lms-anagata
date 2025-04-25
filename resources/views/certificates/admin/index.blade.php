@@ -27,7 +27,7 @@
                 <i class="bi bi-plus-circle me-1"></i> Tambah Sertifikat Baru
             </a>
         </div>
-        
+
         <!-- Pencarian dan Filter -->
         <form method="GET" action="{{ route('certificates.indexAdmin') }}" class="mb-3">
             <div class="row">
@@ -72,7 +72,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('certificates.showadmin', $certificate->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
+                        <a href="{{ route('certificates.show', $certificate->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
                     </td>
                 </tr>
                 @endforeach
