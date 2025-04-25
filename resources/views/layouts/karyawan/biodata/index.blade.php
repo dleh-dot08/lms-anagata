@@ -76,8 +76,6 @@
                                 <tr><th>Jabatan</th><td>: {{ $user->jabatan->nama_jabatan ?? '-' }}</td></tr>
                                 <tr><th>Divisi</th><td>: {{ $user->divisi->nama_divisi ?? '-' }}</td></tr>
                                 <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
-                                <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
-                                <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
                                 <!-- Foto KTP -->
                                 <tr>
                                     <th>Foto KTP</th>
