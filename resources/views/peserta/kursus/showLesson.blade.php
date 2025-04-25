@@ -26,7 +26,7 @@
                                 height="400" 
                                 frameborder="0" 
                                 allowfullscreen 
-                                sandbox="allow-scripts allow-same-origin allow-presentation">
+                                sandbox="allow-scripts allow-presentation">
                             </iframe>
                         </div>
                     @endif
