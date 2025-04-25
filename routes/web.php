@@ -354,7 +354,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
     Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('certificates.edit');
     Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('certificates.update');
-    Route::get('/certificates/{id}', [CertificateController::class, 'show'])->name('certificates.showAdmin');
+    Route::get('/certificates/{id}', [CertificateController::class, 'showPeserta'])->name('certificates.showAdmin');
 });
 
 // Khusus untuk Peserta
@@ -364,9 +364,9 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
 });
 
 // SHARED (ADMIN & PESERTA)
-Route::middleware(['auth'])->group(function () {
+/*Route::middleware(['auth'])->group(function () {
     Route::get('/certificates/{id}', [CertificateController::class, 'show'])->name('certificates.show');
-});
+});*/
 
 Route::get('/mentor/dashboard', [MentorController::class, 'index'])
     ->name('mentor.dashboard')
