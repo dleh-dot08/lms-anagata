@@ -71,7 +71,7 @@ class BiodataController extends Controller
             'no_hp' => 'nullable|string|max:15',
             'instansi' => 'nullable|string|max:255',
             'pekerjaan' => 'nullable|string|max:255',
-            'jenjang_id' => 'nullable|exists:jenjangs,id',
+            'jenjang_id' => 'nullable|exists:jenjang,id',
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'foto_ktp' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'data_ttd' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
