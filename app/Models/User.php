@@ -21,7 +21,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name', 'email', 'password', 'foto_diri', 'tanggal_lahir', 'tempat_lahir',
         'alamat_tempat_tinggal', 'instansi', 'jenjang_id', 'jabatan',
         'bidang_pengajaran', 'divisi', 'no_telepon', 'tanggal_bergabung',
-        'surat_tugas', 'role_id', 'created_by', 'updated_by'
+        'surat_tugas', 'role_id', 'created_by', 'updated_by',
+        'jenis_kelamin', 'pendidikan_terakhir', 'pekerjaan', 'media_sosial' // ← tambahkan ini
     ];
 
     /**
