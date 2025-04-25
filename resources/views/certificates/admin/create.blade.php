@@ -52,7 +52,7 @@
                 <select name="activities_id" id="activities_id" class="form-control">
                     <option value="">Pilih Aktivitas</option>
                     @foreach($activities as $activity)
-                        <option value="{{ $activity->id }}">{{ $activity->nama_aktivitas }}</option>
+                        <option value="{{ $activity->id }}">{{ $activity->nama_kegiatan }}</option>
                     @endforeach
                 </select>
             </div>
