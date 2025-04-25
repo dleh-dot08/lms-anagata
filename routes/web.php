@@ -17,6 +17,7 @@ use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
