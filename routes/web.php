@@ -355,6 +355,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('certificates.edit');
     Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('certificates.update');
     Route::get('/certificates/{id}', [CertificateController::class, 'showAdmin'])->name('certificates.showAdmin');
+    Route::delete('/certificates/{id}', [ActivityController::class, 'destroy'])->name('certificates.destroy');
 });
 
 // Khusus untuk Peserta

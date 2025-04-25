@@ -181,11 +181,11 @@
                             <td>{{ $certificate->status }}</td>
                             <td>
                                 <a href="{{ route('certificates.edit', $certificate->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <!-- <form action="{{ route('certificates.destroy', $certificate->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus sertifikat ini?')">
+                                <form action="{{ route('certificates.destroy', $certificate->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus sertifikat ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm">Hapus</button>
-                                </form> -->
+                                </form>
                             </td>
                         </tr>
                     @endforeach
