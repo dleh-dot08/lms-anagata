@@ -72,7 +72,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('certificates.show', $certificate->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
+                        <a href="{{ route('certificates.showAdmin', $certificate->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
                         <a href="{{ route('certificates.edit', $certificate->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     </td>
                 </tr>
