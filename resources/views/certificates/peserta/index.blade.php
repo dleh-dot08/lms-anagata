@@ -80,7 +80,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('certificates.show', $certificate->id) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('certificates.showPeserta', $certificate->id) }}" class="btn btn-info btn-sm">
                             <i class="bi bi-eye"></i> Detail
                         </a>
                         @if ($certificate->status == 'Diterbitkan')
