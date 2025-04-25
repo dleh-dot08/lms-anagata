@@ -64,16 +64,21 @@ class BiodataController extends Controller
             'email' => 'required|email|max:255|unique:users,email,' . $id,
             'no_telepon' => 'nullable|string|max:14',
             'alamat' => 'nullable|string',
+            'alamat_tempat_tinggal' => 'nullable|string',
             'nip' => 'nullable|string|max:20|unique:biodata,nip,' . $id . ',id_user',
             'nik' => 'nullable|string|max:20|unique:biodata,nik,' . $id . ',id_user',
             'tempat_lahir' => 'nullable|string|max:100',
             'tanggal_lahir' => 'nullable|date',
             'no_hp' => 'nullable|string|max:15',
+            'instansi' => 'nullable|string|max:255',
+            'pekerjaan' => 'nullable|string|max:255',
+            'jenjang_id' => 'nullable|exists:jenjang,id',
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'foto_ktp' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'data_ttd' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'pendidikan_terakhir' => 'nullable|string|max:100',
             'media_sosial' => 'nullable|string|max:255',
+            'bidang_pengajaran' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:10|in:Laki-laki,Perempuan',
         ]);
 
@@ -85,10 +90,14 @@ class BiodataController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'no_telepon' => $request->no_telepon,
-            'alamat' => $request->alamat,
+            'alamat_tempat_tinggal' => $request->alamat_tempat_tinggal,
             'jenis_kelamin' => $request->jenis_kelamin,
+            'instansi' => $request->instansi,
+            'pekerjaan' => $request->pekerjaan,
             'pendidikan_terakhir' => $request->pendidikan_terakhir,
             'media_sosial' => $request->media_sosial,
+            'bidang_pengajaran' => $request->bidang_pengajaran, 
+            'jenjang_id' => $request->jenjang_id,
         ]);
 
         // Update data Biodata

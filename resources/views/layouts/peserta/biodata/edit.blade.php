@@ -12,7 +12,7 @@
             <div class="card p-3 border-0 shadow-sm mb-4">
                 <h5 class="fw-bold text-primary">Informasi Akun</h5>
                 <div class="mb-3">
-                    <label class="form-label">Nama</label>
+                    <label class="form-label">Nama Lengkap</label>
                     <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
                 </div>
                 <div class="mb-3">
@@ -24,8 +24,12 @@
                     <input type="text" name="no_telepon" class="form-control" value="{{ $user->no_telepon }}">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Alamat</label>
-                    <textarea name="alamat" class="form-control">{{ $user->alamat }}</textarea>
+                    <label class="form-label">Alamat KTP</label>
+                    <textarea name="alamat" class="form-control">{{ $biodata?->alamat }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Alamat Domisili</label>
+                    <textarea name="alamat_tempat_tinggal" class="form-control">{{ $user?->alamat_tempat_tinggal }}</textarea>
                 </div>
             </div>
 
@@ -64,19 +68,23 @@
                     <input type="text" name="instansi" class="form-control" value="{{ $user?->instansi }}">
                 </div>
                 <div class="mb-3">
+                    <label class="form-label">Pekerjaan</label>
+                    <input type="text" name="pekerjaan" class="form-control" value="{{ $user?->pekerjaan }}">
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Jenjang</label>
                     <select name="jenjang_id" class="form-select">
                         <option value="">-- Pilih Jenjang --</option>
                         @foreach($jenjangs as $jenjang)
                             <option value="{{ $jenjang->id }}" {{ $user?->jenjang_id == $jenjang->id ? 'selected' : '' }}>
-                                {{ $jenjang->nama }}
+                                {{ $jenjang->nama_jenjang }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Pekerjaan</label>
-                    <input type="text" name="pekerjaan" class="form-control" value="{{ $user?->pekerjaan }}">
+                    <label class="form-label">Bidang pengajaran</label>
+                    <input type="text" name="bidang_pengajaran" class="form-control" value="{{ $user?->bidang_pengajaran}}">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Pendidikan Terakhir</label>
