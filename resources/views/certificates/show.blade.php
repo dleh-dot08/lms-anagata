@@ -17,7 +17,7 @@
         @endif
 
         <div class="mb-3">
-            <a href="{{ route('certificates.indexadmin') }}" class="btn btn-secondary">
+            <a href="{{ route('certificates.indexAdmin') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left-circle me-1"></i> Kembali ke Daftar Sertifikat
             </a>
         </div>
