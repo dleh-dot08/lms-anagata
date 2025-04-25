@@ -356,11 +356,6 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('certificates.update');
 });
 
-// PESERTA
-Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
-    Route::get('/my-certificates', [CertificateController::class, 'indexPeserta'])->name('certificates.indexPeserta');
-});
-
 // Khusus untuk Peserta
 Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
     Route::get('my-certificates', [CertificateController::class, 'indexPeserta'])->name('certificates.indexPeserta');

@@ -23,7 +23,7 @@
         @endif
 
         {{-- Filter dan pencarian --}}
-        <form method="GET" action="{{ route('certificates.indexpeserta') }}" class="mb-3">
+        <form method="GET" action="{{ route('certificates.indexPeserta') }}" class="mb-3">
             <div class="row">
                 <div class="col-md-6">
                     <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="Cari nama kursus / kegiatan...">
@@ -80,7 +80,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('certificates.showpeserta', $certificate->id) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('certificates.showPeserta', $certificate->id) }}" class="btn btn-info btn-sm">
                             <i class="bi bi-eye"></i> Detail
                         </a>
                         @if ($certificate->status == 'Diterbitkan')
