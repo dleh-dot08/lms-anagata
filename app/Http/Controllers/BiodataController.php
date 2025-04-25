@@ -74,6 +74,7 @@ class BiodataController extends Controller
             'data_ttd' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'pendidikan_terakhir' => 'nullable|string|max:100',
             'media_sosial' => 'nullable|string|max:255',
+            'bidang_pengajaran' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:10|in:Laki-laki,Perempuan',
         ]);
 
@@ -89,6 +90,8 @@ class BiodataController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin,
             'pendidikan_terakhir' => $request->pendidikan_terakhir,
             'media_sosial' => $request->media_sosial,
+            'bidang_pengajaran' => $request->bidang_pengajaran, 
+            'jenjang_id' => $request->jenjang_id,
         ]);
 
         // Update data Biodata
