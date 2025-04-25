@@ -48,7 +48,7 @@
                             <iframe 
                                 src="{{ convertToPreview($file) }}" 
                                 width="100%" 
-                                height="400" 
+                                height="600" 
                                 frameborder="0" 
                                 sandbox="allow-scripts allow-same-origin allow-presentation">
                             </iframe>
