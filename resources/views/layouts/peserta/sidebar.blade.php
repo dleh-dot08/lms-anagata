@@ -58,7 +58,7 @@
         </li>        
 
         <li class="menu-item {{ request()->routeIs('courses.index') ? 'active' : '' }}">
-            <a href="{{ route('courses.index') }}" class="menu-link">
+            <a href="{{ route('certificates.indexPeserta') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-badge-check"></i>
                 <div data-i18n="Analytics">Sertifikat</div>
             </a>

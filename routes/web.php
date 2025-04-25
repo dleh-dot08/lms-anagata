@@ -347,6 +347,24 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::delete('/admin/activities/{activity}/participants/{user}', [ActivityController::class, 'removeParticipant'])->name('activities.participants.remove');
 });
 
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('/certificates', [CertificateController::class, 'indexAdmin'])->name('certificates.indexAdmin');
+    Route::get('/certificates/create', [CertificateController::class, 'create'])->name('certificates.create');
+    Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
+    Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('certificates.edit');
+    Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('certificates.update');
+});
+
+// PESERTA
+Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
+    Route::get('/my-certificates', [CertificateController::class, 'indexPeserta'])->name('certificates.indexPeserta');
+});
+
+// SHARED (ADMIN & PESERTA)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/certificates/{id}', [CertificateController::class, 'show'])->name('certificates.show');
+});
+
 Route::get('/mentor/dashboard', [MentorController::class, 'index'])
     ->name('mentor.dashboard')
     ->middleware(MentorMiddleware::class);
