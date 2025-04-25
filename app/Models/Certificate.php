@@ -19,6 +19,11 @@ class Certificate extends Model
         'status',
     ];
 
+    // Menambahkan cast untuk tanggal_terbit
+    protected $casts = [
+        'tanggal_terbit' => 'date',
+    ];
+
     // Relasi ke User (Peserta)
     public function user()
     {
