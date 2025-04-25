@@ -67,8 +67,8 @@
                     <label class="form-label">Jenjang</label>
                     <select name="jenjang_id" class="form-select">
                         <option value="">-- Pilih Jenjang --</option>
-                        @foreach($jenjangList as $jenjang)
-                            <option value="{{ $jenjang->id }}" {{ $biodata?->jenjang_id == $jenjang->id ? 'selected' : '' }}>
+                        @foreach($jenjangs as $jenjang)
+                            <option value="{{ $jenjang->id }}" {{ $users?->jenjang_id == $jenjang->id ? 'selected' : '' }}>
                                 {{ $jenjang->nama }}
                             </option>
                         @endforeach
