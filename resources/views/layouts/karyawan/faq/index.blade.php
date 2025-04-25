@@ -43,7 +43,10 @@
             </tbody>
         </table>
 
-        {{ $faqs->links() }}
+        <div class="d-flex justify-content-center mt-4">
+            {{ $faqs->onEachSide(1)->links('pagination.custom') }}
+        </div>
+
 
     </div>
 @endsection
