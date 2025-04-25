@@ -12,9 +12,27 @@ use Illuminate\Support\Facades\Auth;
 class CertificateController extends Controller
 {
     // INDEX untuk ADMIN
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
-        $certificates = Certificate::with('user', 'course', 'activity')->latest()->get();
+        // Filter berdasarkan pencarian atau tipe
+        $query = Certificate::query();
+
+        // Pencarian berdasarkan nama peserta, kode sertifikat, dll.
+        if ($request->has('search') && $request->search != '') {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter berdasarkan tipe sertifikat (course atau activity)
+        if ($request->has('type') && $request->type != '') {
+            $query->where('type', $request->type);
+        }
+
+        // Mengambil sertifikat sesuai dengan filter, paginasi, dan pengurutan
+        $certificates = $query->orderBy('created_at', 'desc')->paginate(10);
+
         return view('certificates.admin.index', compact('certificates'));
     }
 

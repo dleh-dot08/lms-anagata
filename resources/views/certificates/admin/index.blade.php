@@ -17,7 +17,7 @@
         @endif
 
         <!-- Pencarian dan Filter -->
-        <form method="GET" action="{{ route('certificates.indexadmin') }}" class="mb-3">
+        <form method="GET" action="{{ route('certificates.indexAdmin') }}" class="mb-3">
             <div class="row">
                 <div class="col-md-6">
                     <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="Cari sertifikat...">
