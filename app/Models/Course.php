@@ -75,5 +75,10 @@ class Course extends Model
                     ->withTimestamps();
     }
 
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class); // Assuming you have a Certificate model
+    }
+
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }
