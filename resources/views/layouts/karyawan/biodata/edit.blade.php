@@ -8,7 +8,7 @@
             @csrf
             @method('PUT')
 
-            <div class="row">
+            <div class="mt-4">
                 <!-- Kolom User -->
                 <div class="card p-3 border-0 shadow-sm">
                     <h5 class="fw-bold text-primary">Informasi User</h5>
@@ -32,7 +32,7 @@
             </div>
 
             <!-- Kolom Biodata -->
-            <div class="row">
+            <div class="mt-4">
                     <div class="card p-3 border-0 shadow-sm">
                         <h5 class="fw-bold text-primary">Informasi Biodata</h5>
                         <div class="mb-3">
@@ -54,17 +54,17 @@
                             <label class="form-label">Jenis Kelamin</label>
                             <select name="jenis_kelamin" class="form-control">
                                 <option value="">-- Pilih Jenis Kelamin --</option>
-                                <option value="Laki-laki" {{ $biodata?->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                <option value="Perempuan" {{ $biodata?->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                                <option value="Laki-laki" {{ $user?->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="Perempuan" {{ $user?->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Pendidikan terakhir</label>
-                            <input type="text" name="no_hp" class="form-control" value="{{ $users?->pendidikan_terakhir }}">
+                            <input type="text" name="pendidikan_terakhir" class="form-control" value="{{ $user?->pendidikan_terakhir }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Media Sosial</label>
-                            <input type="text" name="no_hp" class="form-control" value="{{ $users?->media_sosial }}">
+                            <input type="text" name="media_sosial" class="form-control" value="{{ $user?->media_sosial }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">No HP</label>

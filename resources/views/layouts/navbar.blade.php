@@ -61,4 +61,7 @@
         </div>
     </nav>
     <section style="padding-top: 7rem;">
-        <div class="bg-holder" style="background-image:url(public/asset/img/hero/hero-bg.svg);"></div>
+        @if (!Request::is('faq')) {{-- or use Route::currentRouteName() if named --}}
+            <div class="bg-holder" style="background-image: url('{{ asset('asset/img/hero/hero-bg.svg') }}');"></div>
+        @endif
+

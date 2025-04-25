@@ -70,6 +70,9 @@ class BiodataController extends Controller
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'foto_ktp' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'data_ttd' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'pendidikan_terakhir' => 'nullable|string|max:100',
+            'media_sosial' => 'nullable|string|max:255',
+            'jenis_kelamin' => 'nullable|string|max:10|in:Laki-laki,Perempuan',
         ]);
 
         $user = User::findOrFail($id);
@@ -81,7 +84,9 @@ class BiodataController extends Controller
             'email' => $request->email,
             'no_telepon' => $request->no_telepon,
             'alamat' => $request->alamat,
-            'foto_diri' => $request->foto_diri
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'pendidikan_terakhir' => $request->pendidikan_terakhir,
+            'media_sosial' => $request->media_sosial,
         ]);
 
         // Update data Biodata
@@ -93,7 +98,6 @@ class BiodataController extends Controller
             'tanggal_lahir' => $request->tanggal_lahir,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
-            'foto' => $request->foto,
         ]);
 
         // Upload Foto KTP jika ada file baru
