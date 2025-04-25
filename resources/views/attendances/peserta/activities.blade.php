@@ -1,4 +1,4 @@
-@extends('layouts.mentor.template')
+@extends('layouts.peserta.template')
 
 @section('content')
 <div class="container py-4">
