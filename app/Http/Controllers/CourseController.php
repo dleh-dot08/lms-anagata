@@ -193,18 +193,46 @@ class CourseController extends Controller
 
         $enrollments = $query->paginate(10);
 
+        // ========================== Tambahan baru di bawah sini ==========================
+
+        // 1. Ambil semua tanggal lesson (hanya tanggal, tanpa jam)
+        $lessonDates = Lesson::where('course_id', $id)
+                        ->pluck('created_at')
+                        ->map(function ($date) {
+                            return $date->format('Y-m-d');
+                        })
+                        ->toArray();
+
+        $totalLessons = count($lessonDates);
+
+        // 2. Untuk masing-masing peserta, hitung jumlah hadir/izin yang cocok dengan tanggal lesson
+        foreach ($enrollments as $enrollment) {
+            $presentCount = Attendance::where('course_id', $id)
+                ->where('user_id', $enrollment->user_id)
+                ->whereIn('status', ['Hadir', 'Izin'])
+                ->whereDate('tanggal', function ($query) use ($lessonDates) {
+                    $query->whereIn('tanggal', $lessonDates);
+                })
+                ->count();
+
+            $enrollment->attendance_percentage = $totalLessons > 0 ? ($presentCount / $totalLessons) * 100 : 0;
+        }
+
+        // ========================== Akhir tambahan ==========================
+
         $user = auth()->user();
 
         if ($user->role_id === 1) {
             return view('courses.show', compact('course', 'enrollments'));
-    
+
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
             return view('layouts.karyawan.kursus.show', compact('course', 'enrollments'));
-    
+
         } else {
             abort(403, 'Akses dilarang.');
         }
     }
+
 
     // Menghapus kursus (soft delete)
     public function destroy(Course $course)

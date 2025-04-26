@@ -54,6 +54,7 @@
                         <th>Nama Peserta</th>
                         <th>Jenjang</th>
                         <th>Status</th>
+                        <th>Persentase Kehadiran</th> <!-- Kolom baru untuk persentase -->
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -69,6 +70,21 @@
                                 @else
                                     <span class="badge bg-warning">Aktif</span>
                                 @endif
+                            </td>
+                            <td>
+                                <!-- Menghitung persentase kehadiran -->
+                                @php
+                                    // Menghitung jumlah pertemuan total
+                                    $totalLessons = \App\Models\Lesson::where('course_id', $course->id)->count();
+                                    // Menghitung jumlah hadir atau izin
+                                    $presentCount = \App\Models\Attendance::where('course_id', $course->id)
+                                        ->where('user_id', $enrollment->user->id)
+                                        ->whereIn('status', ['Hadir', 'Izin'])
+                                        ->count();
+                                    // Menghitung persentase kehadiran
+                                    $attendancePercentage = $totalLessons > 0 ? ($presentCount / $totalLessons) * 100 : 0;
+                                @endphp
+                                {{ number_format($attendancePercentage, 2) }}%
                             </td>
                             <td>
                                 <form action="{{ route('courses.participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
