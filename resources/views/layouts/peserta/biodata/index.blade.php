@@ -5,6 +5,13 @@
     <div class="card shadow-sm p-4">
         <h3 class="fw-bold text-center mb-4">Biodata Peserta</h3>
         <div class="row">
+            <!-- Tombol Edit -->
+            <div class="text-center mt-4">
+                <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
+                    <i class="bx bx-edit"></i> Edit Data
+                </a>
+            </div>
+            
             <!-- Informasi User -->
             <div class="col-md-8">
                 <div class="card p-3 border-0 shadow-sm">
@@ -45,7 +52,6 @@
             <div class="card p-3 border-0 shadow-sm">
                 <h5 class="fw-bold text-primary">Informasi Biodata</h5>
                 <table class="table">
-                    <tr><th>Nama Lengkap</th><td>: {{ $biodata->nama_lengkap ?? '-' }}</td></tr>
                     <tr><th>NIK</th><td>: {{ $biodata->nik ?? '-' }}</td></tr>
                     <tr><th>Jenis Kelamin</th><td>: {{ $user->jenis_kelamin ?? '-' }}</td></tr>
                     <tr>
@@ -61,34 +67,7 @@
                     <tr><th>Pendidikan Terakhir</th><td>: {{ $user->pendidikan_terakhir ?? '-' }}</td></tr>
                     <tr><th>Sosial Media</th><td>: {{ $user->media_sosial ?? '-' }}</td></tr>
                     <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
-                    <tr>
-                        <th>Foto KTP</th>
-                        <td>
-                            @if ($biodata?->data_ktp)
-                                <img src="{{ asset('storage/' . $biodata->data_ktp) }}" alt="KTP" width="100">
-                            @else
-                                <span class="text-danger">Belum diupload</span>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Tanda Tangan</th>
-                        <td>
-                            @if ($biodata?->data_ttd)
-                                <img src="{{ asset('storage/' . $biodata->data_ttd) }}" alt="TTD" width="100">
-                            @else
-                                <span class="text-danger">Belum diupload</span>
-                            @endif
-                        </td>
-                    </tr>
                 </table>
-            </div>
-
-            <!-- Tombol Edit -->
-            <div class="text-center mt-4">
-                <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
-                    <i class="bx bx-edit"></i> Edit Data
-                </a>
             </div>
         </div>
     </div>

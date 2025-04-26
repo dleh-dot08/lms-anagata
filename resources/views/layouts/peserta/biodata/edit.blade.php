@@ -20,8 +20,10 @@
                     <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">No Telepon</label>
-                    <input type="text" name="no_telepon" class="form-control" value="{{ $user->no_telepon }}">
+                    <label class="form-label">No Handphone</label>
+                    <input type="text" name="no_telepon" class="form-control" 
+                        value="{{ $user->no_telepon }}">
+                    <small class="text-muted">Gunakan Nomor Whatsapp Aktif</small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Alamat KTP</label>
@@ -30,16 +32,13 @@
                 <div class="mb-3">
                     <label class="form-label">Alamat Domisili</label>
                     <textarea name="alamat_tempat_tinggal" class="form-control">{{ $user?->alamat_tempat_tinggal }}</textarea>
+                    <small class="text-muted">jika sama dengan Alamat KTP maka isi sesuai KTP</small>
                 </div>
             </div>
 
             <!-- Informasi Biodata -->
             <div class="card p-3 border-0 shadow-sm mb-4">
                 <h5 class="fw-bold text-primary">Informasi Biodata</h5>
-                <div class="mb-3">
-                    <label class="form-label">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" class="form-control" value="{{ $biodata?->nama_lengkap }}">
-                </div>
                 <div class="mb-3">
                     <label class="form-label">NIK</label>
                     <input type="text" name="nik" class="form-control" value="{{ $biodata?->nik }}">
@@ -52,16 +51,15 @@
                         <option value="Perempuan" {{ $user?->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Tempat, Tanggal Lahir</label>
-                    <div class="d-flex">
-                        <input type="text" name="tempat_lahir" class="form-control me-2" value="{{ $biodata?->tempat_lahir }}">
+                <div class="mb-3 row">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="form-label">Tempat Lahir</label>
+                        <input type="text" name="tempat_lahir" class="form-control" value="{{ $biodata?->tempat_lahir }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tanggal Lahir</label>
                         <input type="date" name="tanggal_lahir" class="form-control" value="{{ $biodata?->tanggal_lahir }}">
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">No HP</label>
-                    <input type="text" name="no_hp" class="form-control" value="{{ $biodata?->no_hp }}">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Instansi</label>
@@ -70,6 +68,7 @@
                 <div class="mb-3">
                     <label class="form-label">Pekerjaan</label>
                     <input type="text" name="pekerjaan" class="form-control" value="{{ $user?->pekerjaan }}">
+                    <small class="text-muted">Jika Tenaga Pendidik maka masukan juga rumpun ilmu / bidang pengajaran</small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Jenjang</label>
@@ -83,7 +82,7 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Bidang pengajaran</label>
+                    <label class="form-label">Bidang Keahlian</label>
                     <input type="text" name="bidang_pengajaran" class="form-control" value="{{ $user?->bidang_pengajaran}}">
                 </div>
                 <div class="mb-3">
@@ -99,14 +98,6 @@
             <!-- Upload Berkas -->
             <div class="card p-3 border-0 shadow-sm mb-4">
                 <h5 class="fw-bold text-primary">Upload Berkas</h5>
-                <div class="mb-3">
-                    <label class="form-label">Foto KTP</label>
-                    <input type="file" name="foto_ktp" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Tanda Tangan</label>
-                    <input type="file" name="data_ttd" class="form-control">
-                </div>
                 <div class="mb-3">
                     <label class="form-label">Foto Profil</label>
                     <input type="file" name="foto" class="form-control">
