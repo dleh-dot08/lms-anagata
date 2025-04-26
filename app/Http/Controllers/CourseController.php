@@ -196,14 +196,14 @@ class CourseController extends Controller
         $enrollments = $query->paginate(10);
 
         // ========================== Tambahan baru di bawah sini ==========================
-
+       
         // 1. Ambil semua tanggal lesson (hanya tanggal, tanpa jam)
         $lessonDates = Lesson::where('course_id', $id)
-                        ->pluck('created_at')
-                        ->map(function ($date) {
-                            return $date->format('Y-m-d');
-                        })
-                        ->toArray();
+                            ->pluck('created_at')
+                            ->map(function ($date) {
+                                return $date->format('Y-m-d'); // Ambil hanya tanggal (tanpa jam)
+                            })
+                            ->toArray();
 
         $totalLessons = count($lessonDates);
 
@@ -212,11 +212,10 @@ class CourseController extends Controller
             $presentCount = Attendance::where('course_id', $id)
                 ->where('user_id', $enrollment->user_id)
                 ->whereIn('status', ['Hadir', 'Izin'])
-                ->whereDate('tanggal', function ($query) use ($lessonDates) {
-                    $query->whereIn('tanggal', $lessonDates);
-                })
+                ->whereIn('tanggal', $lessonDates) // Gunakan whereIn untuk mencocokkan tanggal
                 ->count();
 
+            // Hitung persentase kehadiran
             $enrollment->attendance_percentage = $totalLessons > 0 ? ($presentCount / $totalLessons) * 100 : 0;
         }
 
