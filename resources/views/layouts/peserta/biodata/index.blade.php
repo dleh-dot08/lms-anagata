@@ -5,13 +5,6 @@
     <div class="card shadow-sm p-4">
         <h3 class="fw-bold text-center mb-4">Biodata Peserta</h3>
         <div class="row">
-            <!-- Tombol Edit -->
-            <div class="text-center mt-4">
-                <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
-                    <i class="bx bx-edit"></i> Edit Data
-                </a>
-            </div>
-            
             <!-- Informasi User -->
             <div class="col-md-8">
                 <div class="card p-3 border-0 shadow-sm">
@@ -19,7 +12,7 @@
                     <table class="table">
                         <tr><th>Nama</th><td>: {{ $user->name }}</td></tr>
                         <tr><th>Email</th><td>: {{ $user->email }}</td></tr>
-                        <tr><th>No Telepon</th><td>: {{ $user->no_telepon ?? '-' }}</td></tr>
+                        <tr><th>No Hanphone</th><td>: {{ $user->no_telepon ?? '-' }}</td></tr>
                         <tr><th>Status</th>
                             <td>
                                 @if ($biodata)
@@ -48,6 +41,13 @@
             </div>
         </div>
 
+        <!-- Tombol Edit -->
+        <div class="text-center mt-4">
+            <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
+                 <i class="bx bx-edit"></i> Edit Data
+            </a>
+        </div>
+
         <div class="p-3 mt-4">
             <div class="card p-3 border-0 shadow-sm">
                 <h5 class="fw-bold text-primary">Informasi Biodata</h5>
@@ -58,7 +58,6 @@
                         <th>Tempat, Tanggal Lahir</th>
                         <td>: {{ $biodata->tempat_lahir ?? '-' }}, {{ $biodata->tanggal_lahir ? date('d M Y', strtotime($biodata->tanggal_lahir)) : '-' }}</td>
                     </tr>
-                    <tr><th>No HP</th><td>: {{ $biodata->no_hp ?? '-' }}</td></tr>
                     <tr><th>Alamat</th><td>: {{ $biodata->alamat ?? '-' }}</td></tr>
                     <tr><th>Instansi</th><td>: {{ $user->instansi ?? '-' }}</td></tr>
                     <tr><th>Pekerjaan</th><td>: {{ $user->pekerjaan ?? '-' }}</td></tr>
