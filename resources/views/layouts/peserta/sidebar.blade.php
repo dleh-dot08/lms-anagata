@@ -5,6 +5,10 @@
                 <!-- <div class="sidebar-header">
                     <img src="{{ asset('assets/img/illustrations/logo-asn.png') }}" alt="logo-asn" class="logo-image">
                 </div> -->
+                <div class="sidebar-header">
+                    <h3 class="text-primary mb-0" style="font-weight: 700; letter-spacing: 1px;">ruanganagata.id</h3>
+                    <small class="text-muted">Official Website</small>
+                </div>
             </span>
 
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
