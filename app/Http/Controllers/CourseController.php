@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\User;
+use App\Models\Lesson;
+use App\Models\Attendance;
 use App\Models\Kategori;
 use App\Models\Jenjang;
 use Illuminate\Http\Request;
