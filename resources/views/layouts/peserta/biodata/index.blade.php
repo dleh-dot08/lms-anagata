@@ -65,7 +65,7 @@
                     <tr><th>Bidang Pengajaran</th><td>: {{ $user->bidang_pengajaran ?? '-' }}</td></tr>
                     <tr><th>Pendidikan Terakhir</th><td>: {{ $user->pendidikan_terakhir ?? '-' }}</td></tr>
                     <tr><th>Sosial Media</th><td>: {{ $user->media_sosial ?? '-' }}</td></tr>
-                    <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
+                    <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->created_at)) }}</td></tr>
                 </table>
             </div>
         </div>
