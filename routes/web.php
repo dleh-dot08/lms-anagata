@@ -1,40 +1,60 @@
 <?php
 
 use App\Models\Attendance;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\KaryawanController;
+use App\Http\Middleware\DivisiMiddleware;
 use App\Http\Middleware\MentorMiddleware;
-use App\Http\Controllers\CourseController;
 //use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\MentorController;
 use App\Http\Middleware\PesertaMiddleware;
 use App\Http\Controllers\BiodataController;
 use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
+
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ParticipantController;
-
-use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HelpdeskTicketController;
-use App\Http\Controllers\HelpdeskMessageController;
-use App\Http\Controllers\MentorController;
-use App\Http\Middleware\DivisiMiddleware;
 use App\Http\Middleware\MentorOrPesertaMiddleware;
+
+use App\Http\Controllers\HelpdeskMessageController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
+// Route buat verifikasi
+Route::get('/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/peserta/dashboard');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+
+// Route buat kirim ulang email verifikasi
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('status', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::middleware('auth', 'verified')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -119,7 +139,7 @@ Route::middleware('auth')->group(function () {
 });
     
 // Admin routes
-Route::middleware(['auth'])->prefix('admin/attendances')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('admin/attendances')->group(function () {
     Route::get('/', [AttendanceController::class, 'adminIndex'])->name('attendances.admin.index');
     Route::get('/{attendance}', [AttendanceController::class, 'show'])->name('attendances.admin.show');
 });
@@ -212,7 +232,7 @@ Route::prefix('guest/helpdesk')
 
 Route::get('/peserta/dashboard', [PesertaController::class, 'index'])
     ->name('peserta.dashboard')
-    ->middleware(PesertaMiddleware::class);
+    ->middleware(['auth', 'verified', PesertaMiddleware::class]);
 
 /*Route::middleware(['web', PesertaMiddleware::class])
     ->prefix('layouts/peserta')
@@ -382,6 +402,5 @@ Route::get('/mentor/dashboard', [MentorController::class, 'index'])
         Route::get('/kursus/{course}', [CourseController::class, 'showMentor'])->name('kursus.show');
         Route::get('/kursus/{course}/lesson/{lesson}', [CourseController::class, 'showLessonMentor'])->name('kursus.lesson.show');
     });
-
     
 require __DIR__.'/auth.php';
