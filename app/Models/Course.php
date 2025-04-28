@@ -44,6 +44,11 @@ class Course extends Model
         return $this->belongsTo(Jenjang::class);
     }
 
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'course_id');
+    }
+
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
