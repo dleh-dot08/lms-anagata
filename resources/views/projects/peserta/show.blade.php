@@ -43,15 +43,14 @@
         iframeDoc.write(`
             <html>
                 <head>
-                    <!-- Menambahkan Link CSS Leaflet -->
                     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
-                    <style>${cssCode}</style>
+                    <style>{{ cssCode }}</style>
                 </head>
                 <body>
-                    ${htmlCode}
-                    <!-- Menambahkan Script JS Leaflet -->
+                    {{ htmlCode }}
+                    
                     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-                    <script>${jsCode}<\/script>
+                    <script>{{ jsCode }}</script>
                 </body>
             </html>
         `);
