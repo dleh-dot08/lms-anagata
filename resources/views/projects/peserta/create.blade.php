@@ -6,17 +6,6 @@
     <form action="{{ route('projects.peserta.store') }}" method="POST" id="projectForm">
         @csrf
         <div class="mb-3">
-            <label for="course_id" class="form-label">Kursus</label>
-            <select name="course_id" id="course_id" class="form-control">
-                <option value="">Pilih Kursus</option>
-                @foreach ($courses as $course)
-                    <option value="{{ $course->id }}">{{ $course->nama_kelas }}</option>
-                @endforeach
-            </select>
-            @error('course_id') <small class="text-danger">{{ $message }}</small> @enderror
-        </div>
-
-        <div class="mb-3">
             <label for="title" class="form-label">Judul Project</label>
             <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}">
             @error('title') <small class="text-danger">{{ $message }}</small> @enderror

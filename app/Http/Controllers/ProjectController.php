@@ -62,7 +62,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'course_id' => 'required|exists:courses,id',
+            'course_id' => 'nullable|exists:courses,id',
             'title' => 'required|string|max:255',
             'html_code' => 'nullable',
             'css_code' => 'nullable',
