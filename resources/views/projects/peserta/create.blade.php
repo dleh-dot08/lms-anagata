@@ -1,4 +1,3 @@
-<!-- resources/views/projects/peserta/create.blade.php -->
 @extends('layouts.peserta.template')
 
 @section('content')
