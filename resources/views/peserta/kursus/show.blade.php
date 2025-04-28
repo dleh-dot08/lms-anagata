@@ -52,6 +52,7 @@
                 {{-- Tambahan Section: Projects --}}
                 <div class="mb-3">
                     <h5><strong>Projects Peserta</strong></h5>
+                    <a href="{{ route('projects.peserta.createCourse') }}" class="btn btn-primary mb-3">Buat Project Baru</a>
                     @if($course->projects && count($course->projects))
                         <div class="row">
                             @foreach($course->projects as $project)

@@ -313,6 +313,10 @@ Route::get('/peserta/kursus', [CourseController::class, 'indexpeserta'])
     ->name('courses.indexpeserta')
     ->middleware(PesertaMiddleware::class);
 
+// Untuk project dari course
+Route::get('/courses/{course}/projects/create', [ProjectPesertaController::class, 'createCourse'])->name('projects.peserta.createCourse');
+Route::post('/courses/{course}/projects/store', [ProjectPesertaController::class, 'storeCourse'])->name('projects.peserta.storeCourse');
+
 // Halaman detail kursus untuk peserta
 Route::get('/peserta/kursus/{course}', [CourseController::class, 'showPeserta'])
     ->name('courses.showPeserta')

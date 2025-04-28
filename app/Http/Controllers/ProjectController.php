@@ -81,6 +81,33 @@ class ProjectController extends Controller
         return redirect()->route('projects.peserta.index')->with('success', 'Project berhasil dibuat!');
     }
 
+    public function createCourse($courseId)
+    {
+        $course = Course::findOrFail($courseId);
+        return view('projects.peserta.createproject', compact('course'));
+    }
+
+    public function storeCourse(Request $request, $courseId)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'html_code' => 'nullable|string',
+            'css_code' => 'nullable|string',
+            'js_code' => 'nullable|string',
+        ]);
+
+        $project = new Project();
+        $project->user_id = Auth::id();
+        $project->course_id = $courseId;
+        $project->title = $request->title;
+        $project->html_code = $request->html_code;
+        $project->css_code = $request->css_code;
+        $project->js_code = $request->js_code;
+        $project->save();
+
+        return redirect()->route('peserta.kursus.show', $courseId)->with('success', 'Project berhasil dibuat.');
+    }
+
     public function showPeserta(Project $project)
     {
         $user = Auth::user();
