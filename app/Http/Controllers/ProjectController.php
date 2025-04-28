@@ -78,7 +78,7 @@ class ProjectController extends Controller
             'js_code' => $request->js_code,
         ]);
 
-        return redirect()->route('projects.index')->with('success', 'Project berhasil dibuat!');
+        return redirect()->route('projects.peserta.index')->with('success', 'Project berhasil dibuat!');
     }
 
     public function showPeserta(Project $project)
