@@ -87,7 +87,20 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Pendidikan Terakhir</label>
-                    <input type="text" name="pendidikan_terakhir" class="form-control" value="{{ $user?->pendidikan_terakhir }}">
+                    <select name="pendidikan_terakhir" class="form-control">
+                        <option value="">-- Pilih Pendidikan --</option>
+                        <option value="SD" {{ $user?->pendidikan_terakhir == 'SD' ? 'selected' : '' }}>SD</option>
+                        <option value="SMP" {{ $user?->pendidikan_terakhir == 'SMP' ? 'selected' : '' }}>SMP</option>
+                        <option value="SMA" {{ $user?->pendidikan_terakhir == 'SMA' ? 'selected' : '' }}>SMA</option>
+                        <option value="SMK" {{ $user?->pendidikan_terakhir == 'SMK' ? 'selected' : '' }}>SMK</option>
+                        <option value="D1" {{ $user?->pendidikan_terakhir == 'D1' ? 'selected' : '' }}>D1</option>
+                        <option value="D2" {{ $user?->pendidikan_terakhir == 'D2' ? 'selected' : '' }}>D2</option>
+                        <option value="D3" {{ $user?->pendidikan_terakhir == 'D3' ? 'selected' : '' }}>D3</option>
+                        <option value="D4" {{ $user?->pendidikan_terakhir == 'D4' ? 'selected' : '' }}>D4</option>
+                        <option value="S1" {{ $user?->pendidikan_terakhir == 'S1' ? 'selected' : '' }}>S1</option>
+                        <option value="S2" {{ $user?->pendidikan_terakhir == 'S2' ? 'selected' : '' }}>S2</option>
+                        <option value="S3" {{ $user?->pendidikan_terakhir == 'S3' ? 'selected' : '' }}>S3</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Media Sosial (Instagram/Facebook/LinkedIn)</label>
@@ -101,6 +114,7 @@
                 <div class="mb-3">
                     <label class="form-label">Foto Profil</label>
                     <input type="file" name="foto" class="form-control">
+                    <small class="text-muted">Type File JPEG/PNG ukuran max. 1MB </small>
                 </div>
             </div>
 
