@@ -394,12 +394,14 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
     Route::get('peserta/projects', [ProjectController::class, 'index'])->name('peserta.projects.index'); // Menampilkan daftar project untuk peserta
     Route::get('peserta/projects/{project}', [ProjectController::class, 'show'])->name('peserta.projects.show'); // Menampilkan detail project untuk peserta
-    Route::get('peserta/projects/create', [ProjectController::class, 'create'])->name('peserta.projects.create'); // Form untuk membuat project baru
-    Route::post('peserta/projects', [ProjectController::class, 'store'])->name('peserta.projects.store'); // Menyimpan project baru
+    //Route::get('peserta/projects/create', [ProjectController::class, 'create'])->name('peserta.projects.create'); // Form untuk membuat project baru
+    //Route::post('peserta/projects', [ProjectController::class, 'store'])->name('peserta.projects.store'); // Menyimpan project baru
     Route::get('peserta/projects/{project}/edit', [ProjectController::class, 'edit'])->name('peserta.projects.edit'); // Form untuk mengedit project
     Route::put('peserta/projects/{project}', [ProjectController::class, 'update'])->name('peserta.projects.update'); // Update project
     Route::delete('peserta/projects/{project}', [ProjectController::class, 'destroy'])->name('peserta.projects.destroy'); // Hapus project
 });
+
+Route::get('peserta/projects/create', [ProjectController::class, 'create'])->name('peserta.projects.create');
 
 // Karyawan Routes
 Route::middleware(['auth', DivisiMiddleware::class.':APD,MRC'])->group(function () {
