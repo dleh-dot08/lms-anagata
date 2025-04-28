@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Project;
+use App\Models\Course;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class ProjectController extends Controller
+{
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->role_id == 3) { // Peserta
+            // Peserta hanya bisa melihat project mereka sendiri
+            $projects = Project::where('user_id', $user->id)
+                        ->latest()
+                        ->paginate(10);
+            return view('projects.peserta.index', compact('projects'));
+
+        } elseif ($user->role_id == 1) { // Admin
+            // Admin bisa melihat semua project
+            $projects = Project::with('user', 'course')
+                        ->latest()
+                        ->paginate(10);
+            return view('projects.admin.index', compact('projects'));
+
+        } elseif ($user->role_id == 2) { // Mentor
+            // Mentor bisa melihat semua project, bisa ditambahkan filter berdasarkan course
+            $projects = Project::with('user', 'course')
+                        ->where('course_id', $request->course_id ?? null)
+                        ->latest()
+                        ->paginate(10);
+            return view('projects.mentor.index', compact('projects'));
+
+        } elseif ($user->role_id == 4) { // Karyawan
+            // Karyawan hanya bisa melihat semua project, tidak bisa melakukan aksi lain
+            $projects = Project::with('user', 'course')
+                        ->latest()
+                        ->paginate(10);
+            return view('projects.karyawan.index', compact('projects'));
+
+        } elseif ($user->role_id == 5) { // Vendor
+            // Vendor hanya bisa melihat project, bisa ditambahkan fitur spesifik jika diperlukan
+            $projects = Project::with('user', 'course')
+                        ->latest()
+                        ->paginate(10);
+            return view('projects.vendor.index', compact('projects'));
+        }
+
+        abort(403); // Untuk role yang tidak dikenali
+    }
+
+    public function create()
+    {
+        $courses = Course::all(); // Peserta memilih kursus untuk membuat project
+        return view('projects.peserta.create', compact('courses'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'title' => 'required|string|max:255',
+            'html_code' => 'nullable',
+            'css_code' => 'nullable',
+            'js_code' => 'nullable',
+        ]);
+
+        Project::create([
+            'user_id' => Auth::id(),
+            'course_id' => $request->course_id,
+            'title' => $request->title,
+            'html_code' => $request->html_code,
+            'css_code' => $request->css_code,
+            'js_code' => $request->js_code,
+        ]);
+
+        return redirect()->route('projects.index')->with('success', 'Project berhasil dibuat!');
+    }
+
+    public function show(Project $project)
+    {
+        $user = Auth::user();
+
+        // Peserta hanya bisa melihat project mereka sendiri
+        if ($user->role_id == 3 && $project->user_id != $user->id) {
+            abort(403);
+        }
+
+        return view('projects.show', compact('project'));
+    }
+
+    public function edit(Project $project)
+    {
+        $user = Auth::user();
+
+        // Peserta hanya bisa mengedit project mereka sendiri
+        if ($user->role_id != 3 || $project->user_id != $user->id) {
+            abort(403);
+        }
+
+        $courses = Course::all();
+        return view('projects.peserta.edit', compact('project', 'courses'));
+    }
+
+    public function update(Request $request, Project $project)
+    {
+        $user = Auth::user();
+
+        if ($user->role_id != 3 || $project->user_id != $user->id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'title' => 'required|string|max:255',
+            'html_code' => 'nullable',
+            'css_code' => 'nullable',
+            'js_code' => 'nullable',
+        ]);
+
+        $project->update($request->only('course_id', 'title', 'html_code', 'css_code', 'js_code'));
+
+        return redirect()->route('projects.index')->with('success', 'Project berhasil diperbarui!');
+    }
+
+    public function destroy(Project $project)
+    {
+        $user = Auth::user();
+
+        // Peserta hanya bisa menghapus project mereka sendiri
+        if ($user->role_id != 3 || $project->user_id != $user->id) {
+            abort(403);
+        }
+
+        $project->delete();
+
+        return redirect()->route('projects.index')->with('success', 'Project berhasil dihapus!');
+    }
+}

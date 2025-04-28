@@ -22,7 +22,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ParticipantController;
-
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HelpdeskTicketController;
 use App\Http\Controllers\HelpdeskMessageController;
@@ -382,6 +382,27 @@ Route::get('/mentor/dashboard', [MentorController::class, 'index'])
         Route::get('/kursus/{course}', [CourseController::class, 'showMentor'])->name('kursus.show');
         Route::get('/kursus/{course}/lesson/{lesson}', [CourseController::class, 'showLessonMentor'])->name('kursus.lesson.show');
     });
+
+
+// Admin Routes
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::resource('admin/projects', ProjectController::class);
+});
+
+// Peserta Routes
+Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
+    Route::resource('peserta/projects', ProjectController::class);
+});
+
+// Karyawan Routes
+Route::middleware(['auth', DivisiMiddleware::class.':APD,MRC'])->group(function () {
+    Route::resource('karyawan/projects', ProjectController::class);
+});
+
+// Mentor Routes
+Route::middleware(['auth', MentorMiddleware::class])->group(function () {
+    Route::resource('mentor/projects', ProjectController::class);
+});
 
     
 require __DIR__.'/auth.php';
