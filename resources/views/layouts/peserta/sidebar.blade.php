@@ -42,8 +42,8 @@
             </a>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('peserta.projects.index') ? 'active' : '' }}">
-            <a href="{{ route('peserta.projects.index') }}" class="menu-link">
+        <li class="menu-item {{ request()->routeIs('projects.peserta.index') ? 'active' : '' }}">
+            <a href="{{ route('projects.peserta.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-book-alt"></i>
                 <div data-i18n="Analytics">Project</div>
             </a>
