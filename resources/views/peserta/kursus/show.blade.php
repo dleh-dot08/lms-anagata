@@ -49,6 +49,28 @@
                     @endif
                 </div>
 
+                {{-- Tambahan Section: Projects --}}
+                <div class="mb-3">
+                    <h5><strong>Projects Peserta</strong></h5>
+                    @if($course->projects && count($course->projects))
+                        <div class="row">
+                            @foreach($course->projects as $project)
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ $project->title }}</h6>
+                                            <p class="card-text">Peserta: {{ $project->user->name ?? 'Tidak diketahui' }}</p>
+                                            <a href="{{ route('projects.peserta.show', $project->id) }}" class="btn btn-sm btn-primary">Lihat Project</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Belum ada project peserta.</p>
+                    @endif
+                </div>
+
             @else
                 <div class="alert alert-warning text-center">
                     <h5>Kursus Tidak Aktif</h5>
