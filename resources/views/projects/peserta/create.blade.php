@@ -46,12 +46,16 @@
 
 <script>
     function updatePreview() {
-        var iframe = document.getElementById('preview');
+        // Ambil kode HTML, CSS, dan JS dari textarea
         var htmlCode = document.getElementById('html_code').value;
         var cssCode = document.getElementById('css_code').value;
         var jsCode = document.getElementById('js_code').value;
 
+        // Ambil dokumen iframe
+        var iframe = document.getElementById('preview');
         var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+        // Menulis HTML, CSS, dan JS ke dalam iframe
         iframeDoc.open();
         iframeDoc.write(`
             <html>
@@ -60,7 +64,13 @@
                 </head>
                 <body>
                     ${htmlCode}
-                    <script>${jsCode}<\/script>
+                    <script>
+                        try {
+                            ${jsCode}
+                        } catch (error) {
+                            console.error('Error in JS code:', error);
+                        }
+                    <\/script>
                 </body>
             </html>
         `);
