@@ -24,42 +24,39 @@
         <pre><code>{{ $project->js_code }}</code></pre>
     </div>
 
+    <!-- Preview Section -->
+    <h2>Live Preview</h2>
+    <iframe id="preview" style="width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
+
     <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning">Edit Project</a>
     <a href="{{ route('projects.peserta.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
 </div>
 
 <script>
-    // Fungsi untuk memperbarui preview di iframe
-    function updatePreview() {
+    // Function to render the preview in the iframe
+    window.onload = function() {
         var iframe = document.getElementById('preview');
-        var htmlCode = `{{ $project->html_code }}`;
-        var cssCode = `{{ $project->css_code }}`;
-        var jsCode = `{{ $project->js_code }}`;
+        var htmlCode = @json($project->html_code);
+        var cssCode = @json($project->css_code);
+        var jsCode = @json($project->js_code);
 
         var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
+        
         iframeDoc.open();
         iframeDoc.write(`
             <html>
                 <head>
+                    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
                     <style>${cssCode}</style>
                 </head>
                 <body>
                     ${htmlCode}
-                    <script>
-                        try {
-                            ${jsCode}
-                        } catch (error) {
-                            console.error('Error in JS code:', error);
-                        }
-                    </script>
+                    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+                    <script>${jsCode}<\/script>
                 </body>
             </html>
         `);
         iframeDoc.close();
     }
-
-    // Panggil fungsi updatePreview untuk menampilkan preview saat halaman pertama kali dimuat
-    updatePreview();
 </script>
 @endsection
