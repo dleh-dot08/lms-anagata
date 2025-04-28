@@ -392,17 +392,13 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
 // Peserta Routes
 Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
-    Route::get('peserta/projects', [ProjectController::class, 'index'])->name('peserta.projects.index'); // Menampilkan daftar project untuk peserta
-    Route::get('peserta/projects/{project}', [ProjectController::class, 'show'])->name('peserta.projects.show'); // Menampilkan detail project untuk peserta
+    Route::get('projects/peserta', [ProjectController::class, 'index'])->name('projects.peserta.index'); // Menampilkan daftar project untuk peserta
+    Route::get('/projects/{project}', [ProjectController::class, 'showPeserta'])->name('projects.peserta.show'); // Menampilkan detail project untuk peserta
     Route::get('projects/peserta/create', [ProjectController::class, 'create'])->name('projects.peserta.create'); // Form untuk membuat project baru
     Route::post('projects/peserta', [ProjectController::class, 'store'])->name('projects.peserta.store'); // Menyimpan project baru
-    Route::get('peserta/projects/{project}/edit', [ProjectController::class, 'edit'])->name('peserta.projects.edit'); // Form untuk mengedit project
-    Route::put('peserta/projects/{project}', [ProjectController::class, 'update'])->name('peserta.projects.update'); // Update project
-    Route::delete('peserta/projects/{project}', [ProjectController::class, 'destroy'])->name('peserta.projects.destroy'); // Hapus project
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('', [ProjectController::class, 'create'])->name('');
+    Route::get('projects/peserta/{project}/edit', [ProjectController::class, 'edit'])->name('projects.peserta.edit'); // Form untuk mengedit project
+    Route::put('projects/peserta/{project}', [ProjectController::class, 'update'])->name('projects.peserta.update'); // Update project
+    Route::delete('projects/peserta/{project}', [ProjectController::class, 'destroy'])->name('projects.peserta.destroy'); // Hapus project
 });
 
 // Karyawan Routes

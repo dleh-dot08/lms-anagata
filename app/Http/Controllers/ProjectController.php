@@ -81,7 +81,7 @@ class ProjectController extends Controller
         return redirect()->route('projects.index')->with('success', 'Project berhasil dibuat!');
     }
 
-    public function show(Project $project)
+    public function showPeserta(Project $project)
     {
         $user = Auth::user();
 
@@ -90,8 +90,45 @@ class ProjectController extends Controller
             abort(403);
         }
 
-        return view('projects.show', compact('project'));
+        return view('projects.peserta.show', compact('project'));
     }
+
+    public function showAdmin(Project $project)
+    {
+        $user = Auth::user();
+
+        // Admin bisa melihat project siapapun
+        if ($user->role_id == 1) {
+            return view('projects.admin.show', compact('project'));
+        }
+
+        abort(403);
+    }
+
+    public function showMentor(Project $project)
+    {
+        $user = Auth::user();
+
+        // Mentor bisa melihat project siapapun
+        if ($user->role_id == 2) {
+            return view('projects.mentor.show', compact('project'));
+        }
+
+        abort(403);
+    }
+
+    public function showKaryawan(Project $project)
+    {
+        $user = Auth::user();
+
+        // Karyawan bisa melihat project siapapun
+        if ($user->role_id == 4) {
+            return view('projects.karyawan.show', compact('project'));
+        }
+
+        abort(403);
+    }
+
 
     public function edit(Project $project)
     {
@@ -124,7 +161,7 @@ class ProjectController extends Controller
 
         $project->update($request->only('course_id', 'title', 'html_code', 'css_code', 'js_code'));
 
-        return redirect()->route('projects.index')->with('success', 'Project berhasil diperbarui!');
+        return redirect()->route('projects.peserta.index')->with('success', 'Project berhasil diperbarui!');
     }
 
     public function destroy(Project $project)
@@ -138,6 +175,6 @@ class ProjectController extends Controller
 
         $project->delete();
 
-        return redirect()->route('projects.index')->with('success', 'Project berhasil dihapus!');
+        return redirect()->route('projects.peserta.index')->with('success', 'Project berhasil dihapus!');
     }
 }

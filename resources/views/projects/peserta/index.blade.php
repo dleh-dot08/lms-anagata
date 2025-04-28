@@ -26,9 +26,9 @@
                         <td>{{ $project->course->name }}</td>
                         <td>{{ $project->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ route('peserta.projects.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
-                            <a href="{{ route('peserta.projects.edit', $project->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('peserta.projects.destroy', $project->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('projects.peserta.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                            <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('projects.peserta.destroy', $project->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Hapus</button>

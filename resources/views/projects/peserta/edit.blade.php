@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1>Edit Project</h1>
-    <form action="{{ route('peserta.projects.update', $project->id) }}" method="POST">
+    <form action="{{ route('projects.peserta.update', $project->id) }}" method="POST">
         @csrf
         @method('PUT')
 
