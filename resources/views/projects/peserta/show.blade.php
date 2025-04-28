@@ -28,33 +28,28 @@
 </div>
 
 <script>
-    // Function to render the preview in the iframe after page load
-    window.onload = function() {
+    function updatePreview() {
         var iframe = document.getElementById('preview');
-        var htmlCode = @json($project->html_code); // Mengambil HTML
-        var cssCode = @json($project->css_code); // Mengambil CSS
-        var jsCode = @json($project->js_code);   // Mengambil JS
+        var htmlCode = document.getElementById('html_code').value;
+        var cssCode = document.getElementById('css_code').value;
+        var jsCode = document.getElementById('js_code').value;
 
-        // Memastikan iframe ada dan bisa diubah
         var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
         iframeDoc.open();
-
-        // Menulis konten HTML, CSS, dan JS ke dalam iframe
         iframeDoc.write(`
             <html>
                 <head>
                     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
-                    <style>{{ cssCode }}</style>
+                    <style>${cssCode}</style>
                 </head>
                 <body>
-                    {{ htmlCode }}
-                    
-                    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-                    <script>{{ jsCode }}</script>
+                    ${htmlCode}
+
+                    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"><\/script>
+                    <script>${jsCode}<\/script>
                 </body>
             </html>
         `);
-
         iframeDoc.close();
     }
 </script>
