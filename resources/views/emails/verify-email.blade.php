@@ -49,7 +49,7 @@
     <div class="container" style="max-width: 600px; margin: auto; background: white; padding: 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden;">
         
         <!-- Header -->
-        <div class="header" style="background-color: #4A102A; padding: 20px; text-align: center;">
+        <div class="header" style="background-color: #2cffea; padding: 20px; text-align: center;">
             <img src="https://ruanganagata.id/assets/img/illustrations/logo-asn.png" alt="Company Logo" style="height: 50px; margin-bottom: 10px;">
             <h1 style="color: white; font-size: 24px; margin: 0;">Selamat Datang di LMS Kami</h1>
         </div>
