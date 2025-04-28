@@ -402,7 +402,7 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('peserta/projects/create', [ProjectController::class, 'create'])->name('peserta.projects.create');
+    Route::get('projects/peserta/create', [ProjectController::class, 'create'])->name('projects.peserta.create');
 });
 
 // Karyawan Routes

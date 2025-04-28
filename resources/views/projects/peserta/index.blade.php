@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1>Daftar Project Saya</h1>
-    <a href="{{ route('peserta.projects.create') }}" class="btn btn-primary mb-3">Buat Project Baru</a>
+    <a href="{{ route('projects.peserta.create') }}" class="btn btn-primary mb-3">Buat Project Baru</a>
 
     @if($projects->isEmpty())
         <p>Tidak ada project yang ditemukan.</p>
