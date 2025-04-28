@@ -5,23 +5,19 @@
     <h1>{{ $project->title }}</h1>
     <h5>Kursus: {{ $project->course->nama_kursus }}</h5>
 
-    <!-- Menampilkan Preview dengan Iframe -->
-    <h2>Live Preview</h2>
-    <iframe id="preview" style="width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
-
     <div class="mb-3">
         <h4>HTML</h4>
-        <pre><code>{{ $project->html_code }}</code></pre>
+        <pre>{{ $project->html_code }}</pre>
     </div>
 
     <div class="mb-3">
         <h4>CSS</h4>
-        <pre><code>{{ $project->css_code }}</code></pre>
+        <pre>{{ $project->css_code }}</pre>
     </div>
 
     <div class="mb-3">
         <h4>JavaScript</h4>
-        <pre><code>{{ $project->js_code }}</code></pre>
+        <pre>{{ $project->js_code }}</pre>
     </div>
 
     <!-- Preview Section -->
@@ -41,7 +37,6 @@
         var jsCode = @json($project->js_code);
 
         var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        
         iframeDoc.open();
         iframeDoc.write(`
             <html>
