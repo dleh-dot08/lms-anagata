@@ -22,6 +22,6 @@
         <pre>{{ $project->js_code }}</pre>
     </div>
 
-    <a href="{{ route('projects.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
+    <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
 </div>
 @endsection

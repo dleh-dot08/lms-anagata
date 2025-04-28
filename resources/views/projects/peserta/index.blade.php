@@ -4,7 +4,7 @@
 @section('content')
 <div class="container">
     <h1>Daftar Project Saya</h1>
-    <a href="{{ route('projects.create') }}" class="btn btn-primary mb-3">Buat Project Baru</a>
+    <a href="{{ route('peserta.projects.create') }}" class="btn btn-primary mb-3">Buat Project Baru</a>
 
     @if($projects->isEmpty())
         <p>Tidak ada project yang ditemukan.</p>
@@ -27,9 +27,9 @@
                         <td>{{ $project->course->name }}</td>
                         <td>{{ $project->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ route('projects.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
-                            <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('projects.destroy', $project->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('peserta.projects.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                            <a href="{{ route('peserta.projects.edit', $project->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('peserta.projects.destroy', $project->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Hapus</button>

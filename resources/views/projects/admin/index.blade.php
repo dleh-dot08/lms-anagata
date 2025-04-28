@@ -28,7 +28,7 @@
                         <td>{{ $project->course->name }}</td>
                         <td>{{ $project->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ route('projects.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                            <a href="{{ route('admin.projects.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
                         </td>
                     </tr>
                 @endforeach

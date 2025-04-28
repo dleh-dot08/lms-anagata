@@ -384,24 +384,33 @@ Route::get('/mentor/dashboard', [MentorController::class, 'index'])
     });
 
 
-// Admin Routes
+/// Admin Routes
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::resource('admin/projects', ProjectController::class);
+    Route::get('admin/projects', [ProjectController::class, 'index'])->name('admin.projects.index'); // Menampilkan daftar project untuk admin
+    Route::get('admin/projects/{project}', [ProjectController::class, 'show'])->name('admin.projects.show'); // Menampilkan detail project untuk admin
 });
 
 // Peserta Routes
 Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
-    Route::resource('peserta/projects', ProjectController::class);
+    Route::get('peserta/projects', [ProjectController::class, 'index'])->name('peserta.projects.index'); // Menampilkan daftar project untuk peserta
+    Route::get('peserta/projects/{project}', [ProjectController::class, 'show'])->name('peserta.projects.show'); // Menampilkan detail project untuk peserta
+    Route::get('peserta/projects/create', [ProjectController::class, 'create'])->name('peserta.projects.create'); // Form untuk membuat project baru
+    Route::post('peserta/projects', [ProjectController::class, 'store'])->name('peserta.projects.store'); // Menyimpan project baru
+    Route::get('peserta/projects/{project}/edit', [ProjectController::class, 'edit'])->name('peserta.projects.edit'); // Form untuk mengedit project
+    Route::put('peserta/projects/{project}', [ProjectController::class, 'update'])->name('peserta.projects.update'); // Update project
+    Route::delete('peserta/projects/{project}', [ProjectController::class, 'destroy'])->name('peserta.projects.destroy'); // Hapus project
 });
 
 // Karyawan Routes
 Route::middleware(['auth', DivisiMiddleware::class.':APD,MRC'])->group(function () {
-    Route::resource('karyawan/projects', ProjectController::class);
+    Route::get('karyawan/projects', [ProjectController::class, 'index'])->name('karyawan.projects.index'); // Menampilkan daftar project untuk karyawan
+    Route::get('karyawan/projects/{project}', [ProjectController::class, 'show'])->name('karyawan.projects.show'); // Menampilkan detail project untuk karyawan
 });
 
 // Mentor Routes
 Route::middleware(['auth', MentorMiddleware::class])->group(function () {
-    Route::resource('mentor/projects', ProjectController::class);
+    Route::get('mentor/projects', [ProjectController::class, 'index'])->name('mentor.projects.index'); // Menampilkan daftar project untuk mentor
+    Route::get('mentor/projects/{project}', [ProjectController::class, 'show'])->name('mentor.projects.show'); // Menampilkan detail project untuk mentor
 });
 
     

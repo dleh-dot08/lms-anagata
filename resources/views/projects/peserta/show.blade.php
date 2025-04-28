@@ -21,7 +21,7 @@
         <pre>{{ $project->js_code }}</pre>
     </div>
 
-    <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-warning">Edit Project</a>
-    <a href="{{ route('projects.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
+    <a href="{{ route('peserta.projects.edit', $project->id) }}" class="btn btn-warning">Edit Project</a>
+    <a href="{{ route('peserta.projects.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
 </div>
 @endsection

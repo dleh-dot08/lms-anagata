@@ -4,7 +4,7 @@
 @section('content')
 <div class="container">
     <h1>Buat Project Baru</h1>
-    <form action="{{ route('projects.store') }}" method="POST">
+    <form action="{{ route('peserta.projects.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="course_id" class="form-label">Kursus</label>
