@@ -12,7 +12,7 @@
             <select name="course_id" id="course_id" class="form-control">
                 <option value="">Pilih Kursus</option>
                 @foreach ($courses as $course)
-                    <option value="{{ $course->id }}" {{ $course->id == $project->course_id ? 'selected' : '' }}>{{ $course->name }}</option>
+                    <option value="{{ $course->id }}" {{ $course->id == $project->course_id ? 'selected' : '' }}>{{ $course->nama_kelas }}</option>
                 @endforeach
             </select>
             @error('course_id') <small class="text-danger">{{ $message }}</small> @enderror
