@@ -13,7 +13,6 @@
                 <tr>
                     <th>#</th>
                     <th>Judul</th>
-                    <th>Kursus</th>
                     <th>Tanggal Dibuat</th>
                     <th>Aksi</th>
                 </tr>
@@ -23,7 +22,6 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $project->title }}</td>
-                        <td>{{ $project->course->nama_kelas }}</td>
                         <td>{{ $project->created_at->format('d-m-Y') }}</td>
                         <td>
                             <a href="{{ route('projects.peserta.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
