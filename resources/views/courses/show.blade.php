@@ -190,10 +190,10 @@
                     @forelse ($course->projects as $index => $project)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $project->user->name }}</td>
+                            <td>{{ $project->user->title }}</td>
                             <td>{{ $project->judul }}</td>
                             <td>
-                                <a href="{{ route('admin.projects.show', $project->id) }}" class="btn btn-sm btn-info">Detail</a>
+                                <a href="{{ route('projects.admin.show', $project->id) }}" class="btn btn-sm btn-info">Detail</a>
                             </td>
                         </tr>
                     @empty

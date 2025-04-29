@@ -412,7 +412,7 @@ Route::get('/mentor/dashboard', [MentorController::class, 'index'])
 /// Admin Routes
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('admin/projects', [ProjectController::class, 'index'])->name('admin.projects.index'); // Menampilkan daftar project untuk admin
-    Route::get('admin/projects/{project}', [ProjectController::class, 'show'])->name('admin.projects.show'); // Menampilkan detail project untuk admin
+    Route::get('admin/projects/{project}', [ProjectController::class, 'showAdmin'])->name('projects.admin.show'); // Menampilkan detail project untuk admin
 });
 
 // Peserta Routes
