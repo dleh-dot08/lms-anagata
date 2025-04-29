@@ -224,7 +224,16 @@ class CourseController extends Controller
         // 3. Search untuk Projects berdasarkan judul project
         if ($request->has('project_search') && $request->project_search != '') {
             $projectSearch = $request->project_search;
-            $course->projects = $course->projects()->where('judul', 'like', "%{$projectSearch}%")->get();
+            
+            // Menambahkan pencarian berdasarkan judul proyek dan nama peserta
+            $course->projects = $course->projects()
+            ->where(function($query) use ($projectSearch) {
+                $query->where('title', 'like', "%{$projectSearch}%")  // Pencarian berdasarkan judul proyek
+                    ->orWhereHas('user', function($q) use ($projectSearch) {  // Pencarian berdasarkan nama peserta (user)
+                        $q->where('name', 'like', "%{$projectSearch}%");
+                    });
+            })
+            ->get();
         }
 
         // ========================== Akhir tambahan ==========================
