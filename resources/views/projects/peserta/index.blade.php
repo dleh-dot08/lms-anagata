@@ -1,56 +1,72 @@
 @extends('layouts.peserta.template')
 
 @section('content')
-<div class="container py-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Daftar Project Saya</h5>
-            <a href="{{ route('projects.peserta.create') }}" class="btn btn-light btn-sm">+ Buat Project Baru</a>
-        </div>
-        <div class="card-body">
-            @if($projects->isEmpty())
-                <div class="alert alert-info text-center" role="alert">
-                    Tidak ada project yang ditemukan.
-                </div>
-            @else
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle">
-                        <thead class="table-primary text-center">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Judul</th>
-                                <th scope="col">Kursus</th>
-                                <th scope="col">Tanggal Dibuat</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($projects as $project)
-                                <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $project->title }}</td>
-                                    <td>{{ optional($project->course)->nama_kelas ?? '-' }}</td>
-                                    <td class="text-center">{{ $project->created_at->format('d-m-Y') }}</td>
-                                    <td class="text-center">
-                                        <a href="{{ route('projects.peserta.show', $project->id) }}" class="btn btn-info btn-sm mb-1">Lihat</a>
-                                        <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning btn-sm mb-1">Edit</a>
-                                        <form action="{{ route('projects.peserta.destroy', $project->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Yakin ingin menghapus project ini?')">Hapus</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+<div class="container">
+    <div class="">
+        <h3 class="fw-bold py-3 mb-1 mt-2">Daftar Project Anda</h3>
+        <div class="card shadow-sm p-4">
 
-                <!-- Pagination -->
-                <div class="d-flex justify-content-center mt-3">
-                    {{ $projects->links() }}
+            <!-- Menampilkan Pesan Error -->
+            @if(session('errors'))
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
+
+            <!-- Tombol Buat Project Baru -->
+            <div class="mb-3">
+                <a href="{{ route('projects.peserta.create') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle me-1"></i> Buat Project Baru
+                </a>
+            </div>
+
+            <!-- Form Pencarian -->
+            <form method="GET" action="{{ route('projects.peserta.index') }}" class="mb-3">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="Cari project...">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">Cari</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Tabel Project -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Judul Project</th>
+                        <th>Kursus</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($projects as $project)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $project->title }}</td>
+                        <td>{{ $project->course->nama_kelas ?? 'N/A' }}</td>
+                        <td>
+                            <a href="{{ route('projects.peserta.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                            <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">Belum ada project.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            {{ $projects->links() }}
         </div>
     </div>
 </div>
