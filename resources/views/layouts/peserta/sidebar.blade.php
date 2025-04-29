@@ -60,11 +60,11 @@
                         <div>Absen Kursus</div>
                     </a>
                 </li>
-                <!-- <li class="menu-item {{ request()->routeIs('attendances.activities') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->routeIs('attendances.activities') ? 'active' : '' }}">
                     <a href="{{ route('attendances.activities') }}" class="menu-link">
                         <div>Absen Kegiatan</div>
                     </a>
-                </li> -->
+                </li> 
             </ul>
         </li>        
 

@@ -9,11 +9,13 @@ use App\Models\Activity;
 use App\Models\Attendance;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use Intervention\Image\ImageManagerStatic;
 
 class AttendanceController extends Controller
 {
@@ -80,45 +82,43 @@ class AttendanceController extends Controller
             'latitude' => 'nullable|numeric',
             'status' => 'required|in:Hadir,Tidak Hadir,Izin,Sakit',
             'file_attache' => 'nullable|file|max:2048',
+            'photo_capture' => 'nullable|string', // tambahkan ini
             'ttd_digital' => 'nullable|string',
         ]);
-
+    
         if (!$request->course_id && !$request->activity_id) {
             return redirect()->back()->with('error', 'Absensi harus terkait dengan Course atau Activity.');
         }
-
+    
         $today = \Carbon\Carbon::today()->toDateString();
         $user_id = Auth::id();
-
+    
         $query = Attendance::where('user_id', $user_id)
             ->whereDate('tanggal', $today);
-
+    
         if ($request->course_id) {
             $query->where('course_id', $request->course_id)
-                ->whereNull('activity_id');
+                  ->whereNull('activity_id');
         } elseif ($request->activity_id) {
             $query->where('activity_id', $request->activity_id)
-                ->whereNull('course_id');
+                  ->whereNull('course_id');
         }
-
+    
         if ($query->exists()) {
             return redirect()->back()->with('error', 'Sudah absen hari ini untuk entitas ini.');
         }
-
+    
         $file = null;
-        if ($request->hasFile('file_attache')) {
-            $filename = uniqid() . '.' . $request->file('file_attache')->getClientOriginalExtension();
-            $filePath = public_path('storage/absensi/foto');
-            if (!file_exists($filePath)) mkdir($filePath, 0755, true);
-            $request->file('file_attache')->move($filePath, $filename);
-            $file = 'absensi/foto/' . $filename;
+    
+        if ($request->filled('photo_capture')) {
+            $file = $this->saveBase64Image($request->photo_capture, 'absensi/foto');
         }
-
+    
         $ttd = null;
         if ($request->filled('ttd_digital')) {
             $ttd = $this->saveBase64Image($request->ttd_digital, 'absensi/ttd');
         }
-
+    
         Attendance::create([
             'user_id' => $user_id,
             'course_id' => $request->course_id,
@@ -131,9 +131,10 @@ class AttendanceController extends Controller
             'ttd_digital' => $ttd,
             'status' => $request->status,
         ]);
-
+    
         return redirect()->route('attendances.index')->with('success', 'Absensi berhasil disimpan.');
     }
+    
     
 
     private function saveBase64Image($base64Image, $path)
@@ -141,34 +142,44 @@ class AttendanceController extends Controller
         if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
             $data = substr($base64Image, strpos($base64Image, ',') + 1);
             $type = strtolower($type[1]); // jpg, png, gif
-
+    
             if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
                 throw new \Exception('Invalid image type');
             }
-
+    
             $data = base64_decode($data);
-
+    
             if ($data === false) {
                 throw new \Exception('Base64 decode failed');
             }
         } else {
             throw new \Exception('Did not match data URI with image data');
         }
-
-        $fileName = \Str::uuid() . '.' . $type;
+    
+        $fileName = Str::uuid() . '.' . $type;
         $publicPath = public_path('storage/' . $path);
-
-        // Create directory if not exists
+    
         if (!file_exists($publicPath)) {
             mkdir($publicPath, 0755, true);
         }
-
+    
         $fullPath = $publicPath . '/' . $fileName;
-
-        file_put_contents($fullPath, $data);
-
+    
+        // === Ini fix ===
+        $manager = new ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+    
+        $image = $manager->read($data);
+    
+        if ($image->width() > 1200) {
+            $image->resize(width: 1200);
+        }
+    
+        $image->save($fullPath);
+    
         return $path . '/' . $fileName;
     }
+    
+    
 
 
 
@@ -254,20 +265,19 @@ class AttendanceController extends Controller
         
         // Ambil kegiatan aktif yang diikuti user dan masih dalam rentang waktu
         $activities = $user->activities()
-            ->wherePivot('status', 'Aktif')
-            ->where(function ($query) use ($now) {
-                $query->whereDate('waktu_mulai', '<=', $now)
-                      ->whereDate('waktu_akhir', '>=', $now)
-                      ->whereTime('waktu_mulai', '<=', $now->format('H:i'))
-                      ->whereTime('waktu_akhir', '>=', $now->format('H:i'));
-            })
-            ->whereDoesntHave('attendances', function ($query) use ($user, $now) {
-                // Pastikan user belum absen pada kegiatan yang dimaksud di hari yang sama
-                $query->where('user_id', $user->id)
-                      ->whereDate('tanggal', $now->toDateString());
-            })
-            ->get();
-    
+        ->wherePivot('status', 'Aktif')
+        ->where(function ($query) use ($now) {
+            $query->whereDate('waktu_mulai', '<=', $now)
+                  ->whereDate('waktu_akhir', '>=', $now)
+                  ->whereTime('waktu_mulai', '<=', $now->format('H:i'))
+                  ->whereTime('waktu_akhir', '>=', $now->format('H:i'));
+        })
+        ->whereDoesntHave('attendances', function ($query) use ($user, $now) {
+            $query->where('user_id', $user->id)
+                  ->whereDate('tanggal', $now->toDateString());
+        })
+        ->get();
+
         // Ambil riwayat absensi kegiatan user
         $activityAttendances = Attendance::where('user_id', $user->id)
             ->whereNotNull('activity_id')
@@ -349,8 +359,15 @@ class AttendanceController extends Controller
         $courses = $enrolled->filter(fn($course) => !in_array($course->id, $alreadyAbsent));
 
         $attendances = Attendance::where('user_id', $user->id)->with('course')->orderByDesc('tanggal')->get();
-    
-        return view('attendances.peserta.index', compact('courses', 'attendances'));
+
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('attendances.mentor.index', compact('courses', 'attendances'));
+            case 3: // Peserta
+                return view('attendances.peserta.index', compact('courses', 'attendances'));
+            default:
+            return view('attendances.peserta.activities', compact('activities', 'activityAttendances'));
+        }
     }
 
 }

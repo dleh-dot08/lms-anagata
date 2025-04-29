@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\CustomVerifyEmail;
+use App\Notifications\CustomResetPassword;
+use App\Models\Activity;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -136,9 +138,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function activities()
     {
-        return $this->belongsToMany(Activity::class)
-        ->withPivot('tanggal_mulai', 'tanggal_daftar', 'tanggal_selesai', 'status')
-        ->withTimestamps();
+        return $this->belongsToMany(Activity::class, 'activity_user')
+                    ->withPivot(['status', 'tanggal_mulai', 'tanggal_selesai'])
+                    ->withTimestamps();
     }
 
     public function courses()
@@ -151,6 +153,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmail());
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPassword($token));
     }
 
 }

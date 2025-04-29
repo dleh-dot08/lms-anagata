@@ -3,11 +3,13 @@
 @section('content')
 <div class="container">
     <h4>Absen untuk Kelas: {{ $course->nama }}</h4>
-    <form action="{{ route('attendances.store') }}" method="POST" enctype="multipart/form-data">
+
+    <form id="absenForm" action="{{ route('attendances.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="course_id" value="{{ $course->id }}">
         <input type="hidden" name="latitude" id="latitude">
         <input type="hidden" name="longitude" id="longitude">
+        <input type="hidden" name="photo_capture" id="photo_file">
 
         <div class="mb-3">
             <label for="status" class="form-label">Status Kehadiran</label>
@@ -21,69 +23,85 @@
         </div>
 
         <div class="mb-3">
-            <label for="file_attache" class="form-label">Foto Kehadiran (Opsional)</label>
-            <input type="file" name="file_attache" class="form-control">
+            <label class="form-label">Ambil Foto Kehadiran</label><br>
+            <video id="camera" width="320" height="240" autoplay style="border:1px solid #ccc;"></video>
+            <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+            <br>
+            <button type="button" class="btn btn-primary mt-2" onclick="takePhoto()">Ambil Foto</button>
+            <div id="preview" class="mt-2"></div>
         </div>
 
         <div class="mb-3">
-            <label for="ttd_canvas" class="form-label">Tanda Tangan Digital</label><br>
+            <label for="ttd_canvas" class="form-label">Tanda Tangan Digital (Opsional)</label><br>
             <canvas id="ttd_canvas" width="300" height="100" style="border:1px solid #ccc;"></canvas>
             <input type="hidden" name="ttd_digital" id="ttd_digital_file">
             <button type="button" class="btn btn-secondary btn-sm mt-1" onclick="clearSignature()">Bersihkan</button>
         </div>
+
         <div id="map" style="height: 300px; margin-bottom: 20px;"></div>
-        <button type="submit" class="btn btn-success">submit</button>
+
+        <button type="submit" class="btn btn-success">Submit Absensi</button>
     </form>
 </div>
 
 <script>
-    // Inisialisasi peta
-    var map = L.map('map').setView([0, 0], 13); // Koordinat default
+    // Lokasi Map
+    var map = L.map('map').setView([0, 0], 13);
 
-    // Tambahkan tile layer dari OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Fungsi untuk menangani lokasi yang ditemukan
     function onLocationFound(e) {
         var radius = e.accuracy / 2;
-
-        // Tambahkan marker ke peta pada lokasi pengguna
-        L.marker(e.latlng).addTo(map)
-            .bindPopup("Anda berada di sini").openPopup();
-
-        // Tambahkan lingkaran akurasi
+        L.marker(e.latlng).addTo(map).bindPopup("Anda berada di sini").openPopup();
         L.circle(e.latlng, radius).addTo(map);
 
-        // Setel nilai latitude dan longitude ke input tersembunyi
         document.getElementById('latitude').value = e.latitude;
         document.getElementById('longitude').value = e.longitude;
     }
 
-    // Fungsi untuk menangani kesalahan lokasi
     function onLocationError(e) {
-        alert(e.message);
+        alert('Lokasi harus diaktifkan untuk absen.');
     }
 
-    // Minta lokasi pengguna dan perbarui peta secara real-time
     map.locate({ setView: true, maxZoom: 16, watch: true, enableHighAccuracy: true });
     map.on('locationfound', onLocationFound);
     map.on('locationerror', onLocationError);
 
+    // Kamera
+    const camera = document.getElementById('camera');
+    const canvas = document.getElementById('canvas');
+    const preview = document.getElementById('preview');
+    const photoInput = document.getElementById('photo_file');
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
+        .then(stream => camera.srcObject = stream)
+        .catch(err => alert('Gagal mengakses kamera: ' + err));
+
+    function takePhoto() {
+        const context = canvas.getContext('2d');
+        context.drawImage(camera, 0, 0, canvas.width, canvas.height);
+
+        const imageData = canvas.toDataURL('image/jpeg');
+        photoInput.value = imageData;
+
+        preview.innerHTML = `<img src="${imageData}" width="160">`;
+    }
+
     // Tanda tangan digital
-    const canvas = document.getElementById('ttd_canvas');
-    const ctx = canvas.getContext('2d');
+    const ttdCanvas = document.getElementById('ttd_canvas');
+    const ctx = ttdCanvas.getContext('2d');
     let isDrawing = false;
 
-    canvas.addEventListener('mousedown', () => isDrawing = true);
-    canvas.addEventListener('mouseup', () => {
+    ttdCanvas.addEventListener('mousedown', () => isDrawing = true);
+    ttdCanvas.addEventListener('mouseup', () => {
         isDrawing = false;
-        document.getElementById('ttd_digital_file').value = canvas.toDataURL("image/png");
+        document.getElementById('ttd_digital_file').value = ttdCanvas.toDataURL("image/png");
     });
-    canvas.addEventListener('mousemove', draw);
+    ttdCanvas.addEventListener('mousemove', drawSignature);
 
-    function draw(e) {
+    function drawSignature(e) {
         if (!isDrawing) return;
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
@@ -95,8 +113,40 @@
     }
 
     function clearSignature() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, ttdCanvas.width, ttdCanvas.height);
         document.getElementById('ttd_digital_file').value = '';
     }
+
+    // Validasi sebelum submit
+    document.getElementById('absenForm').addEventListener('submit', function(e) {
+    if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
+        e.preventDefault();
+        Swal.fire({
+            icon: 'warning',
+            title: 'Lokasi Belum Aktif!',
+            text: 'Aktifkan lokasi Anda sebelum mengirim absensi.',
+            showConfirmButton: true,
+            confirmButtonText: 'Coba Lagi',
+            timer: 4000,
+            timerProgressBar: true
+        });
+        return;
+    }
+
+    if (!document.getElementById('photo_file').value) {
+        e.preventDefault();
+        Swal.fire({
+            icon: 'warning',
+            title: 'Foto Tidak Terdeteksi!',
+            text: 'Silakan ambil foto kehadiran sebelum submit absensi.',
+            showConfirmButton: true,
+            confirmButtonText: 'Ambil Foto',
+            timer: 4000,
+            timerProgressBar: true
+        });
+        return;
+    }
+});
+
 </script>
 @endsection

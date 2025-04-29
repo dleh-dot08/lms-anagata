@@ -4,7 +4,7 @@
     xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 
     <head>
-        <title></title>
+        <title>Reset Password</title>
         <meta charset="UTF-8" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <!--[if !mso]>-->
@@ -382,13 +382,7 @@
                                                                                                 style="padding:0 0 22px 0;">
                                                                                                 <p class="t11"
                                                                                                     style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:14px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#333333;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">
-                                                                                                    Terimakasih sudah
-                                                                                                    mendaftar! Klik
-                                                                                                    tombol
-                                                                                                    dibawah<br />untuk
-                                                                                                    secara otomatis akan
-                                                                                                    memverifikasi
-                                                                                                    akunmu.&nbsp;&nbsp;
+                                                                                                    Kami menerima permintaan untuk mereset password akun Anda. Klik tombol di bawah ini untuk mengatur ulang password Anda. Jika Anda tidak meminta reset password, Anda dapat mengabaikan email ini.
                                                                                                 </p>
                                                                                             </td>
                                                                                         </tr>
@@ -422,8 +416,8 @@
                                                                                                 <p class="t16"
                                                                                                     style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:22px;font-weight:500;font-style:normal;font-size:14px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#333333;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">
                                                                                                     Best regards,&nbsp;
-                                                                                                    <br />PT Anagata
-                                                                                                    Sisedu Nusantara
+                                                                                                    <br />PT Anagata Sisedu
+                                                                                                    Nusantara
                                                                                                     <br />Jakarta,
                                                                                                     Indonesia
                                                                                                 </p>
@@ -447,12 +441,44 @@
                                                                                 <!--[if !mso]>-->
                                                                                 <td class="t24"
                                                                                     style="background-color:#FF8819;overflow:hidden;width:250px;border-radius:44px 44px 44px 44px;text-align:center;">
-                                                                                    <a href="{{ $url }}"
+                                                                                    <a href="{{ $resetLink }}"
                                                                                         style="display:inline-block;width:100%;text-decoration:none;background-color:#FF8819;color:#F8F8F8;padding:10px 0;border-radius:44px;line-height:44px;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:2.4px;text-align:center;">
-                                                                                        Verifikasi
+                                                                                        Reset Password
                                                                                     </a>
                                                                                 </td>
-
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="center">
+                                                                        <table class="t20" role="presentation"
+                                                                            cellpadding="0" cellspacing="0"
+                                                                            style="Margin-left:auto;Margin-right:auto;margin-top:20px;">
+                                                                            <tr>
+                                                                                <!--[if mso]>
+<td width="500" class="t19" style="width:500px;">
+<![endif]-->
+                                                                                <!--[if !mso]>-->
+                                                                                <td class="t19"
+                                                                                    style="width:500px;">
+                                                                                    <!--<![endif]-->
+                                                                                    <table class="t18"
+                                                                                        role="presentation"
+                                                                                        cellpadding="0"
+                                                                                        cellspacing="0" width="100%"
+                                                                                        style="width:100%;">
+                                                                                        <tr>
+                                                                                            <td class="t17"
+                                                                                                style="padding:0 0 15px 0;">
+                                                                                                <p class="t16"
+                                                                                                    style="margin:0;Margin:0;font-family:Albert Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:16px;font-weight:500;font-style:normal;font-size:12px;text-decoration:none;text-transform:none;letter-spacing:-0.56px;direction:ltr;color:#999999;text-align:left;mso-line-height-rule:exactly;mso-text-raise:2px;">
+                                                                                                    Link reset password akan kedaluwarsa dalam {{ $expiration }} menit.
+                                                                                                </p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                </td>
                                                                             </tr>
                                                                         </table>
                                                                     </td>
@@ -805,7 +831,10 @@
                                                                                                     <a class="t80"
                                                                                                         href="https://tabular.email"
                                                                                                         style="margin:0;Margin:0;font-weight:700;font-style:normal;text-decoration:none;direction:ltr;color:#A1A1A1;mso-line-height-rule:exactly;"
-                                                                                                        target="_blank">Learning Management System</a>
+                                                                                                        target="_blank">Aplikasi
+                                                                                                        Manajemen Kantor
+                                                                                                        - by Alena
+                                                                                                        Alfiana</a>
                                                                                                 </p>
                                                                                             </td>
                                                                                         </tr>

@@ -31,19 +31,21 @@
             </p>
 
             {{-- Menampilkan Foto atau TTD Digital --}}
-            @if($attendance->file_attache)
-            <div class="mb-3">
-                <strong>File Lampiran:</strong>
-                <a href="{{ asset('storage/' . $attendance->file_attache) }}" target="_blank" class="btn btn-info">Lihat File</a>
+            <div class="row">
+                @if($attendance->file_attache)
+                <div class="col-md-6 mb-3">
+                    <strong>Foto Kehadiran:</strong><br>
+                    <img src="{{ asset('storage/' . $attendance->file_attache) }}" alt="Foto Kehadiran" class="img-fluid border p-2">
+                </div>
+                @endif
+            
+                @if($attendance->ttd_digital)
+                <div class="col-md-6 mb-3">
+                    <strong>Tanda Tangan Digital:</strong><br>
+                    <img src="{{ asset('storage/' . $attendance->ttd_digital) }}" alt="Tanda Tangan" class="img-fluid border p-2">
+                </div>
+                @endif
             </div>
-            @endif
-
-            @if($attendance->ttd_digital)
-            <div class="mb-3">
-                <strong>Tanda Tangan Digital:</strong>
-                <img src="{{ asset('storage/' . $attendance->ttd_digital) }}" alt="Tanda Tangan" style="width: 200px;">
-            </div>
-            @endif
 
             {{-- Peta Lokasi --}}
             @if($attendance->longitude && $attendance->latitude)
