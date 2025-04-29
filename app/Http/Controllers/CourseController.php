@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\User;
 use App\Models\Lesson;
+use App\Models\Project;
 use App\Models\Attendance;
 use App\Models\Kategori;
 use App\Models\Jenjang;
@@ -225,7 +226,7 @@ class CourseController extends Controller
             $projectSearch = $request->project_search;
             $course->projects = $course->projects()->where('judul', 'like', "%{$projectSearch}%")->get();
         }
-        
+
         // ========================== Akhir tambahan ==========================
 
         $user = auth()->user();
