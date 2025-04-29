@@ -5,46 +5,56 @@
     <h1>Buat Project Baru</h1>
     <form action="{{ route('projects.peserta.store') }}" method="POST" id="projectForm">
         @csrf
+
         <div class="mb-3">
             <label for="title" class="form-label">Judul Project</label>
             <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}">
             @error('title') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
-        <div class="mb-3">
-            <label for="html_code" class="form-label">HTML</label>
-            <textarea name="html_code" id="html_code" class="form-control" oninput="updatePreview()">{{ old('html_code') }}</textarea>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">HTML</div>
+                    <div class="card-body">
+                        <textarea name="html_code" id="html_code" class="form-control" rows="10" oninput="updatePreview()">{{ old('html_code') }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">CSS</div>
+                    <div class="card-body">
+                        <textarea name="css_code" id="css_code" class="form-control" rows="10" oninput="updatePreview()">{{ old('css_code') }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-dark">JavaScript</div>
+                    <div class="card-body">
+                        <textarea name="js_code" id="js_code" class="form-control" rows="10" oninput="updatePreview()">{{ old('js_code') }}</textarea>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="css_code" class="form-label">CSS</label>
-            <textarea name="css_code" id="css_code" class="form-control" oninput="updatePreview()">{{ old('css_code') }}</textarea>
-        </div>
+        <h4>Live Preview</h4>
+        <iframe id="preview" style="width: 100%; height: 500px; border: 1px solid #ddd;"></iframe>
 
-        <div class="mb-3">
-            <label for="js_code" class="form-label">JavaScript</label>
-            <textarea name="js_code" id="js_code" class="form-control" oninput="updatePreview()">{{ old('js_code') }}</textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Buat Project</button>
+        <button type="submit" class="btn btn-primary mt-3">Buat Project</button>
     </form>
-
-    <h2>Live Preview</h2>
-    <iframe id="preview" style="width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
 </div>
 
 <script>
     function updatePreview() {
-        // Ambil kode HTML, CSS, dan JS dari textarea
         var htmlCode = document.getElementById('html_code').value;
         var cssCode = document.getElementById('css_code').value;
         var jsCode = document.getElementById('js_code').value;
 
-        // Ambil dokumen iframe
         var iframe = document.getElementById('preview');
         var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-        // Menulis HTML, CSS, dan JS ke dalam iframe
         iframeDoc.open();
         iframeDoc.write(`
             <html>
@@ -54,16 +64,14 @@
                 <body>
                     ${htmlCode}
                     <script>
-                        try {
-                            ${jsCode}
-                        } catch (error) {
-                            console.error('Error in JS code:', error);
-                        }
+                        try { ${jsCode} } catch (e) { console.error(e); }
                     <\/script>
                 </body>
             </html>
         `);
         iframeDoc.close();
     }
+
+    document.addEventListener('DOMContentLoaded', updatePreview);
 </script>
 @endsection

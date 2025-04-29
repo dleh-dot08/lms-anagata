@@ -2,45 +2,72 @@
 
 @section('content')
 <div class="container">
-    <h1>Daftar Project Saya</h1>
-    <a href="{{ route('projects.peserta.create') }}" class="btn btn-primary mb-3">Buat Project Baru</a>
+    <div class="">
+        <h3 class="fw-bold py-3 mb-1 mt-2">Daftar Project Anda</h3>
+        <div class="card shadow-sm p-4">
 
-    @if($projects->isEmpty())
-        <p>Tidak ada project yang ditemukan.</p>
-    @else
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Judul</th>
-                    <th>Kursus</th>
-                    <th>Tanggal Dibuat</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($projects as $project)
+            <!-- Menampilkan Pesan Error -->
+            @if(session('errors'))
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- Tombol Buat Project Baru -->
+            <div class="mb-3">
+                <a href="{{ route('projects.peserta.create') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle me-1"></i> Buat Project Baru
+                </a>
+            </div>
+
+            <!-- Form Pencarian -->
+            <form method="GET" action="{{ route('projects.peserta.index') }}" class="mb-3">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="Cari project...">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">Cari</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Tabel Project -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Judul Project</th>
+                        <th>Kursus</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($projects as $project)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $project->title }}</td>
-                        <td>{{ $project->course->nama_kelas }}</td>
-                        <td>{{ $project->created_at->format('d-m-Y') }}</td>
+                        <td>{{ $project->course->nama_kelas ?? 'N/A' }}</td>
                         <td>
                             <a href="{{ route('projects.peserta.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
                             <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('projects.peserta.destroy', $project->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                            </form>
                         </td>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">Belum ada project.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
 
-        <!-- Pagination -->
-        {{ $projects->links() }}
-    @endif
+            <!-- Pagination -->
+            {{ $projects->links() }}
+        </div>
+    </div>
 </div>
 @endsection

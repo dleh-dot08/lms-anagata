@@ -1,32 +1,63 @@
 @extends('layouts.peserta.template')
 
 @section('content')
-<div class="container">
-    <h1>{{ $project->title }}</h1>
-    <h5>Kursus: {{ $project->course->nama_kelas }}</h5>
+<div class="container py-4">
+    <h2 class="mb-3">{{ $project->title }}</h2>
+    <h5 class="text-muted mb-4">Kursus: {{ $project->course->nama_kelas ?? '-' }}</h5>
 
-    <div class="mb-3">
-        <h4>Preview Project</h4>
-        <iframe id="preview" style="width: 100%; height: 500px; border: 1px solid #ddd;"></iframe>
+    <div class="row mb-4">
+        <!-- Card HTML -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">HTML</h6>
+                </div>
+                <div class="card-body">
+                    <pre class="mb-0" style="white-space: pre-wrap;">{{ $project->html_code }}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card CSS -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">CSS</h6>
+                </div>
+                <div class="card-body">
+                    <pre class="mb-0" style="white-space: pre-wrap;">{{ $project->css_code }}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card JavaScript -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">JavaScript</h6>
+                </div>
+                <div class="card-body">
+                    <pre class="mb-0" style="white-space: pre-wrap;">{{ $project->js_code }}</pre>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="mb-3">
-        <h4>Kode HTML</h4>
-        <pre>{{ $project->html_code }}</pre>
+    <!-- Preview Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h6 class="mb-0">Preview Project</h6>
+        </div>
+        <div class="card-body p-0">
+            <iframe id="preview" style="width: 100%; height: 600px; border: none;"></iframe>
+        </div>
     </div>
 
-    <div class="mb-3">
-        <h4>Kode CSS</h4>
-        <pre>{{ $project->css_code }}</pre>
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-start gap-2">
+        <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning">Edit Project</a>
+        <a href="{{ route('projects.peserta.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
     </div>
-
-    <div class="mb-3">
-        <h4>Kode JavaScript</h4>
-        <pre>{{ $project->js_code }}</pre>
-    </div>
-
-    <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning">Edit Project</a>
-    <a href="{{ route('projects.peserta.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
 </div>
 
 <script>
