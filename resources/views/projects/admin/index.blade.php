@@ -28,7 +28,7 @@
                         <td>{{ $project->course ? $project->course->nama_kelas : 'Course tidak tersedia' }}</td>
                         <td>{{ $project->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ route('admin.projects.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                            <a href="{{ route('projects.admin.show', $project->id) }}" class="btn btn-info btn-sm">Lihat</a>
                         </td>
                     </tr>
                 @endforeach

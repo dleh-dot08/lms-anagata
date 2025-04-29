@@ -54,12 +54,6 @@
             <iframe id="preview" style="width: 100%; height: 600px; border: none;"></iframe>
         </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="d-flex justify-content-start gap-2">
-        <a href="{{ route('projects.peserta.edit', $project->id) }}" class="btn btn-warning">Edit Project</a>
-        <a href="{{ route('projects.peserta.index') }}" class="btn btn-secondary">Kembali ke Daftar Project</a>
-    </div>
 </div>
 
 <script>
