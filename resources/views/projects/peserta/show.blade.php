@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1>{{ $project->title }}</h1>
-    <h5>Kursus: {{ $project->course->nama_kelas }}</h5>
+    <h5>Kursus: {{ $project->course->nama_kelas ?? '-' }}</h5>
 
     <div class="mb-3">
         <h4>Preview Project</h4>
