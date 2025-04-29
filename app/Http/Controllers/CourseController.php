@@ -219,6 +219,13 @@ class CourseController extends Controller
             $enrollment->attendance_percentage = $totalLessons > 0 ? ($presentCount / $totalLessons) * 100 : 0;
         }
 
+        // ========================== Tambahan search untuk projects ==========================
+        // 3. Search untuk Projects berdasarkan judul project
+        if ($request->has('project_search') && $request->project_search != '') {
+            $projectSearch = $request->project_search;
+            $course->projects = $course->projects()->where('judul', 'like', "%{$projectSearch}%")->get();
+        }
+        
         // ========================== Akhir tambahan ==========================
 
         $user = auth()->user();

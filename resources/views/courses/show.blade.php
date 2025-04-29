@@ -166,6 +166,46 @@
         </div>
     </div>
 
+    <!-- Projects -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <!-- Form pencarian Projects -->
+            <form method="GET" action="{{ route('courses.show', $course->id) }}" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="project_search" class="form-control" placeholder="Cari project..." value="{{ request('project_search') }}">
+                    <button class="btn btn-primary" type="submit">Cari</button>
+                </div>
+            </form>
+
+            <table class="table table-hover table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Peserta</th>
+                        <th>Judul Project</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($course->projects as $index => $project)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $project->user->name }}</td>
+                            <td>{{ $project->judul }}</td>
+                            <td>
+                                <a href="{{ route('projects.show', $project->id) }}" class="btn btn-sm btn-info">Detail</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">Belum ada project</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <a href="{{ route('courses.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection
