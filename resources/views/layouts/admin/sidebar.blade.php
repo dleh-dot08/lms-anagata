@@ -65,13 +65,13 @@
                 <div data-i18n="Boxicons">Data Kursus</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->routeIs('courses.*') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
             <a href="{{ route('admin.projects.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Projects</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->routeIs('sertifikat.*') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('certificates.*') ? 'active' : '' }}">
             <a href="{{ route('certificates.indexAdmin') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Boxicons">Data Sertifikat</div>
