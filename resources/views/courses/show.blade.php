@@ -170,7 +170,7 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <!-- Form pencarian Projects -->
-            <form method="GET" action="{{ route('courses.show', $course->id) }}" class="mb-3">
+            <form method="GET" action="{{ route('admin.projects.inde', $course->id) }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="project_search" class="form-control" placeholder="Cari project..." value="{{ request('project_search') }}">
                     <button class="btn btn-primary" type="submit">Cari</button>
@@ -193,7 +193,7 @@
                             <td>{{ $project->user->name }}</td>
                             <td>{{ $project->judul }}</td>
                             <td>
-                                <a href="{{ route('projects.show', $project->id) }}" class="btn btn-sm btn-info">Detail</a>
+                                <a href="{{ route('admin.projects.show', $project->id) }}" class="btn btn-sm btn-info">Detail</a>
                             </td>
                         </tr>
                     @empty
