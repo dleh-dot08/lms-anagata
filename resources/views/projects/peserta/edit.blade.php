@@ -9,15 +9,16 @@
 
         <div class="mb-3">
             <label for="course_id" class="form-label">Kursus</label>
-            <select name="course_id" id="course_id" class="form-control">
+            <select name="course_id_display" id="course_id" class="form-control" disabled>
                 <option value="">Pilih Kursus</option>
                 @foreach ($courses as $course)
                     <option value="{{ $course->id }}" {{ $course->id == $project->course_id ? 'selected' : '' }}>{{ $course->nama_kelas }}</option>
                 @endforeach
             </select>
+            <input type="hidden" name="course_id" value="{{ $project->course_id }}">
             @error('course_id') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
-
+        
         <div class="mb-3">
             <label for="title" class="form-label">Judul Project</label>
             <input type="text" name="title" id="title" class="form-control" value="{{ old('title', $project->title) }}">
