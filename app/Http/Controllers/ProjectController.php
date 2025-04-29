@@ -13,6 +13,22 @@ class ProjectController extends Controller
     {
         $user = Auth::user();
 
+        $projectsQuery = Project::with('user', 'course')->latest();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+    
+            // Pencarian berdasarkan nama peserta
+            $projectsQuery->whereHas('user', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            });
+    
+            // Pencarian berdasarkan nama kursus
+            $projectsQuery->orWhereHas('course', function ($query) use ($search) {
+                $query->where('nama_kursus', 'like', "%{$search}%");
+            });
+        }
+
         if ($user->role_id == 3) { // Peserta
             // Peserta hanya bisa melihat project mereka sendiri
             $projects = Project::where('user_id', $user->id)
