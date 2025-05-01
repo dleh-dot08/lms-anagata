@@ -316,6 +316,7 @@ Route::get('/peserta/kursus', [CourseController::class, 'indexpeserta'])
 // Untuk project dari course
 Route::get('/courses/{course}/projects/create', [ProjectController::class, 'createCourse'])->name('projects.peserta.createCourse');
 Route::post('/courses/{course}/projects/store', [ProjectController::class, 'storeCourse'])->name('projects.peserta.storeCourse');
+Route::get('/courses/{course}/projects/{project}/show', [ProjectController::class, 'showCourse'])->name('projects.peserta.showCourse');
 
 // Halaman detail kursus untuk peserta
 Route::get('/peserta/kursus/{course}', [CourseController::class, 'showPeserta'])

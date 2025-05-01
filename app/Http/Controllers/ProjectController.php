@@ -136,6 +136,22 @@ class ProjectController extends Controller
         return view('projects.peserta.show', compact('project'));
     }
 
+    public function showCourse(Project $project)
+    {
+        $user = Auth::user();
+
+        // Hanya admin, mentor dari course, atau peserta pemilik project yang boleh mengakses
+        $isAdmin = $user->role_id == 1;
+        $isMentorCourse = $user->role_id == 4 && $project->course && $project->course->mentor_id == $user->id;
+        $isOwnerPeserta = $user->role_id == 3 && $project->user_id == $user->id;
+
+        if (!($isAdmin || $isMentorCourse || $isOwnerPeserta)) {
+            abort(403);
+        }
+
+        return view('course.showproject', compact('project'));
+    }
+
     public function showAdmin(Project $project)
     {
         $user = Auth::user();

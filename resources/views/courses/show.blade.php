@@ -193,7 +193,7 @@
                             <td>{{ $project->user->name }}</td>
                             <td>{{ $project->title }}</td>
                             <td>
-                                <a href="{{ route('projects.admin.show', $project->id) }}" class="btn btn-sm btn-info">Detail</a>
+                                <a href="{{ route('projects.peserta.showCourse', ['course' => $project->course_id, 'project' => $project->id]) }}" class="btn btn-sm btn-info">Detail</a>
                             </td>
                         </tr>
                     @empty
