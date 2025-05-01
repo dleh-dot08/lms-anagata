@@ -52,8 +52,7 @@ class AuthenticatedSessionController extends Controller
 
         // ✅ Cek verifikasi email
         if (!$user->hasVerifiedEmail()) {
-            Auth::logout();
-            return redirect('/login')->with('error', 'Akun Anda belum memverifikasi email. Silakan cek inbox Anda untuk verifikasi.');
+            return redirect()->route('verification.notice');
         }
 
         if ($user->role_id == '1') // 1 = Admin
