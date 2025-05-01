@@ -65,9 +65,9 @@
         var iframe = document.getElementById('preview');
         var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-        var htmlCode = `{!! addslashes($project->html_code) !!}`;
-        var cssCode = `{!! addslashes($project->css_code) !!}`;
-        var jsCode = `{!! addslashes($project->js_code) !!}`;
+        var htmlCode = {!! json_encode($project->html_code) !!};
+        var cssCode = {!! json_encode($project->css_code) !!};
+        var jsCode = {!! json_encode($project->js_code) !!};
 
         iframeDoc.open();
         iframeDoc.write(`
