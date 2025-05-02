@@ -424,7 +424,7 @@
   
               <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                   <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label">Nama Lengkap</label>
                     <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Masukkan Username" required autofocus/>
                     @if ($errors->has('name'))
   <span class="help-block">
