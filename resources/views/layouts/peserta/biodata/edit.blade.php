@@ -61,6 +61,7 @@
                 <div class="mb-3">
                     <label class="form-label">NIK</label>
                     <input type="text" name="nik" class="form-control" value="{{ $biodata?->nik }}">
+                    <small class="text-muted">Jika Peserta memiliki KTP</small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Jenis Kelamin</label>
@@ -103,6 +104,7 @@
                 <div class="mb-3">
                     <label class="form-label">Bidang Keahlian</label>
                     <input type="text" name="bidang_pengajaran" class="form-control" value="{{ $user?->bidang_pengajaran}}">
+                    <small class="text-muted">Tidak diwajibkan untuk Siswa</small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Pendidikan Terakhir</label>

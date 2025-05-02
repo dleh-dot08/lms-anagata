@@ -99,7 +99,9 @@
         </table>
 
         {{-- Pagination --}}
-        {{ $certificates->links() }}
+        <div class="d-flex justify-content-center mt-4">
+            {{ $certificates->onEachSide(1)->links('pagination.custom') }}
+        </div>
     </div>
     </div>
 </div>

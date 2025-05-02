@@ -80,6 +80,8 @@
         </tbody>
     </table>
 
-    {{ $courses->links() }}
+    <div class="d-flex justify-content-center mt-4">
+        {{ $courses->onEachSide(1)->links('pagination.custom') }}
+    </div>
 </div>
 @endsection

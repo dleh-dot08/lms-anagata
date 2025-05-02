@@ -103,8 +103,8 @@
             </table>
 
             <!-- Paginasi -->
-            <div class="d-flex justify-content-center">
-                {{ $enrollments->withQueryString()->links() }}
+            <div class="d-flex justify-content-center mt-4">
+                {{ $enrollments->withQueryString()->onEachSide(1)->links('pagination.custom') }}
             </div>
         </div>
     </div>

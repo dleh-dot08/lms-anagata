@@ -63,8 +63,8 @@
             </table>
         </div>
 
-        <div class="mt-3">
-            {{ $activities->links() }}
+        <div class="d-flex justify-content-center mt-4">
+            {{ $activities->onEachSide(1)->links('pagination.custom') }}
         </div>
     @else
         <div class="alert alert-info">

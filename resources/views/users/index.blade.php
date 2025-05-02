@@ -85,7 +85,9 @@
                 </table>
 
                 <!-- Pagination -->
-                {{ $users->links() }}
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $users->onEachSide(1)->links('pagination.custom') }}
+                </div>
             </div>
         </div>
     </div>

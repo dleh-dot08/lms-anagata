@@ -92,8 +92,8 @@
             </table>
 
             <!-- Pagination -->
-            <div class="d-flex justify-content-end">
-                {{ $participants->links() }}
+            <div class="d-flex justify-content-end mt-4">
+                {{ $participants->onEachSide(1)->links('pagination.custom') }}
             </div>
         </div>
     </div>

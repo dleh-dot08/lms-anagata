@@ -93,7 +93,7 @@
 
             <!-- Pagination -->
             <div class="d-flex justify-content-end">
-                {{ $participants->links() }}
+                {{ $participants->onEachSide(1)->links('pagination.custom') }}
             </div>
         </div>
     </div>
