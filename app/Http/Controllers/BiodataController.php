@@ -8,6 +8,7 @@ use App\Models\Jenjang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class BiodataController extends Controller
 {
@@ -59,7 +60,7 @@ class BiodataController extends Controller
             abort(403, 'Unauthorized access.');
         }
         
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $id,
             'no_telepon' => 'nullable|string|max:14',
@@ -80,7 +81,44 @@ class BiodataController extends Controller
             'media_sosial' => 'nullable|string|max:255',
             'bidang_pengajaran' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:10|in:Laki-laki,Perempuan',
+        ], [
+            'nik.unique' => 'NIK sudah terdaftar di akun lain.',
+            'nip.unique' => 'NIP sudah terdaftar di akun lain.',
+            'email.unique' => 'Email sudah digunakan.',
+            'foto.max' => 'Ukuran foto profil tidak boleh lebih dari 2MB.',
+            'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 2MB.',
+            'data_ttd.max' => 'Ukuran tanda tangan tidak boleh lebih dari 2MB.',
         ]);
+
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+        
+            // If error is about NIK or NIP → only red box, no warning
+            if ($errors->has('nik') || $errors->has('nip')) {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+        
+            // If error is about foto size → add a specific warning
+            if ($errors->has('foto')) {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('warning', 'Ukuran foto profil terlalu besar. Maksimal 2MB.');
+            }
+        
+            // For other general errors → general warning
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('warning', 'Periksa kembali: ada data yang tidak valid.');
+        }
+        
 
         $user = User::findOrFail($id);
         $biodata = Biodata::where('id_user', $user->id)->firstOrFail();

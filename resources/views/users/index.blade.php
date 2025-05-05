@@ -195,14 +195,12 @@
                         @endif
                     </tbody>
                 </table>
-            </div>
-            
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center px-4 py-3 bg-light">
-                <div class="text-muted small">
-                    Halaman {{ $users->currentPage() }} dari {{ $users->lastPage() }}
+                <div class="d-flex justify-content-between align-items-center px-4 py-3 bg-light">
+                    <div class="text-muted small">
+                        Halaman {{ $users->currentPage() }} dari {{ $users->lastPage() }}
+                    </div>
+                    {{ $users->appends(request()->query())->links() }}
                 </div>
-                {{ $users->appends(request()->query())->links() }}
             </div>
         </div>
     </div>

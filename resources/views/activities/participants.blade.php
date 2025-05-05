@@ -54,8 +54,8 @@
         </form>
 
         @if($perPage !== 'all')
-            <div class="mt-3">
-                {{ $participants->links() }}
+            <div class="d-flex justify-content-center mt-4">
+                {{ $participants->onEachSide(1)->links('pagination.custom') }}
             </div>
         @endif
     </div>
