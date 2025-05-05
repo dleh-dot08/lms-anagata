@@ -82,7 +82,7 @@
 
         <!-- Pagination -->
         <div class="d-flex justify-content-center mt-4">
-            {{ $faqs->onEachSide(1)->links('pagination.custom') }}
+            {{ $courses->onEachSide(1)->links('pagination.custom') }}
         </div>
     </div>
     </div>
