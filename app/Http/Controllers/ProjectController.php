@@ -45,11 +45,21 @@ class ProjectController extends Controller
 
         } elseif ($user->role_id == 2) { // Mentor
             // Mentor bisa melihat semua project, bisa ditambahkan filter berdasarkan course
+            $mentorId = auth()->id();
+
+            $courses = Course::where('mentor_id', $mentorId)->get();
+            
             $projects = Project::with('user', 'course')
-                        ->where('course_id', $request->course_id ?? null)
-                        ->latest()
-                        ->paginate(10);
-            return view('projects.mentor.index', compact('projects'));
+                ->whereHas('course', function ($query) use ($mentorId) {
+                    $query->where('mentor_id', $mentorId);
+                })
+                ->when($request->course_id, function ($query, $courseId) {
+                    $query->where('course_id', $courseId);
+                })
+                ->latest()
+                ->paginate(10);
+            
+            return view('projects.mentor.index', compact('projects', 'courses'));
 
         } elseif ($user->role_id == 4) { // Karyawan
             // Karyawan hanya bisa melihat semua project, tidak bisa melakukan aksi lain

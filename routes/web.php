@@ -436,7 +436,7 @@ Route::middleware(['auth', DivisiMiddleware::class.':APD,MRC'])->group(function 
 // Mentor Routes
 Route::middleware(['auth', MentorMiddleware::class])->group(function () {
     Route::get('mentor/projects', [ProjectController::class, 'index'])->name('mentor.projects.index'); // Menampilkan daftar project untuk mentor
-    Route::get('mentor/projects/{project}', [ProjectController::class, 'show'])->name('mentor.projects.show'); // Menampilkan detail project untuk mentor
+    Route::get('mentor/projects/{project}', [ProjectController::class, 'showMentor'])->name('mentor.projects.show'); // Menampilkan detail project untuk mentor
 });
 
     

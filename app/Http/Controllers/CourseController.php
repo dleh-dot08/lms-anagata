@@ -385,16 +385,25 @@ class CourseController extends Controller
     public function indexMentor(Request $request)
     {
         $user = Auth::user();
-
+    
         $courses = Course::with(['kategori', 'jenjang'])
             ->where('mentor_id', $user->id)
-            ->when($request->search, function ($query) use ($request) {
+            ->when($request->filled('search'), function ($query) use ($request) {
                 $query->where('nama_kelas', 'like', '%' . $request->search . '%');
             })
             ->orderBy('waktu_mulai', 'desc')
             ->paginate(10);
-
-        return view('mentor.kursus.index', compact('courses'));
+    
+        $courses->getCollection()->transform(function ($course) {
+            $course->status_dinamis = now()->greaterThan(Carbon::parse($course->waktu_akhir)) ? 'Non-Aktif' : 'Aktif';
+            return $course;
+        });
+    
+        return view('mentor.kursus.index', [
+            'courses' => $courses,
+            'search' => $request->search,
+            'status' => $request->status,
+        ]);
     }
 
     // Detail kursus untuk mentor

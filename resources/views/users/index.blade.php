@@ -292,16 +292,9 @@
     </div>
 
     <!-- Pagination for Card View -->
-    @if($users->count() > 0)
-        <div class="card mt-3 border-0 shadow-sm d-none" id="cardsPagination">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div class="text-muted small">
-                    Halaman {{ $users->currentPage() }} dari {{ $users->lastPage() }}
-                </div>
-                {{ $users->appends(request()->query())->links() }}
-            </div>
-        </div>
-    @endif
+    <div class="d-flex justify-content-center mt-4">
+        {{ $users->onEachSide(1)->links('pagination.custom') }}
+    </div>
 </div>
 
 @push('scripts')
