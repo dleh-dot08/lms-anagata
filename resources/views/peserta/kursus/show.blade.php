@@ -51,11 +51,19 @@
 
                 {{-- Tambahan Section: Projects --}}
                 <div class="mb-3">
-                    <h5><strong>Projects Peserta</strong></h5>
-                    <a href="{{ route('projects.peserta.createCourse', ['course' => $course->id]) }}" class="btn btn-primary">Buat Project</a>
-                    @if($course->projects && count($course->projects))
+                    <h5><strong>Project Saya</strong></h5>
+
+                    <a href="{{ route('projects.peserta.createCourse', ['course' => $course->id]) }}" class="btn btn-primary mb-3">
+                        Buat Project
+                    </a>
+
+                    @php
+                        $myProjects = $course->projects->where('user_id', auth()->id());
+                    @endphp
+
+                    @if($myProjects->count())
                         <div class="row">
-                            @foreach($course->projects as $project)
+                            @foreach($myProjects as $project)
                                 <div class="col-md-6 mb-3">
                                     <div class="card h-100">
                                         <div class="card-body">
@@ -68,10 +76,9 @@
                             @endforeach
                         </div>
                     @else
-                        <p class="text-muted">Belum ada project peserta.</p>
+                        <p class="text-muted">Kamu belum membuat project untuk kursus ini.</p>
                     @endif
                 </div>
-
             @else
                 <div class="alert alert-warning text-center">
                     <h5>Kursus Tidak Aktif</h5>
