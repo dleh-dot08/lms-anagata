@@ -27,7 +27,7 @@
                         <td>{{ $course->jenjang->nama_jenjang }}</td>
                         <td><span class="badge bg-warning text-dark">Belum Absen</span></td>
                         <td>
-                            <a href="{{ route('attendances.create', $course->id) }}" class="btn btn-sm btn-primary">
+                            <a href="{{ route('attendances.input', $course->id) }}" class="btn btn-sm btn-primary">
                                 <i class="bi bi-pencil-square me-1"></i>Absen
                             </a>
                         </td>

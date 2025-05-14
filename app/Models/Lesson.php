@@ -25,10 +25,17 @@ class Lesson extends Model
         'attachment_url1',
         'attachment_url2',
         'attachment_url3',
+        'pertemuan_id',
     ];
 
     public function course()
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function meeting()
+    {
+        return $this->belongsTo(Meeting::class, 'pertemuan_id');
+    }
+
 }

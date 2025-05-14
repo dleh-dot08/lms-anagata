@@ -12,13 +12,16 @@
                 @endif
 
                 <div class="mb-3">
-                    <label for="judul" class="form-label">Judul Materi</label>
-                    <input type="text" name="judul" class="form-control" value="{{ old('judul', $lesson->judul ?? '') }}" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="pertemuan_ke" class="form-label">Pertemuan Ke</label>
-                    <input type="number" name="pertemuan_ke" class="form-control" value="{{ old('pertemuan_ke', $lesson->pertemuan_ke ?? '') }}" required>
+                    <label for="pertemuan" class="form-label">Pertemuan Ke</label>
+                    <select name="pertemuan_id" class="form-select" required>
+                        <option value="">-- Pilih Pertemuan --</option>
+                        @foreach($course->meetings->sortBy('pertemuan') as $meeting)
+                            <option value="{{ $meeting->id }}"
+                                {{ old('pertemuan_id', $lesson->pertemuan_id ?? '') == $meeting->id ? 'selected' : '' }}>
+                                Pertemuan Ke-{{ $meeting->pertemuan }} - {{ $meeting->judul }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="mb-3">

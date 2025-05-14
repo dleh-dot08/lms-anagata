@@ -108,7 +108,51 @@
             </div>
         </div>
     </div>
+    <!-- Pertemuan -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Pertemuan</h4>
+                <a href="{{ route('meetings.create', $course->id) }}" class="btn btn-success">
+                    + Tambah Pertemuan
+                </a>
+            </div>
 
+            <table class="table table-hover table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Pertemuan Ke</th>
+                        <th>Judul</th>
+                        <th>Tanggal Pelaksanaan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($course->meetings as $index => $meeting)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $meeting->pertemuan }}</td>
+                            <td>{{ $meeting->judul }}</td>
+                            <td>{{ \Carbon\Carbon::parse($meeting->tanggal_pelaksanaan)->translatedFormat('l, d M Y') }}</td>
+                            <td>
+                                <a href="{{ route('meetings.edit', [$course->id, $meeting->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('meetings.destroy', [$course->id, $meeting->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus pertemuan ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Belum ada pertemuan</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
     <!-- Materi -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -128,7 +172,7 @@
                     @foreach($course->lessons as $lesson)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>Pertemuan {{ $lesson->pertemuan_ke }}</td>
+                            <td>Pertemuan {{ $lesson->pertemuan_id }}</td>
                             <td>
                                 @for ($i = 1; $i <= 3; $i++)
                                     @if($lesson["video_url$i"])

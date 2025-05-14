@@ -3,39 +3,40 @@
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\DivisiMiddleware;
-use App\Http\Middleware\MentorMiddleware;
 //use App\Http\Controllers\Admin\UserController;
+use App\Http\Middleware\MentorMiddleware;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MentorController;
 use App\Http\Middleware\PesertaMiddleware;
 use App\Http\Controllers\BiodataController;
 use App\Http\Controllers\JenjangController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Middleware\KaryawanMiddleware;
+
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
-
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ParticipantController;
-use App\Http\Controllers\ProjectController;
+
 use App\Http\Controllers\HelpdeskTicketController;
 use App\Http\Middleware\MentorOrPesertaMiddleware;
-
 use App\Http\Controllers\HelpdeskMessageController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return view('welcome');
@@ -347,6 +348,8 @@ Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class,
         Route::post('/absensi/kegiatan/{activity}/simpan', [AttendanceController::class, 'storeActivity'])->name('attendances.activity.store');
         Route::post('/absensi/store', [AttendanceController::class, 'store'])->name('attendances.store');
         Route::get('/absensi/rekap', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
+        Route::get('/absensi/{course}/input', [AttendanceController::class, 'input'])->name('attendances.input');
+        Route::post('/absensi/{course}/store', [AttendanceController::class, 'storeInput'])->name('attendances.storeInput');
     });
     
     // Route::middleware(['auth', MentorMiddleware::class])->group(function () {
@@ -439,5 +442,16 @@ Route::middleware(['auth', MentorMiddleware::class])->group(function () {
     Route::get('mentor/projects/{project}', [ProjectController::class, 'showMentor'])->name('mentor.projects.show'); // Menampilkan detail project untuk mentor
 });
 
-    
+Route::prefix('admin/courses/{course}')->middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('meetings/create', [MeetingController::class, 'create'])->name('meetings.create');
+    Route::post('meetings', [MeetingController::class, 'store'])->name('meetings.store');
+    Route::get('meetings/{meeting}/edit', [MeetingController::class, 'edit'])->name('meetings.edit');
+    Route::put('meetings/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
+    Route::delete('meetings/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
+});
+  
+Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function () {
+    Route::get('courses/{course}/meetings/{meeting}', [MeetingController::class, 'show'])->name('kursus.pertemuan.show');
+});
+
 require __DIR__.'/auth.php';

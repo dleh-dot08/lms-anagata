@@ -10,8 +10,8 @@ class LessonController extends Controller
 {
     public function create($courseId)
     {
-        $course = Course::findOrFail($courseId);
-        
+        $course = Course::with('meetings')->findOrFail($courseId);
+
         $user = auth()->user();
 
         if ($user->role_id === 1) {
@@ -28,23 +28,20 @@ class LessonController extends Controller
     public function store(Request $request, $courseId)
     {
         $request->validate([
-            'judul' => 'required',
-            'pertemuan_ke' => 'required|integer',
+            'pertemuan_id' => 'required|exists:meetings,id',
         ]);
-
+    
         $data = $request->all();
         $data['course_id'] = $courseId;
-
+    
         Lesson::create($data);
-
+    
         $user = auth()->user();
-
+    
         if ($user->role_id === 1) {
             return redirect()->route('courses.show', $courseId)->with('success', 'Materi berhasil ditambahkan');
-    
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
             return redirect()->route('courses.apd.show', $courseId)->with('success', 'Materi berhasil ditambahkan');
-    
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -71,8 +68,7 @@ class LessonController extends Controller
     public function update(Request $request, $courseId, $lessonId)
     {
         $request->validate([
-            'judul' => 'required',
-            'pertemuan_ke' => 'required|integer',
+            'pertemuan_id' => 'required|exists:meetings,id',
         ]);
 
         $lesson = Lesson::findOrFail($lessonId);

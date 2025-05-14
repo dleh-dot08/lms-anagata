@@ -370,4 +370,38 @@ class AttendanceController extends Controller
         }
     }
 
+
+    public function input(Course $course)
+    {
+        $mentorId = auth()->id();
+        
+        // Cek apakah mentor punya akses ke course ini
+        if ($course->mentor_id != $mentorId) {
+            abort(403);
+        }
+
+        $students = $course->participants; // Asumsikan relasi many-to-many: course -> participants
+        return view('attendances.mentor.input', compact('course', 'students'));
+    }
+
+    public function storeInput(Request $request, Course $course)
+    {
+        $request->validate([
+            'absences' => 'required|array',
+            'absences.*.user_id' => 'required|exists:users,id',
+            'absences.*.status' => 'required|in:Hadir,Tidak Hadir,Izin,Sakit',
+        ]);
+
+        foreach ($request->absences as $absence) {
+            Attendance::create([
+                'user_id' => $absence['user_id'],
+                'course_id' => $course->id,
+                'tanggal' => now(),
+                'status' => $absence['status'],
+            ]);
+        }
+
+        return redirect()->route('attendances.index')->with('success', 'Absensi berhasil disimpan!');
+    }
+
 }

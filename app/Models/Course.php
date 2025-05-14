@@ -80,10 +80,19 @@ class Course extends Model
                     ->withTimestamps();
     }
 
+    public function participants()
+    {
+        return $this->belongsToMany(User::class, 'enrollments')->withTimestamps();
+    }
+
     public function certificates()
     {
         return $this->hasMany(Certificate::class); // Assuming you have a Certificate model
     }
 
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }
