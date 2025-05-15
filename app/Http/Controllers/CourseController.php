@@ -499,5 +499,11 @@ public function searchMentor(Request $request)
     return response()->json($results);
 }
 
+public function overview($courseId)
+{
+    $course = Course::with(['mentor', 'meetings', 'lessons'])->findOrFail($courseId);
+    return view('mentor.kursus.overview', compact('course'));
+}
+
 
 }

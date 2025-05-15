@@ -452,6 +452,9 @@ Route::prefix('admin/courses/{course}')->middleware(['auth', AdminMiddleware::cl
   
 Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function () {
     Route::get('courses/{course}/meetings/{meeting}', [MeetingController::class, 'show'])->name('kursus.pertemuan.show');
+
+    Route::get('/mentor/kursus/{course}/overview', [CourseController::class, 'overview'])->name('kursus.mentor.overview');
+
 });
 
 require __DIR__.'/auth.php';

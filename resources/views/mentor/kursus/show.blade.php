@@ -5,7 +5,7 @@
     <h3 class="mb-0">{{ $course->nama_kelas }}</h3>
     <ul class="nav nav-tabs mb-3">
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('mentor/kursus/'.$course->id.'/overview') ? 'active' : '' }}" href="#">Overview</a>
+            <a class="nav-link {{ request()->is('mentor/kursus/'.$course->id.'/overview') ? 'active' : '' }}" href="{{ route('kursus.mentor.overview', $course->id) }}">Overview</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="#">Meetings</a>
