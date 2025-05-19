@@ -62,16 +62,23 @@
             @if($meeting->assignments->count())
                 <ul class="list-group list-group-flush">
                     @foreach($meeting->assignments as $assignment)
-                        <li class="list-group-item">
-                            <strong>{{ $assignment->judul }}</strong> <br>
-                            {{ $assignment->deskripsi }}
-                            @if($assignment->file_attachment)
-                                <br><a href="{{ Storage::url($assignment->file_attachment) }}" target="_blank">📎 Download Lampiran</a>
-                            @endif
-                            <br><small>Deadline: {{ \Carbon\Carbon::parse($assignment->deadline)->translatedFormat('d M Y H:i') }}</small>
+                        <li class="list-group-item d-flex justify-content-between align-items-start flex-wrap">
+                            <div>
+                                <strong>{{ $assignment->judul }}</strong><br>
+                                {{ $assignment->deskripsi }}
+                                @if($assignment->file_attachment)
+                                    <br><a href="{{ Storage::url($assignment->file_attachment) }}" target="_blank">📎 Download Lampiran</a>
+                                @endif
+                                <br><small>Deadline: {{ \Carbon\Carbon::parse($assignment->deadline)->translatedFormat('d M Y H:i') }}</small>
+                            </div>
+                            <div>
+                                <a href="{{ route('mentor.assignment.submissions', $assignment->id) }}" class="btn btn-sm btn-outline-info mt-2">
+                                    📄 Lihat Pengumpulan
+                                </a>
+                            </div>
                         </li>
                     @endforeach
-                </ul>
+                </ul>            
             @else
                 <div class="card-body text-muted">Belum ada tugas untuk pertemuan ini.</div>
             @endif

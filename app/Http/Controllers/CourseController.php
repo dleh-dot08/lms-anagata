@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Score;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Jenjang;
+use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\Kategori;
 use App\Models\Attendance;
@@ -602,6 +604,18 @@ public function showAssignment($id)
     $course = Course::with(['meetings.assignments'])->findOrFail($id);
     $activeTab = 'assignment';
     return view('mentor.kursus.assignment', compact('course', 'activeTab'));
+}
+
+public function listMeetingsForScoring(Course $course)
+{
+    $course = Course::with(['kategori', 'jenjang', 'lessons', 'enrollments.user', 'meetings'])->findOrFail($course->id);
+
+    if ($course->mentor_id !== Auth::id()) {
+        abort(403, 'Unauthorized access');
+    }
+
+    $activeTab = 'scores';
+    return view('mentor.kursus.score', compact('course', 'activeTab'));
 }
 
 }
