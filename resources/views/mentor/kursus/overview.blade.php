@@ -2,24 +2,9 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-0">{{ $course->nama_kelas }} — Overview</h3>
-    <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">Overview</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('mentor.kursus.show', $course->id) }}">Meetings</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Modul</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Assignment</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Project</a>
-        </li>
-    </ul>
+    <h3 class="mb-0">{{ $course->nama_kelas }}</h3>
+
+    @include('mentor.kursus.partials.nav-tabs', ['activeTab' => 'overview'])
 
     <div class="card shadow-sm">
         <div class="card-body">

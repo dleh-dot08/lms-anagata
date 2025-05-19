@@ -82,12 +82,14 @@ class Course extends Model
 
     public function participants()
     {
-        return $this->belongsToMany(User::class, 'enrollments')->withTimestamps();
+        return $this->belongsToMany(User::class, 'enrollments')
+        ->withPivot(['mentor_id', 'tanggal_daftar', 'tanggal_mulai', 'tanggal_selesai'])
+        ->withTimestamps();
     }
 
     public function certificates()
     {
-        return $this->hasMany(Certificate::class); // Assuming you have a Certificate model
+        return $this->hasMany(Certificate::class);
     }
 
     public function meetings()

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
-use App\Models\Enrollment;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Course;
 use App\Models\Lesson;
-use App\Models\Project;
-use App\Models\Attendance;
-use App\Models\Kategori;
 use App\Models\Jenjang;
+use App\Models\Project;
+use App\Models\Kategori;
+use App\Models\Attendance;
+use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 class CourseController extends Controller
@@ -505,5 +506,102 @@ public function overview($courseId)
     return view('mentor.kursus.overview', compact('course'));
 }
 
+public function project($courseId)
+{
+    $course = Course::with(['projects.user'])->findOrFail($courseId);
+
+    return view('mentor.kursus.projects', compact('course'));
+}
+
+public function showSilabus($id)
+{
+    $course = Course::findOrFail($id);
+
+    if ($course->mentor_id !== auth()->id()) {
+        abort(403, 'Akses ditolak.');
+    }
+
+    // Ubah URL menjadi embed-ready
+    $course->silabus_pdf = $this->convertToGDrivePreview($course->silabus_pdf);
+
+    return view('mentor.kursus.silabus', compact('course'));
+}
+
+public function previewSilabus($id)
+{
+    $course = Course::findOrFail($id);
+
+    if ($course->mentor_id !== auth()->id()) {
+        abort(403, 'Akses ditolak.');
+    }
+
+    $filePath = storage_path("app/public/silabus/{$course->silabus_pdf}");
+
+    if (!file_exists($filePath)) {
+        abort(404, 'File tidak ditemukan.');
+    }
+
+    return response()->file($filePath, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="' . $course->silabus_pdf . '"',
+        'X-Frame-Options' => 'ALLOWALL', // Ini override default DENY/SAMEORIGIN
+        // Jika perlu, bisa juga set CSP header di sini
+        'Content-Security-Policy' => "frame-ancestors 'self' http://your-domain.com",
+    ]);
+}
+
+
+public function uploadSilabus(Request $request, Course $course)
+{
+    $request->validate([
+        'silabus_pdf' => 'required|url', // validasi URL
+    ]);
+
+    // Simpan langsung URL dari Google Drive
+    $course->silabus_pdf = $request->input('silabus_pdf');
+    $course->save();
+
+    return redirect()->route('courses.show', $course->id)->with('success', 'Link Silabus berhasil disimpan.');
+}
+
+public function uploadRpp(Request $request, $id) {
+    $course = Course::findOrFail($id);
+    $course->rpp_drive_link = $request->rpp_drive_link;
+    $course->save();
+    return back()->with('success', 'Link RPP berhasil disimpan.');
+}
+
+private function convertToGDrivePreview($url)
+{
+    if (!$url) return null;
+
+    if (str_contains($url, 'drive.google.com')) {
+        // Pastikan link embed
+        if (str_contains($url, '/view')) {
+            return str_replace('/view', '/preview', $url);
+        }
+
+        // Jika link mentah
+        if (str_contains($url, '/file/d/')) {
+            return preg_replace('#/file/d/(.*?)/.*#', 'https://drive.google.com/file/d/$1/preview', $url);
+        }
+    }
+
+    return $url;
+}
+
+public function showAllPeserta($id) {
+    
+    $course = Course::with('participants')->findOrFail($id);
+
+    return view('mentor.kursus.peserta', compact('course'));
+}
+
+public function showAssignment($id)
+{
+    $course = Course::with(['meetings.assignments'])->findOrFail($id);
+    $activeTab = 'assignment';
+    return view('mentor.kursus.assignment', compact('course', 'activeTab'));
+}
 
 }

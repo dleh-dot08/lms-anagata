@@ -3,24 +3,7 @@
 @section('content')
 <div class="container mt-4">
     <h3 class="mb-0">{{ $course->nama_kelas }}</h3>
-    <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-            <a class="nav-link {{ request()->is('mentor/kursus/'.$course->id.'/overview') ? 'active' : '' }}" href="{{ route('kursus.mentor.overview', $course->id) }}">Overview</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="#">Meetings</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Modul</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Assignment</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Project</a>
-        </li>
-    </ul>
-
+    @include('mentor.kursus.partials.nav-tabs', ['activeTab' => 'meetings'])
     <div class="d-flex flex-column gap-3">
         @forelse ($course->meetings->sortBy('pertemuan') as $meeting)
             <a href="{{ route('kursus.pertemuan.show', [$course->id, $meeting->id]) }}" class="text-decoration-none text-dark">

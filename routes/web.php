@@ -28,10 +28,12 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\SubmissionController;
+
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ParticipantController;
-
 use App\Http\Controllers\HelpdeskTicketController;
 use App\Http\Middleware\MentorOrPesertaMiddleware;
 use App\Http\Controllers\HelpdeskMessageController;
@@ -103,7 +105,11 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/restore', [CourseController::class, 'restore'])->name('restore');
 
-        
+        // untuk silabus admin
+        Route::post('/{course}/upload-silabus', [CourseController::class, 'uploadSilabus'])->name('uploadSilabus');
+        Route::get('/{course}/silabus', [CourseController::class, 'showSilabusAdmin'])->name('showSilabus');
+        Route::post('/{course}/upload-rpp', [CourseController::class, 'uploadRpp'])->name('uploadRpp');
+
         // Form untuk tambah peserta ke kursus tertentu
         Route::get('{course}/formparticipant', [ParticipantController::class, 'form'])->name('formparticipant');
         // Simpan peserta (single / bulk)
@@ -428,6 +434,11 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
     Route::get('projects/peserta/{project}/edit', [ProjectController::class, 'edit'])->name('projects.peserta.edit'); // Form untuk mengedit project
     Route::put('projects/peserta/{project}', [ProjectController::class, 'update'])->name('projects.peserta.update'); // Update project
     Route::delete('projects/peserta/{project}', [ProjectController::class, 'destroy'])->name('projects.peserta.destroy'); // Hapus project
+
+    Route::post('/assignments/{assignment}/submit', [SubmissionController::class, 'store'])->name('assignments.submit');
+    Route::get('/assignments/{assignment}/submit', [SubmissionController::class, 'submissionForm'])->name('assignments.submit.form');
+    Route::get('/assignments', [SubmissionController::class, 'index'])->name('assignments.index');
+   
 });
 
 // Karyawan Routes
@@ -455,6 +466,15 @@ Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function ()
 
     Route::get('/mentor/kursus/{course}/overview', [CourseController::class, 'overview'])->name('kursus.mentor.overview');
 
+    Route::get('/mentor/kursus/{course}/assignment', [CourseController::class, 'showAssignment'])->name('kursus.mentor.assignment');
+    Route::post('{course}/assignment/store', [AssignmentController::class, 'store'])->name('kursus.mentor.assignment.store');
+
+    Route::get('/mentor/kursus/{id}/silabus', [CourseController::class, 'showSilabus'])->name('kursus.mentor.silabus');
+    Route::get('/mentor/kursus/{id}/silabus-preview', [CourseController::class, 'previewSilabus'])->name('kursus.mentor.silabus.preview');
+
+    Route::get('/mentor/kursus/{course}/project', [CourseController::class, 'project'])->name('kursus.mentor.project');
+
+    Route::get('/mentor/kursus/{course}/peserta', [CourseController::class, 'showAllPeserta'])->name('kursus.mentor.peserta');
 });
 
 require __DIR__.'/auth.php';

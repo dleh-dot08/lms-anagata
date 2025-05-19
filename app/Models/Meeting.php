@@ -33,4 +33,10 @@ class Meeting extends Model
         return $this->hasOne(Lesson::class, 'pertemuan_id');
     }    
 
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
+
 }

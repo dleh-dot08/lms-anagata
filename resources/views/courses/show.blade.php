@@ -153,6 +153,58 @@
             </table>
         </div>
     </div>
+    {{-- Silabus --}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>Upload Silabus PDF</h5>
+            <form action="{{ route('courses.uploadSilabus', $course->id) }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="silabus_pdf">Link Google Drive (format: drive.google.com/.../view)</label>
+                    <input type="url" name="silabus_pdf" class="form-control" placeholder="https://drive.google.com/file/d/..." required>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan Link Silabus</button>
+            </form>
+
+            {{-- Tampilkan link silabus jika ada --}}
+            @if ($course->silabus_pdf)
+                @php
+                    $previewSilabus = convertToPreview($course->silabus_pdf);
+                @endphp
+                <hr>
+                <a href="{{ $previewSilabus }}" target="_blank" class="btn btn-sm btn-dark mt-2">
+                    <i class="bi bi-box-arrow-up-right me-1"></i>Lihat Silabus (Preview)
+                </a>
+            @endif
+        </div>
+    </div>
+
+    {{-- RPP --}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>Upload RPP (Link Google Drive)</h5>
+            <form action="{{ route('courses.uploadRpp', $course->id) }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="rpp_drive_link">Link Google Drive (format: drive.google.com/.../view)</label>
+                    <input type="url" name="rpp_drive_link" class="form-control" placeholder="https://drive.google.com/file/d/..." required>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan Link RPP</button>
+            </form>
+
+            {{-- Tampilkan link RPP jika ada --}}
+            @if ($course->rpp_drive_link)
+                @php
+                    $previewRpp = convertToPreview($course->rpp_drive_link);
+                @endphp
+                <hr>
+                <a href="{{ $previewRpp }}" target="_blank" class="btn btn-sm btn-dark mt-2">
+                    <i class="bi bi-box-arrow-up-right me-1"></i>Lihat RPP (Preview)
+                </a>
+            @endif
+        </div>
+    </div>
+
     <!-- Materi -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">

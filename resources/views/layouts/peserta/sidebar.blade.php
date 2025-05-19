@@ -49,6 +49,18 @@
             </a>
         </li>
 
+        @isset($assignment)
+            <a href="{{ route('assignments.submit.form', $assignment->id) }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
+                <div data-i18n="Analytics">Assignment</div>
+            </a>
+        @else
+            <a href="{{ route('assignments.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
+                <div data-i18n="Analytics">Assignment</div>
+            </a>
+        @endisset
+    
         <li class="menu-item {{ request()->routeIs('attendances.courses', 'attendances.activities') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
