@@ -38,6 +38,7 @@ use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\HelpdeskTicketController;
 use App\Http\Middleware\MentorOrPesertaMiddleware;
 use App\Http\Controllers\HelpdeskMessageController;
+use App\Http\Controllers\ScoreReportController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 
@@ -476,6 +477,10 @@ Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function ()
     Route::get('mentor/kursus/{course}/scores', [CourseController::class, 'listMeetingsForScoring'])->name('mentor.scores.index');
     Route::get('mentor/{course}/{meeting}/input', [ScoreController::class, 'input'])->name('mentor.scores.input');
     Route::post('mentor/scores/{course}/{meeting}/store', [ScoreController::class, 'store'])->name('mentor.scores.store');
+
+    Route::get('rekap-nilai/{course}', [ScoreReportController::class, 'index'])->name('mentor.scores.recap');
+    Route::get('rekap-nilai/{course}/export-excel', [ScoreReportController::class, 'exportExcel'])->name('mentor.scores.export.excel');
+    Route::get('rekap-nilai/{course}/export-pdf', [ScoreReportController::class, 'exportPdf'])->name('mentor.scores.export.pdf');
 
     Route::get('/mentor/kursus/{id}/silabus', [CourseController::class, 'showSilabus'])->name('kursus.mentor.silabus');
     Route::get('/mentor/kursus/{id}/silabus-preview', [CourseController::class, 'previewSilabus'])->name('kursus.mentor.silabus.preview');

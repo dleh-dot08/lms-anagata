@@ -2,8 +2,16 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-0">{{ $course->nama_kelas }}</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">{{ $course->nama_kelas }}</h3>
+        <!-- Tombol Rekap Nilai -->
+        <a href="{{ route('mentor.scores.recap', $course->id) }}" class="btn btn-outline-success">
+            <i class="bi bi-file-earmark-bar-graph"></i> Rekap Nilai
+        </a>
+    </div>
+
     @include('mentor.kursus.partials.nav-tabs', ['activeTab' => 'scores'])
+
     <div class="d-flex flex-column gap-3">
         @forelse ($course->meetings->sortBy('pertemuan') as $meeting)
             <a href="{{ route('kursus.pertemuan.show', [$course->id, $meeting->id]) }}" class="text-decoration-none text-dark">
