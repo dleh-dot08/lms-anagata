@@ -23,44 +23,37 @@
         <!-- Dashboard -->
         <li class="menu-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}">
             <a href="{{ route('peserta.dashboard') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <i class="menu-icon tf-icons bx bxs-dashboard"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('biodata.*') ? 'active' : '' }}">
             <a href="{{ route('biodata.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-user-account"></i>
+                <i class="menu-icon tf-icons bx bxs-user-detail"></i>
                 <div data-i18n="Analytics">Biodata</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('courses.indexpeserta') ? 'active' : '' }}">
             <a href="{{ route('courses.indexpeserta') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
+                <i class="menu-icon tf-icons bx bxs-graduation"></i>
                 <div data-i18n="Analytics">Kursus</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('projects.peserta.index') ? 'active' : '' }}">
             <a href="{{ route('projects.peserta.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
+                <i class="menu-icon tf-icons bx bxs-briefcase-alt-2"></i>
                 <div data-i18n="Analytics">Project</div>
             </a>
         </li>
-
-        @isset($assignment)
-            <a href="{{ route('assignments.submit.form', $assignment->id) }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
-                <div data-i18n="Analytics">Assignment</div>
-            </a>
-        @else
+        <li class="menu-item {{ request()->routeIs('assignments.index') ? 'active' : '' }}">
             <a href="{{ route('assignments.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
+                <i class="menu-icon tf-icons bx bxs-file-doc"></i>
                 <div data-i18n="Analytics">Assignment</div>
             </a>
-        @endisset
-    
+        </li>
         <li class="menu-item {{ request()->routeIs('attendances.courses', 'attendances.activities') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
@@ -82,7 +75,7 @@
 
         <li class="menu-item {{ request()->routeIs('courses.index') ? 'active' : '' }}">
             <a href="{{ route('certificates.indexPeserta') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-badge-check"></i>
+                <i class="menu-icon tf-icons bx bxs-certification"></i>
                 <div data-i18n="Analytics">Sertifikat</div>
             </a>
         </li>
@@ -90,7 +83,7 @@
         <!-- Helpdesk -->
         <li class="menu-item {{ Request::is('helpdesk') ? 'active' : '' }}">
             <a href="{{ route('peserta.helpdesk.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-badge-check"></i>
+                <i class="menu-icon tf-icons bx bxs-help-circle"></i>
                 <div data-i18n="Analytics">Helpdesk</div>
             </a>
         </li>

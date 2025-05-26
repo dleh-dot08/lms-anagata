@@ -16,6 +16,9 @@
         <a class="nav-link {{ $activeTab === 'assignment' ? 'active' : '' }}" href="{{ route('kursus.mentor.assignment', $course->id) }}">Assignment</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{ $activeTab === 'scores' ? 'active' : '' }}" href="{{ route('mentor.scores.index', $course->id) }}">Score</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{ $activeTab === 'project' ? 'active' : '' }}" href="{{ route('kursus.mentor.project', $course->id) }}">Project</a>
     </li>
     <li class="nav-item">

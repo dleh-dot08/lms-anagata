@@ -9,9 +9,10 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
-use App\Http\Middleware\DivisiMiddleware;
 use App\Http\Middleware\SekolahMiddleware;
+use App\Http\Controllers\ScoreController;
 //use App\Http\Controllers\Admin\UserController;
+use App\Http\Middleware\DivisiMiddleware;
 use App\Http\Middleware\MentorMiddleware;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
@@ -23,21 +24,22 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Middleware\KaryawanMiddleware;
 
+use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\SubmissionController;
 
+use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\HelpdeskTicketController;
 use App\Http\Middleware\MentorOrPesertaMiddleware;
 use App\Http\Controllers\HelpdeskMessageController;
+use App\Http\Controllers\ScoreReportController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
@@ -449,6 +451,7 @@ Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
     Route::delete('projects/peserta/{project}', [ProjectController::class, 'destroy'])->name('projects.peserta.destroy'); // Hapus project
 
     Route::post('/assignments/{assignment}/submit', [SubmissionController::class, 'store'])->name('assignments.submit');
+    Route::post('/assignments/{assignment}/update', [SubmissionController::class, 'update'])->name('assignments.update');
     Route::get('/assignments/{assignment}/submit', [SubmissionController::class, 'submissionForm'])->name('assignments.submit.form');
     Route::get('/assignments', [SubmissionController::class, 'index'])->name('assignments.index');
    
@@ -481,6 +484,16 @@ Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function ()
 
     Route::get('/mentor/kursus/{course}/assignment', [CourseController::class, 'showAssignment'])->name('kursus.mentor.assignment');
     Route::post('{course}/assignment/store', [AssignmentController::class, 'store'])->name('kursus.mentor.assignment.store');
+    Route::get('/mentor/assignment/{assignment}/submissions', [AssignmentController::class, 'submissions'])->name('mentor.assignment.submissions');
+
+   
+    Route::get('mentor/kursus/{course}/scores', [CourseController::class, 'listMeetingsForScoring'])->name('mentor.scores.index');
+    Route::get('mentor/{course}/{meeting}/input', [ScoreController::class, 'input'])->name('mentor.scores.input');
+    Route::post('mentor/scores/{course}/{meeting}/store', [ScoreController::class, 'store'])->name('mentor.scores.store');
+
+    Route::get('rekap-nilai/{course}', [ScoreReportController::class, 'index'])->name('mentor.scores.recap');
+    Route::get('rekap-nilai/{course}/export-excel', [ScoreReportController::class, 'exportExcel'])->name('mentor.scores.export.excel');
+    Route::get('rekap-nilai/{course}/export-pdf', [ScoreReportController::class, 'exportPdf'])->name('mentor.scores.export.pdf');
 
     Route::get('/mentor/kursus/{id}/silabus', [CourseController::class, 'showSilabus'])->name('kursus.mentor.silabus');
     Route::get('/mentor/kursus/{id}/silabus-preview', [CourseController::class, 'previewSilabus'])->name('kursus.mentor.silabus.preview');

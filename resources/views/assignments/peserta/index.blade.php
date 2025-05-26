@@ -12,81 +12,76 @@
                         <th>Kursus / Pertemuan</th>
                         <th>Deskripsi</th>
                         <th>Deadline</th>
+                        <th>Status</th> {{-- Kolom baru --}}
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($assignments as $assignment)
+                    @php
+                        $submission = $submissions[$assignment->id] ?? null;
+                    @endphp
                     <tr>
-                        <td class="fw-semibold text-truncate" style="max-width: 180px;">
-                            {{ $assignment->judul }}
-                        </td>
+                        <td>{{ $assignment->judul }}</td>
                         <td>
-                            <div><strong>Kursus:</strong> {{ optional($assignment->meeting->course)->nama_kelas ?? 'Tidak ada kursus' }}</div>
+                            <div><strong>Kursus:</strong> {{ optional($assignment->meeting->course)->nama_kelas ?? '-' }}</div>
                             <div><strong>Pertemuan:</strong> {{ $assignment->meeting->judul ?? '-' }}</div>
                         </td>
-                        <td style="max-width: 300px; white-space: normal;">
+                        <td style="max-width: 300px;">
                             {{ Str::limit($assignment->deskripsi, 100, '...') }}
                         </td>
                         <td>
                             {{ $assignment->deadline ? \Carbon\Carbon::parse($assignment->deadline)->format('d M Y H:i') : '-' }}
                         </td>
+                        <td>
+                            @if ($submission)
+                                <div class="text-success fw-semibold">Sudah dikumpulkan</div>
+                                <div class="small text-muted">Pada: {{ \Carbon\Carbon::parse($submission->created_at)->format('d M Y H:i') }}</div>
+                                <div class="small">
+                                    <a href="{{ asset('storage/'.$submission->file_submission) }}" target="_blank">Lihat File</a>
+                                </div>
+                            @else
+                                <span class="text-muted">Belum dikumpulkan</span>
+                            @endif
+                        </td>
                         <td class="text-center">
-                            <!-- Trigger modal -->
-                            <button 
-                                type="button" 
-                                class="btn btn-sm btn-primary"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#modalSubmitAssignment{{ $assignment->id }}">
-                                Kumpulkan Tugas
+                            <button class="btn btn-sm {{ $submission ? 'btn-warning' : 'btn-primary' }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalAssignment{{ $assignment->id }}">
+                                {{ $submission ? 'Edit Tugas' : 'Kumpulkan Tugas' }}
                             </button>
                         </td>
                     </tr>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="modalSubmitAssignment{{ $assignment->id }}" tabindex="-1" aria-labelledby="submitAssignmentLabel{{ $assignment->id }}" aria-hidden="true">
+                    <div class="modal fade" id="modalAssignment{{ $assignment->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $assignment->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form 
-                                    action="{{ route('assignments.submit', $assignment->id) }}" 
-                                    method="POST" 
-                                    enctype="multipart/form-data">
+                                <form action="{{ $submission ? route('assignments.update', $assignment->id) : route('assignments.submit', $assignment->id) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="submitAssignmentLabel{{ $assignment->id }}">Kumpulkan Tugas</h5>
+                                        <h5 class="modal-title" id="modalLabel{{ $assignment->id }}">
+                                            {{ $submission ? 'Edit Pengumpulan Tugas' : 'Kumpulkan Tugas' }}
+                                        </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p><strong>{{ $assignment->judul }}</strong></p>
-
                                         <div class="mb-3">
-                                            <label for="file_submission{{ $assignment->id }}" class="form-label">Upload File Tugas</label>
-                                            <input 
-                                                type="file" 
-                                                class="form-control @error('file_submission') is-invalid @enderror" 
-                                                id="file_submission{{ $assignment->id }}" 
-                                                name="file_submission" 
-                                                required>
-                                            @error('file_submission')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                            <label for="file_submission" class="form-label">File Tugas</label>
+                                            <input type="file" name="file_submission" class="form-control" {{ $submission ? '' : 'required' }}>
+                                            @if ($submission && $submission->file_submission)
+                                                <small class="text-muted d-block mt-1">File sebelumnya:
+                                                    <a href="{{ asset('storage/'.$submission->file_submission) }}" target="_blank">Lihat</a>
+                                                </small>
+                                            @endif
                                         </div>
-
                                         <div class="mb-3">
-                                            <label for="catatan{{ $assignment->id }}" class="form-label">Catatan (Opsional)</label>
-                                            <textarea 
-                                                class="form-control @error('catatan') is-invalid @enderror" 
-                                                id="catatan{{ $assignment->id }}" 
-                                                name="catatan"
-                                                rows="3">{{ old('catatan') }}</textarea>
-                                            @error('catatan')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                            <label for="catatan" class="form-label">Catatan (opsional)</label>
+                                            <textarea name="catatan" class="form-control" rows="3">{{ old('catatan', $submission->catatan ?? '') }}</textarea>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-primary">Kumpulkan</button>
+                                        <button type="submit" class="btn btn-success">{{ $submission ? 'Update' : 'Submit' }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -94,9 +89,7 @@
                     </div>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted">
-                            Tidak ada tugas yang tersedia.
-                        </td>
+                        <td colspan="6" class="text-center text-muted">Tidak ada tugas yang tersedia.</td>
                     </tr>
                     @endforelse
                 </tbody>
