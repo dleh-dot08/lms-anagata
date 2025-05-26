@@ -19,6 +19,8 @@
             <p><strong>Mentor:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
             <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</p>
             <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</p>
+            <p><strong>Program:</strong> {{ $course->program->nama_program ?? 'Tidak Ada' }}</p>
+            <p><strong>Sekolah:</strong> {{ $course->sekolah->nama_sekolah ?? 'Tidak Ada' }}</p>
             <p><strong>Level:</strong> {{ $course->level }}</p>
             <p><strong>Status:</strong> {{ $course->status }}</p>
             <p><strong>Deskripsi:</strong> {{ $course->deskripsi }}</p>

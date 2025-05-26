@@ -18,11 +18,33 @@
             </div>
 
             <div class="form-group">
+                <label for="sekolah_id">Sekolah</label>
+                <select name="sekolah_id" id="sekolah_id" class="form-control">
+                    <option value="">Pilih Sekolah</option>
+                    @foreach($sekolah as $s)
+                        <option value="{{ $s->id }}" {{ old('sekolah_id') == $s->id ? 'selected' : '' }}>
+                            {{ $s->nama_sekolah }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="kategori_id">Kategori</label>
                 <select name="kategori_id" id="kategori_id" class="form-control" required>
                     <option value="">Pilih Kategori</option>
                     @foreach($kategoris as $kategori)
                         <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="program_id">Program</label>
+                <select name="program_id" id="program_id" class="form-control" required>
+                    <option value="">Pilih Program</option>
+                    @foreach($programs as $program)
+                        <option value="{{ $program->id }}">{{ $program->nama_program }}</option>
                     @endforeach
                 </select>
             </div>
@@ -90,9 +112,9 @@
             placeholder: 'Cari Mentor',
             allowClear: true,
             width: 'resolve',
-            minimumInputLength: 1, // ✅ only start searching after 1 character
+            minimumInputLength: 1,
             ajax: {
-                url: @json(route('courses.searchMentor')),
+                url: "{{ route('courses.searchMentor') }}",
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -104,6 +126,5 @@
             }
         });
     });
-
 </script>
 @endpush

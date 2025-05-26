@@ -11,6 +11,8 @@ use App\Models\Project;
 use App\Models\Kategori;
 use App\Models\Attendance;
 use App\Models\Enrollment;
+use App\Models\Program;
+use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -45,9 +47,9 @@ class CourseController extends Controller
             $query->where('status', $request->status);
         }
 
-        $courses = $query->orderBy('created_at', 'desc')->paginate(10);
+        $courses = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->role_id === 1) {
             return view('courses.index', compact('courses'));
@@ -63,22 +65,11 @@ class CourseController extends Controller
     // Menampilkan halaman pembuatan kursus
     public function create()
     {
-        // Ambil data mentor, kategori, dan jenjang
-        $mentors = User::where('role_id', 2)->get();
         $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
-
-        $user = auth()->user();
-
-        if ($user->role_id === 1) {
-            return view('courses.create', compact('mentors', 'kategoris', 'jenjangs'));
-    
-        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
-            return view('layouts.karyawan.kursus.create', compact('mentors', 'kategoris', 'jenjangs'));
-    
-        } else {
-            abort(403, 'Akses dilarang.');
-        }
+        $programs = Program::all();
+        $sekolah = Sekolah::all();
+        return view('courses.create', compact('kategoris', 'jenjangs', 'programs', 'sekolah'));
     }
 
     // Menyimpan kursus baru ke database
@@ -89,6 +80,7 @@ class CourseController extends Controller
             'mentor_id' => 'required|exists:users,id',
             'kategori_id' => 'required|exists:kategoris,id',
             'jenjang_id' => 'required|exists:jenjang,id',
+            'sekolah_id' => 'nullable|exists:sekolah,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
@@ -102,7 +94,7 @@ class CourseController extends Controller
     
         Course::create($data);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->role_id === 1) {
             return redirect()->route('courses.index')->with('success', 'kursus berhasil dibuat');
@@ -119,19 +111,18 @@ class CourseController extends Controller
     // Menampilkan halaman untuk mengedit kursus
     public function edit(Course $course)
     {
-        // Ambil data mentor, kategori, dan jenjang
-        $mentors = User::where('role_id', 2)->get();
         $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
-
-        $user = auth()->user();
-
+        $programs = Program::all();
+        $mentors = User::where('role_id', 2)->get(); // Get all mentors
+        $sekolah = Sekolah::all();
+        
+        $user = Auth::user();
+        
         if ($user->role_id === 1) {
-            return view('courses.edit', compact('course', 'mentors', 'kategoris', 'jenjangs'));
-    
+            return view('courses.edit', compact('course', 'kategoris', 'jenjangs', 'programs', 'mentors', 'sekolah'));
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
-            return view('layouts.karyawan.kursus.edit', compact('course', 'mentors', 'kategoris', 'jenjangs'));
-    
+            return view('layouts.karyawan.kursus.edit', compact('course', 'kategoris', 'jenjangs', 'programs', 'mentors', 'sekolah'));
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -144,7 +135,9 @@ class CourseController extends Controller
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
             'kategori_id' => 'required|exists:kategoris,id',
-            'jenjang_id' => 'required|exists:jenjang,id', // <- perbaikan di sini
+            'jenjang_id' => 'required|exists:jenjang,id',
+            'sekolah_id' => 'nullable|exists:sekolah,id',
+            'program_id' => 'nullable|exists:programs,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
@@ -158,6 +151,8 @@ class CourseController extends Controller
             'mentor_id',
             'kategori_id',
             'jenjang_id',
+            'sekolah_id',
+            'program_id',
             'level',
             'status',
             'waktu_mulai',
@@ -166,13 +161,13 @@ class CourseController extends Controller
             'jumlah_peserta',
         ]));
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->role_id === 1) {
             return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
     
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
-            return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
+            return redirect()->route('courses.apd.index')->with('success', 'Kursus berhasil diperbarui.');
     
         } else {
             abort(403, 'Akses dilarang.');
@@ -182,71 +177,27 @@ class CourseController extends Controller
     // Menampilkan halaman detail kursus
     public function show(Request $request, $id)
     {
-        $course = Course::with('mentor', 'kategori', 'jenjang', 'lessons')->findOrFail($id);
-
-        $query = Enrollment::with('user.jenjang')
-            ->where('course_id', $id);
-
-        if ($request->has('search') && $request->search != '') {
+        $course = Course::with(['mentor', 'kategori', 'jenjang', 'program', 'meetings', 'lessons', 'projects'])->findOrFail($id);
+        
+        // Get enrollments with pagination and search
+        $enrollmentsQuery = $course->enrollments()->with(['user.jenjang']);
+        
+        if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('user', function ($q) use ($search) {
+            $enrollmentsQuery->whereHas('user', function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
+        
+        $enrollments = $enrollmentsQuery->paginate(10)->withQueryString();
 
-        $enrollments = $query->paginate(10);
-
-        // ========================== Tambahan baru di bawah sini ==========================
-       
-        // 1. Ambil semua tanggal lesson (hanya tanggal, tanpa jam)
-        $lessonDates = Lesson::where('course_id', $id)
-                            ->pluck('created_at')
-                            ->map(function ($date) {
-                                return $date->format('Y-m-d'); // Ambil hanya tanggal (tanpa jam)
-                            })
-                            ->toArray();
-
-        $totalLessons = count($lessonDates);
-
-        // 2. Untuk masing-masing peserta, hitung jumlah hadir/izin yang cocok dengan tanggal lesson
-        foreach ($enrollments as $enrollment) {
-            $presentCount = Attendance::where('course_id', $id)
-                ->where('user_id', $enrollment->user_id)
-                ->whereIn('status', ['Hadir', 'Izin'])
-                ->whereIn('tanggal', $lessonDates) // Gunakan whereIn untuk mencocokkan tanggal
-                ->count();
-
-            // Hitung persentase kehadiran
-            $enrollment->attendance_percentage = $totalLessons > 0 ? ($presentCount / $totalLessons) * 100 : 0;
-        }
-
-        // ========================== Tambahan search untuk projects ==========================
-        // 3. Search untuk Projects berdasarkan judul project
-        if ($request->has('project_search') && $request->project_search != '') {
-            $projectSearch = $request->project_search;
-            
-            // Menambahkan pencarian berdasarkan judul proyek dan nama peserta
-            $course->projects = $course->projects()
-            ->where(function($query) use ($projectSearch) {
-                $query->where('title', 'like', "%{$projectSearch}%")  // Pencarian berdasarkan judul proyek
-                    ->orWhereHas('user', function($q) use ($projectSearch) {  // Pencarian berdasarkan nama peserta (user)
-                        $q->where('name', 'like', "%{$projectSearch}%");
-                    });
-            })
-            ->get();
-        }
-
-        // ========================== Akhir tambahan ==========================
-
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->role_id === 1) {
             return view('courses.show', compact('course', 'enrollments'));
-
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
             return view('layouts.karyawan.kursus.show', compact('course', 'enrollments'));
-
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -256,10 +207,9 @@ class CourseController extends Controller
     // Menghapus kursus (soft delete)
     public function destroy(Course $course)
     {
-
         $course->delete();
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->role_id === 1) {
             return redirect()->route('courses.apd.index')->with('success', 'Kursus berhasil dihapus.');
@@ -348,7 +298,7 @@ class CourseController extends Controller
             })
             ->orderBy('waktu_mulai', 'desc');
 
-        $courses = $query->paginate(10)->appends($request->all());
+        $courses = $query->paginate(10)->withQueryString();
 
         return view('peserta.kursus.index', compact('courses'));
     }

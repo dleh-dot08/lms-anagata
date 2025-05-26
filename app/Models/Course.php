@@ -14,16 +14,23 @@ class Course extends Model
     protected $fillable = [
         'kode_unik',
         'mentor_id',
+        'sekolah_id',
         'nama_kelas',
         'deskripsi',
         'kategori_id',
         'jenjang_id',
+        'program_id',
         'level',
         'status',
         'waktu_mulai',
         'waktu_akhir',
         'harga',
         'jumlah_peserta'
+    ];
+
+    protected $casts = [
+        'waktu_mulai' => 'date',
+        'waktu_akhir' => 'date',
     ];
 
     // Relasi ke Mentor (User dengan role_id = 2)
@@ -42,6 +49,11 @@ class Course extends Model
     public function jenjang()
     {
         return $this->belongsTo(Jenjang::class);
+    }
+
+    public function sekolah()
+    {
+        return $this->belongsTo(Sekolah::class);
     }
 
     public function projects()
@@ -96,5 +108,16 @@ class Course extends Model
     {
         return $this->hasMany(Meeting::class);
     }
+
+    public function scores()
+    {
+        return $this->hasMany(Score::class);
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
+
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }

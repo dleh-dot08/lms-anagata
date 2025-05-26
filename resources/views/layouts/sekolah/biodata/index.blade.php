@@ -1,19 +1,20 @@
-@extends('layouts.peserta.template')
+@extends('layouts.sekolah.template')
 
 @section('content')
 <div class="container">
     <div class="card shadow-sm p-4">
-        <h3 class="fw-bold text-center mb-4">Biodata Peserta</h3>
+        <h3 class="fw-bold text-center mb-4">Biodata Sekolah</h3>
         <div class="row">
             <!-- Informasi User -->
             <div class="col-md-8">
                 <div class="card p-3 border-0 shadow-sm">
                     <h5 class="fw-bold text-primary">Informasi Akun</h5>
                     <table class="table">
-                        <tr><th>Nama</th><td>: {{ $user->name }}</td></tr>
+                        <tr><th>Nama PIC</th><td>: {{ $user->name }}</td></tr>
                         <tr><th>Email</th><td>: {{ $user->email }}</td></tr>
-                        <tr><th>No Hanphone</th><td>: {{ $user->no_telepon ?? '-' }}</td></tr>
-                        <tr><th>Status</th>
+                        <tr><th>No Telepon PIC</th><td>: {{ $user->no_telepon ?? '-' }}</td></tr>
+                        <tr>
+                            <th>Status</th>
                             <td>
                                 @if ($biodata)
                                     : <span class="badge bg-{{ $biodata->status == 'aktif' ? 'success' : ($biodata->status == 'cuti' ? 'warning' : 'danger') }}">
@@ -25,8 +26,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Sekolah</th>
+                            <th>PIC Sekolah</th>
                             <td>: {{ $user->sekolah->nama_sekolah ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Alamat Sekolah</th>
+                            <td>: {{ $user->sekolah->alamat ?? '-' }}</td>
                         </tr>
                     </table>
                 </div>
@@ -45,18 +50,18 @@
             </div>
         </div>
 
-        <!-- Tombol Edit -->
+                <!-- Tombol Edit -->
         <div class="text-center mt-4">
             <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
-                 <i class="bx bx-edit"></i> Edit Data
+                <i class="bx bx-edit"></i> Edit Data
             </a>
         </div>
 
-        <div class="p-3 mt-4">
+        <div class=" mt-4">
             <div class="card p-3 border-0 shadow-sm">
                 <h5 class="fw-bold text-primary">Informasi Biodata</h5>
                 <table class="table">
-                    <tr><th>NIK</th><td>: {{ $biodata->nik ?? '-' }}</td></tr>
+                    <tr><th>NIP</th><td>: {{ $biodata->nip ?? '-' }}</td></tr>
                     <tr><th>Jenis Kelamin</th><td>: {{ $user->jenis_kelamin ?? '-' }}</td></tr>
                     <tr>
                         <th>Tempat, Tanggal Lahir</th>
@@ -64,15 +69,13 @@
                     </tr>
                     <tr><th>Alamat</th><td>: {{ $biodata->alamat ?? '-' }}</td></tr>
                     <tr><th>Instansi</th><td>: {{ $user->instansi ?? '-' }}</td></tr>
-                    <tr><th>Pekerjaan</th><td>: {{ $user->pekerjaan ?? '-' }}</td></tr>
                     <tr><th>Jenjang</th><td>: {{ $user->jenjang->nama_jenjang ?? '-' }}</td></tr>
-                    <tr><th>Bidang Pengajaran</th><td>: {{ $user->bidang_pengajaran ?? '-' }}</td></tr>
-                    <tr><th>Pendidikan Terakhir</th><td>: {{ $user->pendidikan_terakhir ?? '-' }}</td></tr>
-                    <tr><th>Sosial Media</th><td>: {{ $user->media_sosial ?? '-' }}</td></tr>
                     <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->created_at)) }}</td></tr>
                 </table>
             </div>
         </div>
+
+
     </div>
 </div>
-@endsection
+@endsection 

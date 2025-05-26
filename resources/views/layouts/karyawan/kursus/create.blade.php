@@ -4,8 +4,9 @@
     <div class="container mt-4">
         <h2>Tambah Kursus Baru</h2>
 
-        <form action="{{ route('courses.apd.store') }}" method="POST">
+        <form action="{{ route('courses.store') }}" method="POST">
             @csrf
+
             <div class="form-group">
                 <label for="nama_kelas">Nama Kelas</label>
                 <input type="text" name="nama_kelas" id="nama_kelas" class="form-control" required>
@@ -13,12 +14,7 @@
 
             <div class="form-group">
                 <label for="mentor_id">Mentor</label>
-                <select name="mentor_id" id="mentor_id" class="form-control" required>
-                    <option value="">Pilih Mentor</option>
-                    @foreach($mentors as $mentor)
-                        <option value="{{ $mentor->id }}">{{ $mentor->name }}</option>
-                    @endforeach
-                </select>
+                <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;"></select>
             </div>
 
             <div class="form-group">
@@ -27,6 +23,16 @@
                     <option value="">Pilih Kategori</option>
                     @foreach($kategoris as $kategori)
                         <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="program_id">Program</label>
+                <select name="program_id" id="program_id" class="form-control" required>
+                    <option value="">Pilih Program</option>
+                    @foreach($programs as $program)
+                        <option value="{{ $program->id }}">{{ $program->nama_program }}</option>
                     @endforeach
                 </select>
             </div>
@@ -82,3 +88,31 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#mentor_id').select2({
+            placeholder: 'Cari Mentor',
+            allowClear: true,
+            width: 'resolve',
+            minimumInputLength: 1,
+            ajax: {
+                url: "{{ route('courses.searchMentor') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
+                }
+            }
+        });
+    });
+</script>
+@endpush

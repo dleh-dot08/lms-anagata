@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\DivisiMiddleware;
+use App\Http\Middleware\SekolahMiddleware;
 //use App\Http\Controllers\Admin\UserController;
 use App\Http\Middleware\MentorMiddleware;
 use App\Http\Controllers\CourseController;
@@ -39,6 +40,10 @@ use App\Http\Middleware\MentorOrPesertaMiddleware;
 use App\Http\Controllers\HelpdeskMessageController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
+use App\Http\Controllers\SekolahController;
+use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\Sekolah\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -168,9 +173,17 @@ Route::get('/admin/dashboard', [AdminController::class, 'index'])
 ->middleware(AdminMiddleware::class);
 
 // Admin User Management
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', UserController::class);
-});
+Route::middleware(['auth', AdminMiddleware::class])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('users', UserController::class);
+
+        // Sekolah Management
+        Route::resource('sekolah', AdminSekolahController::class);
+        Route::post('sekolah/{id}/restore', [AdminSekolahController::class, 'restore'])->name('sekolah.restore');
+        Route::put('sekolah/{id}/update-peserta', [AdminSekolahController::class, 'updatePeserta'])->name('sekolah.update-peserta');
+    });
 
 Route::middleware(['auth', AdminMiddleware::class])
     ->prefix('users')
@@ -269,22 +282,22 @@ Route::middleware(['auth', DivisiMiddleware::class . ':APD'])->group(function ()
     Route::get('/karyawan/kursus/create', [CourseController::class, 'create'])->name('courses.apd.create');
     Route::post('/', [CourseController::class, 'store'])->name('courses.apd.store');
     Route::get('/karyawan/kursus/{id}', [CourseController::class, 'show'])->name('courses.apd.show');
-    Route::get('karyawan/{course}/edit', [CourseController::class, 'edit'])->name('courses.apd.edit');
-    Route::put('karyawan/{course}', [CourseController::class, 'update'])->name('courses.apd.update');
-    Route::delete('karyawan/{course}', [CourseController::class, 'destroy'])->name('courses.apd.destroy');
-    Route::post('karyawan/{id}/restore', [CourseController::class, 'restore'])->name('courses.apd.restore');
+    Route::get('/karyawan/kursus/{course}/edit', [CourseController::class, 'edit'])->name('courses.apd.edit');
+    Route::put('/karyawan/kursus/{course}', [CourseController::class, 'update'])->name('courses.apd.update');
+    Route::delete('/karyawan/kursus/{course}', [CourseController::class, 'destroy'])->name('courses.apd.destroy');
+    Route::post('/karyawan/kursus/{id}/restore', [CourseController::class, 'restore'])->name('courses.apd.restore');
 
-    Route::get('karyawan/{course}/lessons/create', [LessonController::class, 'create'])->name('courses.apd.createLessonForm');
-    Route::post('karyawan/{course}/lessons', [LessonController::class, 'store'])->name('courses.apd.storeLesson');
-    Route::get('karyawan/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('courses.apd.editLesson');
-    Route::put('karyawan/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('courses.apd.updateLesson');
-    Route::delete('karyawan/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('courses.apd.deleteLesson');
-    Route::get('karyawan/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('courses.apd.showLesson');
+    Route::get('/karyawan/kursus/{course}/lessons/create', [LessonController::class, 'create'])->name('courses.apd.createLessonForm');
+    Route::post('/karyawan/kursus/{course}/lessons', [LessonController::class, 'store'])->name('courses.apd.storeLesson');
+    Route::get('/karyawan/kursus/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('courses.apd.editLesson');
+    Route::put('/karyawan/kursus/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('courses.apd.updateLesson');
+    Route::delete('/karyawan/kursus/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('courses.apd.deleteLesson');
+    Route::get('/karyawan/kursus/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('courses.apd.showLesson');
 
-    Route::get('karyawan/{course}/formparticipant', [ParticipantController::class, 'form'])->name('courses.apd.formparticipant');
-    Route::post('karyawan/{course}/participants', [ParticipantController::class, 'store'])->name('courses.apd.participants.store');
-    Route::get('karyawan/search-peserta', [ParticipantController::class, 'search'])->name('courses.apd.participants.search');
-    Route::delete('karyawan/{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('courses.apd.participants.destroy');
+    Route::get('/karyawan/kursus/{course}/formparticipant', [ParticipantController::class, 'form'])->name('courses.apd.formparticipant');
+    Route::post('/karyawan/kursus/{course}/participants', [ParticipantController::class, 'store'])->name('courses.apd.participants.store');
+    Route::get('/karyawan/kursus/search-peserta', [ParticipantController::class, 'search'])->name('courses.apd.participants.search');
+    Route::delete('/karyawan/kursus/{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('courses.apd.participants.destroy');
 
     Route::get('karyawan/activities', [ActivityController::class, 'index'])->name('activities.apd.index');
     Route::get('karyawan/activities/create', [ActivityController::class, 'create'])->name('activities.apd.create');
@@ -476,5 +489,36 @@ Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function ()
 
     Route::get('/mentor/kursus/{course}/peserta', [CourseController::class, 'showAllPeserta'])->name('kursus.mentor.peserta');
 });
+
+// Sekolah Routes
+Route::middleware(['auth', 'verified', SekolahMiddleware::class])->prefix('sekolah')->name('sekolah.')->group(function () {
+    Route::get('/dashboard', [SekolahController::class, 'index'])->name('dashboard');
+    Route::get('/peserta', [SekolahController::class, 'peserta'])->name('peserta');
+
+    // Reports Routes
+    Route::get('/reports/nilai', [ReportController::class, 'nilaiIndex'])->name('reports.nilai.index');
+    Route::get('/reports/nilai/{id}', [ReportController::class, 'nilaiShow'])->name('reports.nilai.show');
+    Route::get('/reports/nilai/{id}/export', [ReportController::class, 'exportNilai'])->name('reports.nilai.export');
+});
+
+// Report Management Routes
+Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/reports')->name('admin.reports.')->group(function () {
+    Route::get('/nilai', [App\Http\Controllers\Admin\ReportController::class, 'nilaiIndex'])->name('nilai.index');
+    Route::get('/nilai/{course}', [App\Http\Controllers\Admin\ReportController::class, 'show'])->name('nilai.show');
+    Route::get('/nilai/{course}/edit', [App\Http\Controllers\Admin\ReportController::class, 'edit'])->name('nilai.edit');
+    Route::put('/nilai/{course}', [App\Http\Controllers\Admin\ReportController::class, 'update'])->name('nilai.update');
+    Route::get('/nilai/{course}/export', [App\Http\Controllers\Admin\ReportController::class, 'exportNilai'])->name('nilai.export');
+    Route::get('/nilai/{course}/export-pdf', [App\Http\Controllers\Admin\ReportController::class, 'exportNilaiPdf'])->name('nilai.export-pdf');
+});
+
+Route::middleware(['auth', SekolahMiddleware::class])->prefix('sekolah/reports')->name('sekolah.reports.')->group(function () {
+    Route::get('/nilai', [App\Http\Controllers\Sekolah\ReportController::class, 'nilaiIndex'])->name('nilai.index');
+    Route::get('/nilai/{course}', [App\Http\Controllers\Sekolah\ReportController::class, 'nilaiShow'])->name('nilai.show');
+    Route::get('/nilai/{course}/export', [App\Http\Controllers\Sekolah\ReportController::class, 'exportNilai'])->name('nilai.export');
+    Route::get('/nilai/{course}/export-pdf', [App\Http\Controllers\Sekolah\ReportController::class, 'exportNilaiPdf'])->name('nilai.export-pdf');
+});
+
+Route::resource('program', ProgramController::class);
+Route::post('program/{id}/restore', [ProgramController::class, 'restore'])->name('program.restore');
 
 require __DIR__.'/auth.php';

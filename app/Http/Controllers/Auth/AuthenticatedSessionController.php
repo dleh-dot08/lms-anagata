@@ -71,6 +71,10 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect()->route('karyawan.dashboard')->with('status', 'Welcome to your dashboard');
         }
+        if ($user->role_id == '6') // 6 = Sekolah
+        {
+            return redirect()->route('sekolah.dashboard')->with('status', 'Welcome to your dashboard');
+        }
         if ($user->role_id == '0') // 0 = User Biasa
         {
             return redirect()->route('user.dashboard')->with('status', 'Welcome to your dashboard');

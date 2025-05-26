@@ -25,7 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'alamat_tempat_tinggal', 'instansi', 'jenjang_id', 'jabatan',
         'bidang_pengajaran', 'divisi', 'no_telepon', 'tanggal_bergabung',
         'surat_tugas', 'role_id', 'created_by', 'updated_by',
-        'jenis_kelamin', 'pendidikan_terakhir', 'pekerjaan', 'media_sosial' // ← tambahkan ini
+        'jenis_kelamin', 'pendidikan_terakhir', 'pekerjaan', 'media_sosial',
+        'sekolah_id' // Add sekolah_id to fillable array
     ];
 
     /**
@@ -165,12 +166,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(AssignmentSubmission::class);
     }
 
-    public function submissions()
+    /**
+     * Relationship with Sekolah
+     */
+    public function sekolah()
     {
-        return $this->hasMany(AssignmentSubmission::class);
+        return $this->belongsTo(Sekolah::class);
     }
 
-
-
+    public function scores()
+    {
+        return $this->hasMany(Score::class);
+    }
 
 }

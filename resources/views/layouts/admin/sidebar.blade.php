@@ -27,7 +27,7 @@
             <span class="menu-header-text">master</span>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('users.*', 'jenjang.*', 'kategori.*') ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->routeIs('users.*', 'jenjang.*', 'kategori.*', 'admin.faq.*', 'admin.sekolah.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-menu"></i>
                 <div data-i18n="Account Settings">Data Manajemen</div>
@@ -43,14 +43,24 @@
                         <div data-i18n="Account">Data Jenjang</div>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->routeIs('program.*') ? 'active' : '' }}">
+                    <a href="{{ route('program.index') }}" class="menu-link">
+                        <div data-i18n="Account">Data Program</div>
+                    </a>
+                </li>
                 <li class="menu-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
                     <a href="{{ route('kategori.index') }}" class="menu-link">
                         <div data-i18n="Account">Data Kategori</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->routeIs('admin.faq.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.faq.index') }}" class="menu-link">
                         <div data-i18n="Account">Data FAQ</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('admin.sekolah.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.sekolah.index') }}" class="menu-link">
+                        <div data-i18n="Account">Data Sekolah</div>
                     </a>
                 </li>
             </ul>
@@ -97,7 +107,16 @@
                 <div data-i18n="Boxicons">Data Absensi</div>
             </a>
         </li>
-
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text"> Report Management</span>
+        </li>
+        <li class="menu-item {{ request()->routeIs('admin.reports.nilai.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.reports.nilai.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div data-i18n="Boxicons">Data Laporan Nilai</div>
+            </a>
+        </li>
+        
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text"> Helpdesk Management</span>
         </li>

@@ -24,11 +24,35 @@
         </div>
 
         <div class="mb-3">
+            <label for="sekolah_id">Sekolah</label>
+            <select name="sekolah_id" id="sekolah_id" class="form-control">
+                <option value="">Pilih Sekolah</option>
+                @foreach($sekolah as $s)
+                    <option value="{{ $s->id }}" {{ (isset($course) && $course->sekolah_id == $s->id) ? 'selected' : '' }}>
+                        {{ $s->nama_sekolah }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label>Kategori</label>
             <select name="kategori_id" class="form-control">
                 @foreach ($kategoris as $kategori)
                     <option value="{{ $kategori->id }}" {{ (isset($course) && $course->kategori_id == $kategori->id) ? 'selected' : '' }}>
                         {{ $kategori->nama_kategori }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Program</label>
+            <select name="program_id" class="form-control">
+            <option value="">Pilih Program</option>
+            @foreach ($programs as $program)
+                    <option value="{{ $program->id }}" {{ (isset($course) && $course->program_id == $program->id) ? 'selected' : '' }}>
+                        {{ $program->nama_program }}
                     </option>
                 @endforeach
             </select>
