@@ -12,11 +12,12 @@
             <p><strong>Mentor:</strong> {{ $course->mentor->name }}</p>
             <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori }}</p>
             <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang }}</p>
+            <p><strong>Program:</strong> {{ $course->program->nama_program ?? 'Tidak Ada' }}</p>
             <p><strong>Level:</strong> {{ $course->level }}</p>
             <p><strong>Status:</strong> {{ $course->status }}</p>
             <p><strong>Waktu:</strong> 
-               {{ \Carbon\Carbon::parse($course->waktu_mulai)->format('d M Y H:i') }} – 
-               {{ \Carbon\Carbon::parse($course->waktu_akhir)->format('d M Y H:i') }}
+               {{ $course->waktu_mulai ? $course->waktu_mulai->format('d M Y') : '-' }} – 
+               {{ $course->waktu_akhir ? $course->waktu_akhir->format('d M Y') : '-' }}
             </p>
         </div>
     </div>
@@ -80,7 +81,7 @@
 
           <!-- Paginasi -->
           <div class="d-flex justify-content-center mt-4">
-            {{ $enrollments->withQueryString()->onEachSide(1)->links('pagination.custom') }}
+            {{ $enrollments->links() }}
           </div>
       </div>
   </div>

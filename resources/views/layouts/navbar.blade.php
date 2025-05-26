@@ -30,6 +30,7 @@
                                         2 => route('mentor.dashboard'),
                                         3 => route('peserta.dashboard'),
                                         4 => route('karyawan.dashboard'),
+                                        6 => route('sekolah.dashboard'),
                                         default => route('user.dashboard'),
                                     };
                                 @endphp

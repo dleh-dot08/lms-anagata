@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Score extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'meeting_id',
@@ -17,7 +18,7 @@ class Score extends Model
         'program_score',
         'design_score',
         'total_score',
-        'feedback',
+        'feedback'
     ];
 
     public function meeting()
@@ -34,5 +35,4 @@ class Score extends Model
     {
         return $this->belongsTo(User::class, 'mentor_id');
     }
-}
-
+} 

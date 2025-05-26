@@ -45,6 +45,10 @@
                     <small class="text-muted">Gunakan Nomor Whatsapp Aktif</small>
                 </div>
                 <div class="mb-3">
+                    <label class="form-label">Sekolah</label>
+                    <input type="text" class="form-control" value="{{ $user->sekolah->nama_sekolah ?? '-' }}" readonly disabled>
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Alamat KTP</label>
                     <textarea name="alamat" class="form-control">{{ $biodata?->alamat }}</textarea>
                 </div>

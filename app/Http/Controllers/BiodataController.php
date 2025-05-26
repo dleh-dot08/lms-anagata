@@ -24,6 +24,8 @@ class BiodataController extends Controller
                 return view('layouts.karyawan.biodata.index', compact('user', 'biodata'));
             case 3: // Peserta
                 return view('layouts.peserta.biodata.index', compact('user', 'biodata'));
+            case 6: // Sekolah
+                return view('layouts.sekolah.biodata.index', compact('user', 'biodata'));
             default:
                 return view('layouts.peserta.biodata.index', compact('user', 'biodata'));
         }
@@ -41,14 +43,16 @@ class BiodataController extends Controller
         $biodata = Biodata::where('id_user', $user->id)->first();
     
         switch ($user->role_id) {
-            case 2: // Karyawan
+            case 2: // Mentor
                 return view('layouts.mentor.biodata.edit', compact('user', 'biodata', 'jenjangs'));
     
-            case 4: // Mentor
+            case 4: // Karyawan
                 return view('layouts.karyawan.biodata.edit', compact('user', 'biodata', 'jenjangs'));
     
             case 3: // Peserta
                 return view('layouts.peserta.biodata.edit', compact('user', 'biodata', 'jenjangs'));
+            case 6: // Sekolah
+                return view('layouts.sekolah.biodata.edit', compact('user', 'biodata', 'jenjangs'));
             default:
                 return view('layouts.peserta.biodata.edit', compact('user', 'biodata', 'jenjangs'));
         }
