@@ -38,5 +38,10 @@ class Enrollment extends Model
         return $this->belongsTo(Course::class, 'course_id');
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
 
 }

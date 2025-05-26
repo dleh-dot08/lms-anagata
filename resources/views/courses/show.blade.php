@@ -224,7 +224,7 @@
                     @foreach($course->lessons as $lesson)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>Pertemuan {{ $lesson->pertemuan_id }}</td>
+                            <td>Pertemuan {{ $lesson->meeting->pertemuan ?? '-' }}</td>
                             <td>
                                 @for ($i = 1; $i <= 3; $i++)
                                     @if($lesson["video_url$i"])

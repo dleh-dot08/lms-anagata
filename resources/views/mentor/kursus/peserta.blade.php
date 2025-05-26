@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-0">{{ $course->nama_kelas }}</h3>
+    <h3 class="mb-4">{{ $course->nama_kelas }}</h3>
     @include('mentor.kursus.partials.nav-tabs', ['activeTab' => 'peserta'])
     <div class="card shadow border-0 rounded-lg">
         <!-- Header with course information -->

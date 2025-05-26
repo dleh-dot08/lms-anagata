@@ -16,7 +16,9 @@ class MentorMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role->name === 'Mentor') {
+        $user = Auth::user();
+
+        if ($user && in_array($user->role_id, [2])) {
             return $next($request);
         }
         return redirect('/')->with('error', 'Unauthorized Access');

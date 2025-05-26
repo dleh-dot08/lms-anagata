@@ -5,6 +5,10 @@
                 <!-- <div class="sidebar-header">
                     <img src="{{ asset('assets/img/illustrations/logo-asn.png') }}" alt="logo-asn" class="logo-image">
                 </div> -->
+                <div class="sidebar-header">
+                    <h3 class="text-primary mb-0" style="font-weight: 700; letter-spacing: 1px;">ruanganagata.id</h3>
+                    <small class="text-muted">Official Website</small>
+                </div>
             </span>
 
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -33,7 +37,7 @@
 
         <li class="menu-item {{ request()->routeIs('mentor.kursus.index') ? 'active' : '' }}">
             <a href="{{ route('mentor.kursus.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-book-alt"></i>
+                <i class="menu-icon tf-icons bx bxs-graduation"></i>
                 <div data-i18n="Analytics">Kursus</div>
             </a>
         </li>
@@ -45,14 +49,14 @@
             </a>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('attendances.courses', 'attendances.activities') ? 'open active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('mentor.attendances.index', 'attendances.activities', 'mentor.absen.courses') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
                 <div data-i18n="Analytics">Absensi</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('attendances.courses') ? 'active' : '' }}">
-                    <a href="{{ route('attendances.courses') }}" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('mentor.attendances.index') ? 'active' : '' }}">
+                    <a href="{{ route('mentor.attendances.index') }}" class="menu-link">
                         <div>Absen Kursus</div>
                     </a>
                 </li>
@@ -61,11 +65,42 @@
                         <div>Absen Kegiatan</div>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->routeIs('mentor.absen.courses') ? 'active' : '' }}">
+                    <a href="{{ route('mentor.absen.courses') }}" class="menu-link">
+                        <div>Kursus Saya</div>
+                    </a>
+                </li>
             </ul>
-        </li>        
-
-
-        <!-- Helpdesk -->
+        </li>
+        <li class="menu-item {{ request()->routeIs('mentor.notes.*') ? 'active' : '' }}">
+            <a href="{{ route('mentor.notes.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-note"></i>
+                <div data-i18n="Analytics">Catatan</div>
+            </a>
+        </li>  
+        <li class="menu-item {{ request()->routeIs('mentor.score.*', 'mentor.attendance.report.*', 'mentor.self.attendance') ? 'open active' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bxs-report"></i>
+                <div data-i18n="Analytics">Laporan</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->routeIs('mentor.score.*') ? 'active' : '' }}">
+                    <a href="{{ route('mentor.score.index') }}" class="menu-link">
+                        <div>Laporan Nilai</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('mentor.attendance.report.index') ? 'active' : '' }}">
+                    <a href="{{ route('mentor.attendance.report.index') }}" class="menu-link">
+                        <div>Absensi Siswa</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('mentor.self.attendance') ? 'active' : '' }}">
+                    <a href="{{ route('mentor.self.attendance') }}" class="menu-link">
+                        <div>Absensi Mentor</div>
+                    </a>
+                </li>
+            </ul>
+        </li>              
     </ul>
 </aside>
 

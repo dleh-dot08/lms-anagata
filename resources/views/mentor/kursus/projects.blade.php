@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-0">{{ $course->nama_kelas }}</h3>
+    <h3 class="mb-4">{{ $course->nama_kelas }}</h3>
     @include('mentor.kursus.partials.nav-tabs', ['activeTab' => 'project'])
     <h5><strong>Project Saya</strong></h5>
     <a href="{{ route('projects.peserta.createCourse', ['course' => $course->id]) }}" class="btn btn-primary mb-3">

@@ -96,5 +96,11 @@ class Course extends Model
     {
         return $this->hasMany(Meeting::class);
     }
+
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'user_id');
+    }
 }

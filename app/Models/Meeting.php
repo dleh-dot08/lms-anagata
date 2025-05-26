@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\MentorNote;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Meeting extends Model
 {
@@ -36,6 +37,16 @@ class Meeting extends Model
     public function assignments()
     {
         return $this->hasMany(Assignment::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function note()
+    {
+        return $this->hasOne(MentorNote::class);
     }
 
 

@@ -10,6 +10,8 @@ class Attendance extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'enrollment_id',
+        'meeting_id',
         'user_id',
         'course_id',
         'activity_id',
@@ -39,6 +41,21 @@ class Attendance extends Model
     public function activity()
     {
         return $this->belongsTo(Activity::class);
+    }
+
+    public function mentor()
+    {
+        return $this->belongsTo(User::class, 'mentor_id');
+    }
+
+    public function meeting()
+    {
+        return $this->belongsTo(Meeting::class);
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(User::class);
     }
 
 }

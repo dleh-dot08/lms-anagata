@@ -79,14 +79,22 @@
         </li>
 
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text"> Activity Management</span>
-        </li>
-        <li class="menu-item {{ request()->routeIs('activities.*') ? 'active' : '' }}">
-            <a href="{{ route('activities.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Boxicons">Data Kegiatan</div>
-            </a>
-        </li>
+    <span class="menu-header-text"> Activity Management</span>
+</li>
+<li class="menu-item {{ request()->routeIs('activities.*') ? 'active' : '' }}">
+    <a href="{{ route('activities.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-file"></i>
+        <div data-i18n="Boxicons">Data Kegiatan</div>
+    </a>
+</li>
+
+<!-- Mentor Notes -->
+<li class="menu-item {{ request()->routeIs('admin.notes.*') ? 'active' : '' }}">
+    <a href="{{ route('admin.notes.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-notepad"></i>
+        <div data-i18n="Boxicons">Mentor Notes</div>
+    </a>
+</li>
 
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text"> Attendance Management</span>

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Meeting;
 use App\Models\Activity;
 use App\Models\Attendance;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -402,6 +404,113 @@ class AttendanceController extends Controller
         }
 
         return redirect()->route('attendances.index')->with('success', 'Absensi berhasil disimpan!');
+    }
+
+       /**
+     * Menampilkan daftar kursus yang diajar mentor untuk dipilih absen
+     */
+    public function indexMentor()
+    {
+        $today = Carbon::today();
+    
+        $courses = auth()->user()->mentorCourses()
+            ->whereDate('waktu_mulai', '<=', $today)
+            ->whereDate('waktu_akhir', '>=', $today)
+            ->withCount(['meetings', 'enrollments'])
+            ->orderBy('nama_kelas')
+            ->get();
+    
+        return view('attendances.mentor.courses', compact('courses'));
+    }
+
+    /**
+     * Menampilkan daftar pertemuan dari kursus yang dipilih
+     */
+    public function selectMeeting(Course $course)
+    {
+        $meetings = $course->meetings()
+            ->orderBy('pertemuan')
+            ->withCount(['attendances as absensi_diisi']) // alias tetap, tanpa filter mentor
+            ->get();
+    
+        return view('attendances.mentor.select_meeting', compact('course', 'meetings'));
+    }
+    
+    
+
+    /**
+     * Menampilkan form absensi untuk pertemuan tertentu
+     */
+    public function createMentor(Course $course, Meeting $meeting)
+    {
+        // Cek apakah pertemuan milik kursus yang benar
+        if ($meeting->course_id !== $course->id) {
+            abort(404);
+        }
+
+        $enrollments = $course->enrollments()
+            ->with(['user', 'attendances' => function($q) use ($meeting) {
+                $q->where('meeting_id', $meeting->id);
+            }])
+            ->get();
+            
+        return view('attendances.mentor.create_attandance', compact('course', 'meeting', 'enrollments'));
+    }
+
+    /**
+     * Menyimpan data absensi
+     */
+    public function storeMentor(Request $request)
+    {
+        $validated = $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'meeting_id' => 'required|exists:meetings,id',
+            'tanggal' => 'required|date',
+            'status' => 'required|array',
+            'status.*' => 'required|in:Hadir,Izin,Sakit,Tidak Hadir',
+            'waktu_absen' => 'required|array',
+            'waktu_absen.*' => 'required|date',
+        ]);
+    
+        DB::transaction(function () use ($validated) {
+            foreach ($validated['status'] as $enrollmentId => $status) {
+                $enrollment = \App\Models\Enrollment::findOrFail($enrollmentId);
+                Attendance::updateOrCreate(
+                    [
+                        'meeting_id' => $validated['meeting_id'],
+                        'enrollment_id' => $enrollmentId,
+                    ],
+                    [
+                        'course_id' => $validated['course_id'],
+                        'tanggal' => $validated['tanggal'],
+                        'status' => $status,
+                        'mentor_id' => auth()->id(),
+                        'waktu_absen' => $validated['waktu_absen'][$enrollmentId],
+                        'user_id' => $enrollment->user_id,
+                    ]
+                );
+            }
+        });
+    
+        return redirect()
+            ->route('mentor.attendances.select_meeting', $validated['course_id'])
+            ->with('success', 'Absensi berhasil disimpan');
+    }
+    
+    
+
+    /**
+     * Menampilkan riwayat absensi per kursus
+     */
+    public function history(Course $course)
+    {
+        $attendances = Attendance::where('course_id', $course->id)
+            ->where('mentor_id', auth()->id())
+            ->with(['meeting', 'user'])
+            ->latest()
+            ->paginate(10);
+
+        return view('mentor.attendances.history', compact('course', 'attendances'));
     }
 
 }
