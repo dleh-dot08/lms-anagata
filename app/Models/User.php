@@ -189,10 +189,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Course::class, 'mentor_id');
     }
 
-    public function scores()
-    {
-        return $this->hasMany(Score::class, 'peserta_id');
-    }
 
 
 }
