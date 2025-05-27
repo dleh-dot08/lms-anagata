@@ -77,7 +77,11 @@
     <!-- Menampilkan jumlah hasil pencarian -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <span class="text-muted">
-            Menampilkan <strong>{{ $users->count() }}</strong> dari <strong>{{ $users->total() }}</strong> pengguna
+            @php
+                $start = ($users->currentPage() - 1) * $users->perPage() + 1;
+                $end = min($start + $users->count() - 1, $users->total());
+            @endphp
+            Menampilkan <strong>{{ $start }}-{{ $end }}</strong> dari <strong>{{ $users->total() }}</strong> pengguna
         </span>
         
         <div class="btn-group">
@@ -109,7 +113,7 @@
                         @if($users->count() > 0)
                             @foreach($users as $user)
                                 <tr class="{{ $user->deleted_at ? 'table-light' : '' }}">
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="avatar avatar-sm bg-{{ $user->deleted_at ? 'secondary' : 'primary' }} me-3 rounded-circle text-white d-flex align-items-center justify-content-center">
@@ -195,12 +199,6 @@
                         @endif
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-between align-items-center px-4 py-3 bg-light">
-                    <div class="text-muted small">
-                        Halaman {{ $users->currentPage() }} dari {{ $users->lastPage() }}
-                    </div>
-                    {{ $users->appends(request()->query())->links() }}
-                </div>
             </div>
         </div>
     </div>
