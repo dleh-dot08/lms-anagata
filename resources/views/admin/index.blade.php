@@ -2,8 +2,7 @@
 
 @section('content')
     <h2>Daftar Pengguna</h2>
-    <a href="{{ route('users.create') }}" class="btn btn-primary">Tambah Pengguna</a>
-
+    
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif

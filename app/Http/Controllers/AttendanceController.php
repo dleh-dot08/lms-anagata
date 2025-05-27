@@ -197,69 +197,6 @@ class AttendanceController extends Controller
         return view("attendances.$folder.rekap", compact('attendances'));
     }
 
-    public function courses()
-    {
-        $user = Auth::user();
-        $today = Carbon::today()->toDateString();
-
-        if($user->role_id == 3) { // Peserta
-            // Ambil kursus yang diikuti oleh user
-            $enrolledCourses = $user->enrolledCourses;
-            
-            // Ambil daftar course_id yang sudah diabsen oleh user hari ini
-            $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
-                ->whereDate('tanggal', $today)
-                ->pluck('course_id')
-                ->toArray();
-        
-            // Filter kursus yang:
-            // - belum diabsen hari ini
-            // - sedang berlangsung hari ini (berdasarkan waktu_mulai dan waktu_akhir)
-            $courses = $enrolledCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
-                $start = Carbon::parse($course->waktu_mulai)->toDateString();
-                $end = Carbon::parse($course->waktu_akhir)->toDateString();
-        
-                return !in_array($course->id, $alreadyAbsentCourses)
-                    && $start <= $today
-                    && $end >= $today;
-            });
-        } elseif ($user->role_id == 2) { // Mentor
-            $taughtCourses = $user->coursesTaught;
-
-            $alreadyAbsentCourses = Attendance::where('user_id', $user->id)
-                ->whereDate('tanggal', $today)
-                ->pluck('course_id')
-                ->toArray();
-
-            $courses = $taughtCourses->filter(function ($course) use ($alreadyAbsentCourses, $today) {
-                return !in_array($course->id, $alreadyAbsentCourses)
-                    && $course->waktu_mulai <= $today
-                    && $course->waktu_akhir >= $today;
-            });
-        } else {
-            $courses = collect(); // Fallback for other roles
-        }
-        
-    
-        // Ambil riwayat absensi user yang terkait dengan course
-        $attendances = Attendance::where('user_id', $user->id)
-            ->whereNotNull('course_id')
-            ->with('course')
-            ->orderByDesc('tanggal')
-            ->get();
-    
-        switch ($user->role_id) {
-            case 2: // Mentor
-                return view('attendances.mentor.courses', compact('courses', 'attendances'));
-            case 3: // Peserta
-                return view('attendances.peserta.courses', compact('courses', 'attendances'));
-            default:
-                return view('attendances.peserta.courses', compact('courses', 'attendances'));
-        }
-    }
-    
-    
-
     public function activities()
     {
         $user = auth()->user();

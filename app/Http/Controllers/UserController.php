@@ -7,6 +7,8 @@ use App\Models\Role;
 use App\Models\Jenjang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -52,7 +54,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::all();
+        $jenjangs = Jenjang::all();
+        return view('users.create', compact('roles', 'jenjangs'));
     }
 
     /**
@@ -68,6 +72,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'role_id' => 'required|exists:roles,id',
+            'foto_diri' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -76,12 +82,22 @@ class UserController extends Controller
                 ->withInput();
         }
 
-        // Simpan user baru
-        $user = User::create([
+        // Prepare user data
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ]);
+            'role_id' => $request->role_id,
+            'created_by' => Auth::id()
+        ];
+
+        // Handle foto_diri upload if present
+        if ($request->hasFile('foto_diri')) {
+            $userData['foto_diri'] = $request->file('foto_diri')->store('uploads/foto_diri', 'public');
+        }
+
+        // Simpan user baru
+        $user = User::create($userData);
 
         return redirect()->route('users.index')->with('success', 'User berhasil dibuat.');
     }
@@ -95,7 +111,6 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-
         return view('users.show', compact('user'));
     }
 
@@ -132,15 +147,8 @@ class UserController extends Controller
             'foto_diri' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Menghandle upload foto_diri jika ada
-        if ($request->hasFile('foto_diri')) {
-            if ($user->foto_diri && Storage::exists($user->foto_diri)) {
-                Storage::delete($user->foto_diri);
-            }
-            $user->foto_diri = $request->file('foto_diri')->store('uploads/foto_diri', 'public');
-        }
-
-        $user->update([
+        // Prepare update data
+        $updateData = [
             'name' => $request->name,
             'email' => $request->email,
             'role_id' => $request->role_id,
@@ -159,8 +167,19 @@ class UserController extends Controller
             'no_telepon' => $request->no_telepon,
             'tanggal_bergabung' => $request->tanggal_bergabung,
             'surat_tugas' => $request->surat_tugas,
-            'updated_by' => auth()->id(),
-        ]);
+            'updated_by' => Auth::id(),
+        ];
+
+        // Handle foto_diri upload if present
+        if ($request->hasFile('foto_diri')) {
+            // Delete old file if exists
+            if ($user->foto_diri && Storage::disk('public')->exists($user->foto_diri)) {
+                Storage::disk('public')->delete($user->foto_diri);
+            }
+            $updateData['foto_diri'] = $request->file('foto_diri')->store('uploads/foto_diri', 'public');
+        }
+
+        $user->update($updateData);
 
         return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
@@ -178,12 +197,16 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User telah dihapus.');
     }
 
+    /**
+     * Memulihkan user yang telah dihapus.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function restore($id)
     {
         $user = User::withTrashed()->findOrFail($id);
         $user->restore(); // Restore from soft delete
         return redirect()->route('users.index')->with('success', 'User telah dipulihkan.');
     }
-
-    
 }

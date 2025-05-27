@@ -6,10 +6,6 @@
         <h2 class="fw-bold mb-0">
             <i class="bi bi-people-fill text-primary me-2"></i>Daftar Pengguna
         </h2>
-        <button type="button" class="btn btn-primary d-flex align-items-center" onclick="window.location.href='{{ route('users.create') }}'">
-            <i class="bi bi-person-plus-fill me-2"></i>
-            <span>Tambah Pengguna</span>
-        </button>
     </div>
 
     <!-- Card untuk filter dan pencarian -->
