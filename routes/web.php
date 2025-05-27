@@ -374,6 +374,7 @@ Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class,
     Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function () {
         // route absensi untuk mentor dan peserta
         Route::get('/absensi', [AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('/absensi/kursus', [AttendanceController::class, 'courses'])->name('attendances.courses');
         Route::get('/absensi/kegiatan', [AttendanceController::class, 'activities'])->name('attendances.activities');
         Route::get('/absensi/create/{course}', [AttendanceController::class, 'create'])->name('attendances.create');
         Route::get('/absensi/kegiatan/{activity}/buat', [AttendanceController::class, 'createActivity'])->name('attendances.activity.create');
