@@ -45,11 +45,15 @@
                             @endif
                         </td>
                         <td class="text-center">
+                            @if (!$assignment->deadline || \Carbon\Carbon::now()->lte($assignment->deadline))
                             <button class="btn btn-sm {{ $submission ? 'btn-warning' : 'btn-primary' }}"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalAssignment{{ $assignment->id }}">
                                 {{ $submission ? 'Edit Tugas' : 'Kumpulkan Tugas' }}
                             </button>
+                            @else
+                                <span class="badge bg-secondary">Deadline Lewat</span>
+                            @endif
                         </td>
                     </tr>
 

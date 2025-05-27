@@ -20,6 +20,11 @@ class SubmissionController extends Controller
 
     public function store(Request $request, Assignment $assignment)
     {
+        // Cek apakah sudah melewati deadline
+        if ($assignment->deadline && now()->gt($assignment->deadline)) {
+            return redirect()->back()->with('error', 'Deadline telah lewat. Kamu tidak bisa mengumpulkan tugas.');
+        }
+    
         $request->validate([
             'file_submission' => 'required|file|max:10240',
             'catatan' => 'nullable|string',
@@ -33,7 +38,6 @@ class SubmissionController extends Controller
             return redirect()->back()->with('error', 'Kamu sudah mengumpulkan tugas ini.');
         }
     
-        // Simpan file ke storage/app/public/submissions
         $path = $request->file('file_submission')->store('submissions', 'public');
     
         AssignmentSubmission::create([
@@ -46,8 +50,14 @@ class SubmissionController extends Controller
         return redirect()->back()->with('success', 'Tugas berhasil dikumpulkan!');
     }
     
+    
     public function update(Request $request, Assignment $assignment)
     {
+        // Cek apakah sudah melewati deadline
+        if ($assignment->deadline && now()->gt($assignment->deadline)) {
+            return redirect()->back()->with('error', 'Deadline telah lewat. Kamu tidak bisa mengedit tugas.');
+        }
+    
         $submission = AssignmentSubmission::where('assignment_id', $assignment->id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
@@ -58,7 +68,6 @@ class SubmissionController extends Controller
         ]);
     
         if ($request->hasFile('file_submission')) {
-            // Simpan file ke storage/app/public/submissions
             $path = $request->file('file_submission')->store('submissions', 'public');
             $submission->file_submission = $path;
         }
@@ -67,7 +76,7 @@ class SubmissionController extends Controller
         $submission->save();
     
         return redirect()->back()->with('success', 'Tugas berhasil diperbarui!');
-    }
+    }    
     
 }
 
