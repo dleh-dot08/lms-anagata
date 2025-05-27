@@ -12,15 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->unsignedBigInteger('sekolah_id')->nullable()->after('mentor_id'); // sesuaikan posisinya
+            $table->foreignId('sekolah_id')->nullable()->constrained('sekolah')->nullOnDelete();
         });
     }
-    
+
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('courses', function (Blueprint $table) {
+            $table->dropForeign(['sekolah_id']);
             $table->dropColumn('sekolah_id');
         });
     }
-    
-};
+}; 

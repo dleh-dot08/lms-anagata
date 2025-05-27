@@ -60,11 +60,6 @@
                 <div data-i18n="Analytics">Absensi</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('attendances.courses') ? 'active' : '' }}">
-                    <a href="{{ route('attendances.courses') }}" class="menu-link">
-                        <div>Absen Kursus</div>
-                    </a>
-                </li>
                 <li class="menu-item {{ request()->routeIs('attendances.activities') ? 'active' : '' }}">
                     <a href="{{ route('attendances.activities') }}" class="menu-link">
                         <div>Absen Kegiatan</div>
