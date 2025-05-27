@@ -18,19 +18,22 @@ class MentorAttendanceController extends Controller
     public function courses()
     {
         $user = Auth::user();
-        $today = Carbon::today()->toDateString();
+        $today = Carbon::today();
     
         if ($user->role_id != 2) {
             abort(403, 'Hanya mentor yang dapat mengakses halaman ini.');
         }
     
-        // Ambil semua kursus yang diajar dan aktif hari ini
-        $courses = $user->coursesTaught->filter(function ($course) use ($today) {
-            return $course->waktu_mulai <= $today && $course->waktu_akhir >= $today;
-        });
+        // Ambil hanya kursus yang status-nya 'Aktif'
+        $courses = auth()->user()->mentorCourses()
+            ->whereDate('waktu_mulai', '<=', $today)
+            ->whereDate('waktu_akhir', '>=', $today)
+            ->withCount(['meetings', 'enrollments'])
+            ->orderBy('nama_kelas')
+            ->get();
     
         return view('attendances.mentor.mentor_attandances.course', compact('courses'));
-    }
+    }    
     
 
     /**

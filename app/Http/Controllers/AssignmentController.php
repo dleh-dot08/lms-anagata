@@ -10,7 +10,7 @@ class AssignmentController extends Controller
 
     public function store(Request $request, $courseId)
     {
-        $request->validate([
+        $validated = $request->validate([
             'meeting_id' => 'required|exists:meetings,id',
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
@@ -18,17 +18,16 @@ class AssignmentController extends Controller
             'deadline' => 'nullable|date',
         ]);
     
-        $data = $request->only(['meeting_id', 'judul', 'deskripsi', 'deadline']);
-    
         if ($request->hasFile('file_attachment')) {
-            // Simpan ke storage/app/public/assignments
-            $data['file_attachment'] = $request->file('file_attachment')->store('assignments', 'public');
+            // Simpan file ke storage/app/public/assignments
+            $validated['file_attachment'] = $request->file('file_attachment')->store('assignments', 'public');
         }
     
-        Assignment::create($data);
+        Assignment::create($validated);
     
         return back()->with('success', 'Tugas berhasil dibuat.');
     }
+    
     
     public function submissions($assignmentId)
     {
