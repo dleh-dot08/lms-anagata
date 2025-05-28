@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Biodata;
 use App\Models\Jenjang;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -33,29 +34,12 @@ class BiodataController extends Controller
 
     public function edit($id)
     {
-        $jenjangs = \App\Models\Jenjang::all(); // ambil semua jenjang
-        // 🛡️ Block if user is not admin and tries to access other user's biodata
-        if (Auth::user()->role_id != '1' && Auth::id() != $id) {
-            abort(403, 'Unauthorized access.');
-        }
-    
         $user = User::findOrFail($id);
-        $biodata = Biodata::where('id_user', $user->id)->first();
-    
-        switch ($user->role_id) {
-            case 2: // Mentor
-                return view('layouts.mentor.biodata.edit', compact('user', 'biodata', 'jenjangs'));
-    
-            case 4: // Karyawan
-                return view('layouts.karyawan.biodata.edit', compact('user', 'biodata', 'jenjangs'));
-    
-            case 3: // Peserta
-                return view('layouts.peserta.biodata.edit', compact('user', 'biodata', 'jenjangs'));
-            case 6: // Sekolah
-                return view('layouts.sekolah.biodata.edit', compact('user', 'biodata', 'jenjangs'));
-            default:
-                return view('layouts.peserta.biodata.edit', compact('user', 'biodata', 'jenjangs'));
-        }
+        $jenjangs = Jenjang::all();
+        $kelas = Kelas::all();
+        $biodata = Biodata::where('id_user', $id)->first();
+
+        return view('layouts.peserta.biodata.edit', compact('user', 'jenjangs', 'kelas', 'biodata'));
     }
 
     public function update(Request $request, $id)
@@ -78,6 +62,7 @@ class BiodataController extends Controller
             'instansi' => 'nullable|string|max:255',
             'pekerjaan' => 'nullable|string|max:255',
             'jenjang_id' => 'nullable|exists:jenjang,id',
+            'kelas_id' => 'nullable|exists:kelas,id',
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'foto_ktp' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'data_ttd' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
@@ -140,6 +125,7 @@ class BiodataController extends Controller
             'media_sosial' => $request->media_sosial,
             'bidang_pengajaran' => $request->bidang_pengajaran, 
             'jenjang_id' => $request->jenjang_id,
+            'kelas_id' => $request->kelas_id,
         ]);
 
         // Update data Biodata

@@ -34,13 +34,14 @@
                     <p><strong>Mentor:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
                     <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</p>
                     <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</p>
-                    <p><strong>Status:</strong> {{ $course->status }}</p>
+                    <p><strong>Kelas:</strong> {{ $course->kelas->nama ?? 'Tidak Ada' }}</p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Sekolah:</strong> {{ $course->sekolah->nama_sekolah ?? 'Tidak Ada' }}</p>
                     <p><strong>Program:</strong> {{ $course->program->nama_program ?? 'Tidak Ada' }}</p>
                     <p><strong>Level:</strong> {{ $course->level }}</p>
                     <p><strong>Deskripsi:</strong> {{ $course->deskripsi }}</p>
+                    <p><strong>Status:</strong> {{ $course->status }}</p>
                 </div>
             </div>
         </div>
@@ -77,7 +78,7 @@
                             <td class="text-center">{{ $index + 1 }}</td>
                             <td>{{ $participant->name }}</td>
                             <td class="text-center">
-                                {{ $participant->sekolah ? 'Kelas ' . $participant->sekolah->jenjang->nama_jenjang : '-' }}
+                                {{ $participant->kelas ? $participant->kelas->nama_kelas : '-' }}
                             </td>
                             @foreach($course->meetings as $meeting)
                                 @php

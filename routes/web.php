@@ -51,6 +51,12 @@ use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\Sekolah\ReportController;
 use App\Http\Controllers\AdminMentorNoteController;
+use App\Http\Controllers\KelasController;
+
+// Add this route before the auth routes
+Route::get('/api/jenjang/{jenjang}/kelas', function($jenjang) {
+    return App\Models\Kelas::where('id_jenjang', $jenjang)->get();
+});
 
 Route::get('/', function () {
     return view('welcome');
@@ -197,6 +203,10 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::resource('sekolah', AdminSekolahController::class);
         Route::post('sekolah/{id}/restore', [AdminSekolahController::class, 'restore'])->name('sekolah.restore');
         Route::put('sekolah/{id}/update-peserta', [AdminSekolahController::class, 'updatePeserta'])->name('sekolah.update-peserta');
+
+        // Kelas Management Routes
+        Route::resource('kelas', KelasController::class);
+        Route::post('kelas/{kelas}/restore', [KelasController::class, 'restore'])->name('kelas.restore');
     });
 
 Route::middleware(['auth', AdminMiddleware::class])

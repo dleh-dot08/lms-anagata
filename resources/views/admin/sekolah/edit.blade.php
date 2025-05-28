@@ -65,8 +65,8 @@
                                 @error('alamat')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-        </div>
-        </div>
+                            </div>
+                        </div>
 
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="pic_id">PIC Sekolah</label>
@@ -78,9 +78,9 @@
                                         <option value="{{ $pic->id }}" 
                                             {{ old('pic_id', optional($sekolah->pic)->id) == $pic->id ? 'selected' : '' }}>
                                             {{ $pic->name }} ({{ $pic->email }})
-                    </option>
-                @endforeach
-            </select>
+                                        </option>
+                                    @endforeach
+                                </select>
                                 @error('pic_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -111,7 +111,7 @@
                         @method('PUT')
                         
                         <div class="row mb-3">
-                            <div class="col-12">
+                            <div class="col-md-8">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" id="searchPeserta" 
                                            placeholder="Cari nama atau email peserta...">
@@ -119,6 +119,14 @@
                                         <i class="bx bx-search"></i>
                                     </button>
                                 </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select" id="kelasFilter">
+                                    <option value="">Semua Kelas</option>
+                                    @foreach($kelas->where('id_jenjang', $sekolah->jenjang_id) as $k)
+                                        <option value="{{ $k->id }}">{{ $k->nama }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -131,12 +139,13 @@
                                         </th>
                                         <th>Nama</th>
                                         <th>Email</th>
+                                        <th>Kelas</th>
                                         <th>Sekolah Saat Ini</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($available_peserta as $peserta)
-                                        <tr>
+                                        <tr data-kelas="{{ $peserta->kelas_id }}">
                                             <td>
                                                 <input type="checkbox" class="form-check-input peserta-checkbox" 
                                                        name="peserta_ids[]" value="{{ $peserta->id }}"
@@ -144,6 +153,7 @@
                                             </td>
                                             <td>{{ $peserta->name }}</td>
                                             <td>{{ $peserta->email }}</td>
+                                            <td>{{ $peserta->kelas ? $peserta->kelas->nama : '-' }}</td>
                                             <td>
                                                 @if($peserta->sekolah_id && $peserta->sekolah_id != $sekolah->id)
                                                     <span class="badge bg-label-info">{{ $peserta->sekolah->nama_sekolah }}</span>
@@ -166,7 +176,7 @@
                                 </button>
                             </div>
                         </div>
-    </form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -181,29 +191,35 @@
         const pesertaCheckboxes = document.querySelectorAll('.peserta-checkbox');
 
         selectAll.addEventListener('change', function() {
-            pesertaCheckboxes.forEach(checkbox => {
+            const visibleCheckboxes = document.querySelectorAll('tr:not([style*="display: none"]) .peserta-checkbox');
+            visibleCheckboxes.forEach(checkbox => {
                 checkbox.checked = selectAll.checked;
             });
         });
 
-        // Search functionality
+        // Search and Filter functionality
         const searchInput = document.getElementById('searchPeserta');
+        const kelasFilter = document.getElementById('kelasFilter');
         const tableRows = document.querySelectorAll('tbody tr');
 
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedKelas = kelasFilter.value;
 
             tableRows.forEach(row => {
                 const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
                 const email = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                const kelasId = row.dataset.kelas;
                 
-                if (name.includes(searchTerm) || email.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
+                const matchesKelas = !selectedKelas || kelasId === selectedKelas;
+
+                row.style.display = (matchesSearch && matchesKelas) ? '' : 'none';
             });
-        });
+        }
+
+        searchInput.addEventListener('input', filterTable);
+        kelasFilter.addEventListener('change', filterTable);
     });
 </script>
 @endpush

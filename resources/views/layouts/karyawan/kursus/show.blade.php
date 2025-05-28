@@ -12,6 +12,7 @@
             <p><strong>Mentor:</strong> {{ $course->mentor->name }}</p>
             <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori }}</p>
             <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang }}</p>
+            <p><strong>Kelas:</strong> {{ $course->kelas->nama ?? 'Tidak Ada' }}</p>
             <p><strong>Program:</strong> {{ $course->program->nama_program ?? 'Tidak Ada' }}</p>
             <p><strong>Level:</strong> {{ $course->level }}</p>
             <p><strong>Status:</strong> {{ $course->status }}</p>

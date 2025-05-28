@@ -68,6 +68,10 @@
             <td>{{ $course->sekolah->nama_sekolah ?? 'Tidak Ada' }}</td>
         </tr>
         <tr>
+            <td>Kelas</td>
+            <td>{{ $course->kelas->nama_kelas ?? 'Tidak Ada' }}</td>
+        </tr>
+        <tr>
             <td>Program</td>
             <td>{{ $course->program->nama_program ?? 'Tidak Ada' }}</td>
         </tr>
@@ -113,10 +117,10 @@
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>{{ $participant->name ?? $participant->user->name }}</td>
                         <td class="text-center">
-                            @if(isset($participant->sekolah))
-                                {{ $participant->sekolah->jenjang->nama_jenjang ?? '-' }}
+                            @if(isset($participant->kelas))
+                                {{ $participant->kelas->nama_kelas ?? '-' }}
                             @else
-                                {{ $participant->user->sekolah->jenjang->nama_jenjang ?? '-' }}
+                                {{ $participant->user->kelas->nama_kelas ?? '-' }}
                             @endif
                         </td>
                         @foreach($meetingChunk as $meeting)

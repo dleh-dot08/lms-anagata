@@ -26,7 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'bidang_pengajaran', 'divisi', 'no_telepon', 'tanggal_bergabung',
         'surat_tugas', 'role_id', 'created_by', 'updated_by',
         'jenis_kelamin', 'pendidikan_terakhir', 'pekerjaan', 'media_sosial',
-        'sekolah_id' // Add sekolah_id to fillable array
+        'sekolah_id', 'kelas_id' // Add sekolah_id and kelas_id to fillable array
     ];
 
     /**
@@ -66,6 +66,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function jenjang()
     {
         return $this->belongsTo(Jenjang::class);
+    }
+
+    /**
+     * Relasi ke Kelas
+     */
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class);
     }
 
     /**
@@ -188,7 +196,5 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Course::class, 'mentor_id');
     }
-
-
 
 }

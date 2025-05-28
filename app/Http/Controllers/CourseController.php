@@ -15,6 +15,7 @@ use App\Models\Attendance;
 use App\Models\Enrollment;
 use App\Models\Program;
 use App\Models\Sekolah;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -67,43 +68,57 @@ class CourseController extends Controller
     // Menampilkan halaman pembuatan kursus
     public function create()
     {
-        $kategoris = Kategori::all();
         $jenjangs = Jenjang::all();
-        $programs = Program::all();
+        $kategoris = Kategori::all();
+        $mentors = User::where('role_id', 2)->get();
+        $kelas = Kelas::all();
         $sekolah = Sekolah::all();
-        return view('courses.create', compact('kategoris', 'jenjangs', 'programs', 'sekolah'));
+        $programs = Program::all();
+
+        $user = Auth::user();
+
+        if ($user->role_id === 1) {
+            return view('courses.create', compact('jenjangs', 'kategoris', 'mentors', 'kelas', 'sekolah', 'programs'));
+        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+            return view('layouts.karyawan.kursus.create', compact('jenjangs', 'kategoris', 'mentors', 'kelas', 'sekolah', 'programs'));
+        } else {
+            abort(403, 'Akses dilarang.');
+        }
     }
 
     // Menyimpan kursus baru ke database
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
+            'deskripsi' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategoris,id',
             'jenjang_id' => 'required|exists:jenjang,id',
+            'kelas_id' => 'nullable|exists:kelas,id',
+            'program_id' => 'nullable|exists:programs,id',
             'sekolah_id' => 'nullable|exists:sekolah,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
-            'waktu_akhir' => 'required|date',
+            'waktu_akhir' => 'required|date|after:waktu_mulai',
             'harga' => 'nullable|numeric',
             'jumlah_peserta' => 'required|integer|min:0',
         ]);
-    
-        $data = $request->all();
-        $data['kode_unik'] = Course::generateKodeKelas();
-    
-        Course::create($data);
 
-        $user = Auth::user();
+        // Add kode_unik to validated data
+        $validated['kode_unik'] = Course::generateKodeKelas();
+        
+        $course = Course::create($validated);
+
+        $user = auth()->user();
 
         if ($user->role_id === 1) {
-            return redirect()->route('courses.index')->with('success', 'kursus berhasil dibuat');
-    
+            return redirect()->route('courses.index')
+                ->with('success', 'Kursus berhasil dibuat');
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
-            return redirect()->route('courses.apd.index')->with('success', 'kursus berhasil dibuat');
-    
+            return redirect()->route('courses.apd.index')
+                ->with('success', 'Kursus berhasil dibuat');
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -111,20 +126,22 @@ class CourseController extends Controller
     
 
     // Menampilkan halaman untuk mengedit kursus
-    public function edit(Course $course)
+    public function edit($id)
     {
-        $kategoris = Kategori::all();
+        $course = Course::findOrFail($id);
         $jenjangs = Jenjang::all();
-        $programs = Program::all();
-        $mentors = User::where('role_id', 2)->get(); // Get all mentors
+        $kategoris = Kategori::all();
+        $mentors = User::where('role_id', 2)->get();
+        $kelas = Kelas::all();
         $sekolah = Sekolah::all();
-        
+        $programs = Program::all();
+
         $user = Auth::user();
-        
+
         if ($user->role_id === 1) {
-            return view('courses.edit', compact('course', 'kategoris', 'jenjangs', 'programs', 'mentors', 'sekolah'));
+            return view('courses.edit', compact('course', 'jenjangs', 'kategoris', 'mentors', 'kelas', 'sekolah', 'programs'));
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
-            return view('layouts.karyawan.kursus.edit', compact('course', 'kategoris', 'jenjangs', 'programs', 'mentors', 'sekolah'));
+            return view('layouts.karyawan.kursus.edit', compact('course', 'jenjangs', 'kategoris', 'mentors', 'kelas', 'sekolah', 'programs'));
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -138,12 +155,14 @@ class CourseController extends Controller
             'mentor_id' => 'required|exists:users,id',
             'kategori_id' => 'required|exists:kategoris,id',
             'jenjang_id' => 'required|exists:jenjang,id',
+            'kelas_id' => 'nullable|exists:kelas,id',
+            'deskripsi' => 'required|string|max:255',
             'sekolah_id' => 'nullable|exists:sekolah,id',
             'program_id' => 'nullable|exists:programs,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
             'status' => 'required|in:Aktif,Nonaktif',
             'waktu_mulai' => 'required|date',
-            'waktu_akhir' => 'required|date',
+            'waktu_akhir' => 'required|date|after:waktu_mulai',
             'harga' => 'nullable|numeric',
             'jumlah_peserta' => 'required|integer|min:0',
         ]);
@@ -153,8 +172,10 @@ class CourseController extends Controller
             'mentor_id',
             'kategori_id',
             'jenjang_id',
+            'kelas_id',
             'sekolah_id',
             'program_id',
+            'deskripsi',
             'level',
             'status',
             'waktu_mulai',

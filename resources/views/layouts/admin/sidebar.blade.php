@@ -27,7 +27,7 @@
             <span class="menu-header-text">master</span>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('users.*', 'jenjang.*', 'kategori.*', 'admin.faq.*', 'admin.sekolah.*') ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->routeIs('users.*', 'jenjang.*', 'kategori.*', 'admin.faq.*', 'admin.sekolah.*', 'admin.kelas.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-menu"></i>
                 <div data-i18n="Account Settings">Data Manajemen</div>
@@ -56,6 +56,11 @@
                 <li class="menu-item {{ request()->routeIs('admin.faq.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.faq.index') }}" class="menu-link">
                         <div data-i18n="Account">Data FAQ</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.kelas.index') }}" class="menu-link">
+                        <div data-i18n="Account">Data Kelas</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->routeIs('admin.sekolah.*') ? 'active' : '' }}">

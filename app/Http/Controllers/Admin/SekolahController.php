@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Models\Jenjang;
 use App\Models\Sekolah;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -81,6 +82,7 @@ class SekolahController extends Controller
     {
         $sekolah = Sekolah::with(['jenjang', 'pic'])->findOrFail($id);
         $jenjang = Jenjang::all();
+        $kelas = Kelas::all();
         $available_pics = User::where('role_id', 6)
             ->where(function($query) use ($sekolah) {
                 $query->whereNull('sekolah_id')
@@ -91,11 +93,11 @@ class SekolahController extends Controller
         // Get all peserta (role_id 3) with matching jenjang_id
         $available_peserta = User::where('role_id', 3)
             ->where('jenjang_id', $sekolah->jenjang_id)  // Filter by matching jenjang_id
-            ->with('sekolah')  // Eager load sekolah relationship
+            ->with(['sekolah', 'kelas'])  // Eager load sekolah and kelas relationships
             ->orderBy('name')
             ->get();
 
-        return view('admin.sekolah.edit', compact('sekolah', 'jenjang', 'available_pics', 'available_peserta'));
+        return view('admin.sekolah.edit', compact('sekolah', 'jenjang', 'kelas', 'available_pics', 'available_peserta'));
     }
 
     public function update(Request $request, $id)
@@ -192,7 +194,7 @@ class SekolahController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('admin.sekolah.edit', $id)
+            return redirect()->route('admin.sekolah.show', $id)
                            ->with('success', 'Peserta berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollback();

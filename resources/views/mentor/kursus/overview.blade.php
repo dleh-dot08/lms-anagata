@@ -21,6 +21,12 @@
 
             <h6>Mentor</h6>
             <p>{{ $course->mentor->name ?? 'Belum ditentukan' }}</p>
+
+            <h6>Jenjang</h6>
+            <p>{{ $course->jenjang->nama_jenjang ?? 'Belum ditentukan' }}</p>
+
+            <h6>Kelas</h6>
+            <p>{{ $course->kelas->nama ?? 'Belum ditentukan' }}</p>
         </div>
     </div>
 </div>

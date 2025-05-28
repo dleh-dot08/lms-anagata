@@ -66,6 +66,7 @@
                     <tr><th>Instansi</th><td>: {{ $user->instansi ?? '-' }}</td></tr>
                     <tr><th>Pekerjaan</th><td>: {{ $user->pekerjaan ?? '-' }}</td></tr>
                     <tr><th>Jenjang</th><td>: {{ $user->jenjang->nama_jenjang ?? '-' }}</td></tr>
+                    <tr><th>Kelas</th><td>: {{ $user->kelas->nama ?? '-' }}</td></tr>
                     <tr><th>Bidang Pengajaran</th><td>: {{ $user->bidang_pengajaran ?? '-' }}</td></tr>
                     <tr><th>Pendidikan Terakhir</th><td>: {{ $user->pendidikan_terakhir ?? '-' }}</td></tr>
                     <tr><th>Sosial Media</th><td>: {{ $user->media_sosial ?? '-' }}</td></tr>

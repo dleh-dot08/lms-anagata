@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Kelas;
 
 class Course extends Model
 {
@@ -19,13 +20,22 @@ class Course extends Model
         'deskripsi',
         'kategori_id',
         'jenjang_id',
+        'kelas_id',
         'program_id',
         'level',
         'status',
         'waktu_mulai',
         'waktu_akhir',
         'harga',
-        'jumlah_peserta'
+        'jumlah_peserta',
+        'kode_kursus',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'silabus',
+        'rpp',
     ];
 
     protected $casts = [
@@ -119,6 +129,10 @@ class Course extends Model
         return $this->belongsTo(Program::class);
     }
 
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas_id');
+    }
 
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 

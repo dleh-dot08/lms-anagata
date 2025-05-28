@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Jenjang;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -122,11 +123,12 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::withTrashed()->findOrFail($id); // Mengambil user termasuk yang terhapus (Soft Delete)
+        $user = User::findOrFail($id);
         $roles = Role::all();
         $jenjangs = Jenjang::all();
+        $kelas = Kelas::all();
 
-        return view('users.edit', compact('user', 'roles', 'jenjangs'));
+        return view('users.edit', compact('user', 'roles', 'jenjangs', 'kelas'));
     }
 
     /**

@@ -14,6 +14,7 @@
                         <p><strong>Kode Unik:</strong> {{ $course->kode_unik  ?? '-' }}</p>
                         <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? '-' }}</p>
                         <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? '-' }}</p>
+                        <p><strong>Kelas:</strong> {{ $course->kelas->nama ?? '-' }}</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Level:</strong> {{ ucfirst($course->level) }}</p>

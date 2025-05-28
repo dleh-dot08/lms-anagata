@@ -22,7 +22,7 @@ class CourseScoresExport implements FromView, WithStyles, ShouldAutoSize
     public function view(): View
     {
         return view('exports.course-scores', [
-            'course' => $this->course->load(['enrollments.user.sekolah.jenjang', 'meetings', 'mentor', 'kategori', 'program', 'sekolah'])
+            'course' => $this->course->load(['enrollments.user.kelas', 'meetings', 'mentor', 'kategori', 'program', 'sekolah'])
         ]);
     }
 

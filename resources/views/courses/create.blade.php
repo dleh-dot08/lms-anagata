@@ -13,6 +13,11 @@
             </div>
 
             <div class="form-group">
+                <label for="deskripsi">Deskripsi</label>
+                <textarea name="deskripsi" id="deskripsi" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
                 <label for="mentor_id">Mentor</label>
                 <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;"></select>
             </div>
@@ -56,6 +61,13 @@
                     @foreach($jenjangs as $jenjang)
                         <option value="{{ $jenjang->id }}">{{ $jenjang->nama_jenjang }}</option>
                     @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="kelas_id">Kelas</label>
+                <select name="kelas_id" id="kelas_id" class="form-control" disabled>
+                    <option value="">Pilih Kelas</option>
                 </select>
             </div>
 
@@ -108,6 +120,7 @@
 
 <script>
     $(document).ready(function() {
+        // Mentor Select2 initialization
         $('#mentor_id').select2({
             placeholder: 'Cari Mentor',
             allowClear: true,
@@ -124,6 +137,33 @@
                     return { results: data };
                 }
             }
+        });
+
+        // Jenjang change event handler
+        $('#jenjang_id').on('change', function() {
+            const jenjangId = $(this).val();
+            const kelasSelect = $('#kelas_id');
+            
+            // Reset and disable kelas select if no jenjang selected
+            if (!jenjangId) {
+                kelasSelect.html('<option value="">Pilih Kelas</option>');
+                kelasSelect.prop('disabled', true);
+                return;
+            }
+
+            // Enable kelas select
+            kelasSelect.prop('disabled', false);
+
+            // Fetch kelas options based on selected jenjang
+            fetch(`/api/jenjang/${jenjangId}/kelas`)
+                .then(response => response.json())
+                .then(data => {
+                    let options = '<option value="">Pilih Kelas</option>';
+                    data.forEach(kelas => {
+                        options += `<option value="${kelas.id}">${kelas.nama}</option>`;
+                    });
+                    kelasSelect.html(options);
+                });
         });
     });
 </script>

@@ -47,7 +47,7 @@
                                 <td class="text-center">{{ $index + 1 }}</td>
                                 <td>{{ $participant->name }}</td>
                                 <td class="text-center">
-                                    {{ $participant->sekolah ? 'Kelas ' . $participant->sekolah->jenjang->nama_jenjang : '-' }}
+                                    {{ $participant->kelas ? $participant->kelas->nama_kelas : '-' }}
                                 </td>
                                 @foreach($course->meetings as $meeting)
                                     @php

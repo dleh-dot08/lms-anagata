@@ -62,7 +62,7 @@ class ReportController extends Controller
         $user = Auth::user();
         $sekolahId = $user->sekolah_id;
 
-        $course = Course::with(['enrollments.user.sekolah.jenjang', 'meetings', 'mentor', 'kategori', 'program', 'sekolah'])
+        $course = Course::with(['enrollments.user.kelas', 'meetings', 'mentor', 'kategori', 'program', 'sekolah'])
             ->where('sekolah_id', $sekolahId)
             ->findOrFail($id);
 
@@ -89,38 +89,42 @@ class ReportController extends Controller
         $sheet->setCellValue('A5', 'Sekolah');
         $sheet->setCellValue('B5', $course->sekolah->nama_sekolah ?? 'Tidak Ada');
         $sheet->mergeCells('B5:C5');
-        
-        $sheet->setCellValue('A6', 'Program');
-        $sheet->setCellValue('B6', $course->program->nama_program ?? 'Tidak Ada');
+
+        $sheet->setCellValue('A6', 'Kelas');
+        $sheet->setCellValue('B6', $course->kelas->nama_kelas ?? 'Tidak Ada');
         $sheet->mergeCells('B6:C6');
         
-        $sheet->setCellValue('A7', 'Kategori');
-        $sheet->setCellValue('B7', $course->kategori->nama_kategori ?? 'Tidak Ada');
+        $sheet->setCellValue('A7', 'Program');
+        $sheet->setCellValue('B7', $course->program->nama_program ?? 'Tidak Ada');
         $sheet->mergeCells('B7:C7');
+        
+        $sheet->setCellValue('A8', 'Kategori');
+        $sheet->setCellValue('B8', $course->kategori->nama_kategori ?? 'Tidak Ada');
+        $sheet->mergeCells('B8:C8');
 
         // Style for course details
-        $sheet->getStyle('A1:C7')->applyFromArray([
+        $sheet->getStyle('A1:C8')->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ],
         ]);
-        $sheet->getStyle('A2:A7')->getFont()->setBold(true);
+        $sheet->getStyle('A2:A8')->getFont()->setBold(true);
 
         // Headers for scores table - start at row 9
-        $row = 9;
+        $row = 10;
         $sheet->setCellValue('A'.$row, 'No');
         $sheet->setCellValue('B'.$row, 'Nama Siswa');
         $sheet->setCellValue('C'.$row, 'Kelas');
 
         // Merge header cells vertically
-        $sheet->mergeCells('A9:A11');
-        $sheet->mergeCells('B9:B11');
-        $sheet->mergeCells('C9:C11');
+        $sheet->mergeCells('A10:A12');
+        $sheet->mergeCells('B10:B12');
+        $sheet->mergeCells('C10:C12');
 
         // Set vertical alignment for merged cells
-        $sheet->getStyle('A9:C11')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A10:C12')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
         // Column tracking
         $col = 'D';
@@ -177,7 +181,7 @@ class ReportController extends Controller
                 ],
             ],
         ];
-        $sheet->getStyle('A9:'.$col.($row))->applyFromArray($headerStyle);
+        $sheet->getStyle('A10:'.$col.($row))->applyFromArray($headerStyle);
 
         // Data rows
         $row++;
@@ -185,7 +189,7 @@ class ReportController extends Controller
             $dataRow = $row + $index;
             $sheet->setCellValue('A'.$dataRow, $index + 1);
             $sheet->setCellValue('B'.$dataRow, $enrollment->user->name);
-            $sheet->setCellValue('C'.$dataRow, $enrollment->user->sekolah ? 'Kelas ' . $enrollment->user->sekolah->jenjang->nama_jenjang : '-');
+            $sheet->setCellValue('C'.$dataRow, $enrollment->user->kelas ? $enrollment->user->kelas->nama_kelas : '-');
 
             $col = 'D';
             foreach ($course->meetings as $meeting) {
@@ -249,7 +253,7 @@ class ReportController extends Controller
         $user = Auth::user();
         $sekolahId = $user->sekolah_id;
 
-        $course = Course::with(['enrollments.user.sekolah.jenjang', 'meetings', 'mentor', 'kategori', 'program', 'sekolah'])
+        $course = Course::with(['enrollments.user.kelas', 'meetings', 'mentor', 'kategori', 'program', 'sekolah'])
             ->where('sekolah_id', $sekolahId)
             ->findOrFail($id);
 

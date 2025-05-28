@@ -40,7 +40,8 @@
 
 <div class="mb-3">
     <label>Jenjang</label>
-    <select name="jenjang_id" class="form-control">
+    <select name="jenjang_id" id="jenjang_id" class="form-control">
+        <option value="">Pilih Jenjang</option>
         @foreach ($jenjangs as $jenjang)
             <option value="{{ $jenjang->id }}" {{ (isset($course) && $course->jenjang_id == $jenjang->id) ? 'selected' : '' }}>
                 {{ $jenjang->nama_jenjang }}
@@ -50,8 +51,22 @@
 </div>
 
 <div class="mb-3">
+    <label>Kelas</label>
+    <select name="kelas_id" id="kelas_id" class="form-control" {{ !isset($course->jenjang_id) ? 'disabled' : '' }}>
+        <option value="">Pilih Kelas</option>
+        @if(isset($course->jenjang_id))
+            @foreach ($kelas as $k)
+                <option value="{{ $k->id }}" {{ (isset($course) && $course->kelas_id == $k->id) ? 'selected' : '' }}>
+                    {{ $k->nama }}
+                </option>
+            @endforeach
+        @endif
+    </select>
+</div>
+
+<div class="mb-3">
     <label>Deskripsi</label>
-    <textarea name="deskripsi" class="form-control">{{ old('deskripsi', $course->deskripsi ?? '') }}</textarea>
+    <textarea name="deskripsi" class="form-control" required>{{ old('deskripsi', $course->deskripsi ?? '') }}</textarea>
 </div>
 
 <div class="mb-3">
