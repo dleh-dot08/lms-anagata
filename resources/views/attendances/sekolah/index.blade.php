@@ -38,19 +38,21 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-primary">
                 <tr>
-                    <th>#</th>
-                    <th>Nama Siswa</th>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Role</th> {{-- Tambahan --}}
                     <th>Kursus / Kegiatan</th>
                     <th>Status</th>
                     <th>Tanggal</th>
                     <th>Aksi</th>
                 </tr>
-            </thead>
+            </thead>            
             <tbody>
                 @forelse($attendances as $attendance)
                     <tr>
                         <td>{{ $loop->iteration + ($attendances->currentPage() - 1) * $attendances->perPage() }}</td>
                         <td>{{ $attendance->user->name }}</td>
+                        <td>{{ $attendance->user->role->name ?? '-' }}</td> {{-- Tambahan --}}
                         <td>    
                             @if($attendance->course_id && $attendance->course)
                                 {{ $attendance->course->nama_kelas }}
@@ -78,10 +80,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">Belum ada data absensi.</td>
+                        <td colspan="7" class="text-center">Belum ada data absensi.</td>
                     </tr>
                 @endforelse
-            </tbody>
+            </tbody>            
         </table>
     </div>
 
