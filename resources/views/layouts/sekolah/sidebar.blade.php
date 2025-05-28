@@ -65,14 +65,14 @@
                 </li>
             </ul>
         </li>        
-        <li class="menu-item {{ request()->routeIs('attendances.courses', 'attendances.activities') ? 'open active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('sekolah.silabus.*') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
+                <i class="menu-icon tf-icons bx bxs-book-content"></i>
                 <div data-i18n="Analytics">Kursus</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('attendances.courses') ? 'active' : '' }}">
-                    <a href="{{ route('attendances.courses') }}" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('sekolah.silabus.*') ? 'active' : '' }}">
+                    <a href="{{ route('sekolah.silabus.index') }}" class="menu-link">
                         <div>Silabus</div>
                     </a>
                 </li>

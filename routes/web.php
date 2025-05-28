@@ -646,6 +646,10 @@ Route::middleware(['auth', 'verified', SekolahMiddleware::class])->prefix('sekol
     // Reports Routes
     Route::get('/reports/nilai', [ReportController::class, 'nilaiIndex'])->name('reports.nilai.index');
     Route::get('/reports/nilai/{id}', [ReportController::class, 'nilaiShow'])->name('reports.nilai.show');
+    
+    // Silabus Routes
+    Route::get('/silabus', [App\Http\Controllers\Sekolah\SilabusController::class, 'index'])->name('silabus.index');
+    Route::get('/silabus/{id}', [App\Http\Controllers\Sekolah\SilabusController::class, 'show'])->name('silabus.show');
     Route::get('/reports/nilai/{id}/export', [ReportController::class, 'exportNilai'])->name('reports.nilai.export');
 });
 

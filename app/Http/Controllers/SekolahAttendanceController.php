@@ -28,10 +28,14 @@ class SekolahAttendanceController extends Controller
         if (!$sekolahId) {
             return redirect()->back()->with('error', 'Anda tidak terhubung dengan sekolah manapun.');
         }
+        
+        // Ambil daftar kursus yang dimiliki oleh sekolah tersebut
+        $courses = Course::where('sekolah_id', $sekolahId)
+            ->orderBy('nama_kelas')
+            ->get();
     
         // Query absensi yang berasal dari kursus milik sekolah tersebut
         $query = Attendance::with(['user', 'course', 'activity'])
-            ->whereNotNull('course_id') // pastikan ini absensi kursus
             ->whereHas('course', function ($q) use ($sekolahId) {
                 $q->where('sekolah_id', $sekolahId);
             });
@@ -46,14 +50,22 @@ class SekolahAttendanceController extends Controller
         } elseif ($request->tipe === 'kegiatan') {
             $query->whereNotNull('activity_id')->whereNull('course_id');
         }
+        
+        // Filter berdasarkan kursus
+        if ($request->filled('course_id')) {
+            $query->where('course_id', $request->course_id);
+        }
     
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
     
         $attendances = $query->latest()->paginate(10);
+        
+        // Mempertahankan parameter filter saat pagination
+        $attendances->appends($request->all());
     
-        return view('attendances.sekolah.index', compact('attendances'));
+        return view('attendances.sekolah.index', compact('attendances', 'courses'));
     }
     
 

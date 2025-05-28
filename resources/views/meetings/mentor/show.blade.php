@@ -55,11 +55,11 @@
 
                 <div class="card-body p-4">
                     <ul class="nav nav-tabs nav-fill mb-4" id="myTab" role="tablist">
-                        {{-- <li class="nav-item" role="presentation">
+                        <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="materi-tab" data-bs-toggle="tab" data-bs-target="#materi" type="button" role="tab" aria-controls="materi" aria-selected="true">
-                                <i class="bi bi-book me-1"></i> Materi Pembelajaran
+                                <i class="bi bi-book me-1"></i> Detail Pembelajaran
                             </button>
-                        </li> --}}
+                        </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">
                                 <i class="bi bi-play-circle me-1"></i> Video Materi
