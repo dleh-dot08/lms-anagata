@@ -64,7 +64,7 @@
                     </table>
                 </div>
                 
-                <div class="d-flex justify-content-end mt-3">
+                <div class="d-flex justify-content-center mt-3">
                     {{ $kelas->onEachSide(2)->links('pagination.custom') }}
                 </div>
             </div>
