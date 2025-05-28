@@ -39,7 +39,18 @@ class BiodataController extends Controller
         $kelas = Kelas::all();
         $biodata = Biodata::where('id_user', $id)->first();
 
-        return view('layouts.peserta.biodata.edit', compact('user', 'jenjangs', 'kelas', 'biodata'));
+        switch ($user->role_id) {
+            case 2: // Mentor
+                return view('layouts.mentor.biodata.edit', compact('user', 'jenjangs', 'kelas', 'biodata'));
+            case 4: // Karyawan
+                return view('layouts.karyawan.biodata.edit', compact('user', 'jenjangs', 'kelas', 'biodata'));
+            case 3: // Peserta
+                return view('layouts.peserta.biodata.edit', compact('user', 'jenjangs', 'kelas', 'biodata'));
+            case 6: // Sekolah
+                return view('layouts.sekolah.biodata.edit', compact('user', 'jenjangs', 'kelas', 'biodata'));
+            default:
+                return view('layouts.peserta.biodata.edit', compact('user', 'jenjangs', 'kelas', 'biodata'));
+        }
     }
 
     public function update(Request $request, $id)

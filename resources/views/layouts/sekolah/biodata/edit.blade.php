@@ -84,13 +84,27 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Jenjang</label>
-                    <select name="jenjang_id" class="form-select">
+                    <select name="jenjang_id" id="jenjang_id" class="form-select">
                         <option value="">-- Pilih Jenjang --</option>
                         @foreach($jenjangs as $jenjang)
                             <option value="{{ $jenjang->id }}" {{ $user->jenjang_id == $jenjang->id ? 'selected' : '' }}>
                                 {{ $jenjang->nama_jenjang }}
                             </option>
                         @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Kelas</label>
+                    <select name="kelas_id" id="kelas_id" class="form-select" {{ !$user->jenjang_id ? 'disabled' : '' }}>
+                        <option value="">-- Pilih Kelas --</option>
+                        @if($user->jenjang_id)
+                            @foreach ($kelas->where('id_jenjang', $user->jenjang_id) as $k)
+                                <option value="{{ $k->id }}" {{ $user->kelas_id == $k->id ? 'selected' : '' }}>
+                                    {{ $k->nama }}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
             </div>
@@ -113,4 +127,34 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.getElementById('jenjang_id').addEventListener('change', function() {
+    const jenjangId = this.value;
+    const kelasSelect = document.getElementById('kelas_id');
+    
+    // Reset and disable kelas select if no jenjang selected
+    if (!jenjangId) {
+        kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+        kelasSelect.disabled = true;
+        return;
+    }
+
+    // Enable kelas select
+    kelasSelect.disabled = false;
+
+    // Fetch kelas options based on selected jenjang
+    fetch(`/api/jenjang/${jenjangId}/kelas`)
+        .then(response => response.json())
+        .then(data => {
+            let options = '<option value="">-- Pilih Kelas --</option>';
+            data.forEach(kelas => {
+                options += `<option value="${kelas.id}">${kelas.nama}</option>`;
+            });
+            kelasSelect.innerHTML = options;
+        });
+});
+</script>
+@endpush
 @endsection 
