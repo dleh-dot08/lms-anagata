@@ -65,7 +65,7 @@
                 </div>
                 
                 <div class="d-flex justify-content-end mt-3">
-                    {{ $kelas->links() }}
+                    {{ $kelas->onEachSide(2)->links('components.pagination') }}
                 </div>
             </div>
         </div>
