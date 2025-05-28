@@ -9,48 +9,49 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
-use App\Http\Middleware\SekolahMiddleware;
 use App\Http\Controllers\ScoreController;
-//use App\Http\Controllers\Admin\UserController;
 use App\Http\Middleware\DivisiMiddleware;
+//use App\Http\Controllers\Admin\UserController;
 use App\Http\Middleware\MentorMiddleware;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MentorController;
 use App\Http\Middleware\PesertaMiddleware;
+use App\Http\Middleware\SekolahMiddleware;
 use App\Http\Controllers\BiodataController;
 use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProgramController;
 
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SekolahController;
 use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
+
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
-
 use App\Http\Controllers\MentorNoteController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ScoreReportController;
 use App\Http\Controllers\HelpdeskTicketController;
+use App\Http\Controllers\Sekolah\ReportController;
 use App\Http\Middleware\MentorOrPesertaMiddleware;
+use App\Http\Controllers\AdminMentorNoteController;
 use App\Http\Controllers\HelpdeskMessageController;
 use App\Http\Controllers\MentorAttendanceController;
 use App\Http\Controllers\MentorScoreReportController;
+use App\Http\Controllers\SekolahMentorNoteController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\MentorAttendanceReportController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
-use App\Http\Controllers\SekolahController;
-use App\Http\Controllers\ProgramController;
-use App\Http\Controllers\Sekolah\ReportController;
-use App\Http\Controllers\AdminMentorNoteController;
 use App\Http\Controllers\KelasController;
 
 // Add this route before the auth routes
@@ -525,6 +526,118 @@ Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function ()
     Route::get('/mentor/kursus/{course}/peserta', [CourseController::class, 'showAllPeserta'])->name('kursus.mentor.peserta');
 });
 
+// Sekolah Mentor Notes
+Route::middleware(['auth', 'verified', SekolahMiddleware::class])->prefix('sekolah/mentor-notes')->name('sekolah.mentor-notes.')->group(function () {
+    Route::get('/', [SekolahMentorNoteController::class, 'index'])->name('index');
+    Route::get('/{courseId}/meetings', [SekolahMentorNoteController::class, 'meetings'])->name('meetings');
+    Route::get('/meetings/{meetingId}/show', [SekolahMentorNoteController::class, 'show'])->name('show');
+});
+
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('/certificates', [CertificateController::class, 'indexAdmin'])->name('certificates.indexAdmin');
+    Route::get('/certificates/create', [CertificateController::class, 'create'])->name('certificates.create');
+    Route::get('/certificates/create/{courseId}', [CertificateController::class, 'createCourses'])->name('certificates.createCourses');
+    Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
+    Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('certificates.edit');
+    Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('certificates.update');
+    Route::get('/certificates/{id}', [CertificateController::class, 'showAdmin'])->name('certificates.showAdmin');
+    Route::delete('/certificates/{id}', [ActivityController::class, 'destroy'])->name('certificates.destroy');
+});
+
+// Khusus untuk Peserta
+Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
+    Route::get('my-certificates', [CertificateController::class, 'indexPeserta'])->name('certificates.indexPeserta');
+    Route::get('my-certificates/{id}', [CertificateController::class, 'showPeserta'])->name('certificates.showPeserta');
+});
+
+// SHARED (ADMIN & PESERTA)
+/*Route::middleware(['auth'])->group(function () {
+    Route::get('/certificates/{id}', [CertificateController::class, 'show'])->name('certificates.show');
+});*/
+
+Route::get('/mentor/dashboard', [MentorController::class, 'index'])
+    ->name('mentor.dashboard')
+    ->middleware(MentorMiddleware::class);
+
+    Route::middleware(['auth', MentorMiddleware::class])
+    ->prefix('mentor')
+    ->name('mentor.')
+    ->group(function () {
+        Route::get('/kursus', [CourseController::class, 'indexMentor'])->name('kursus.index');
+        Route::get('/kursus/{course}', [CourseController::class, 'showMentor'])->name('kursus.show');
+        Route::get('/kursus/{course}/lesson/{lesson}', [CourseController::class, 'showLessonMentor'])->name('kursus.lesson.show');
+    });
+
+
+/// Admin Routes
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('admin/projects', [ProjectController::class, 'index'])->name('admin.projects.index'); // Menampilkan daftar project untuk admin
+    Route::get('admin/projects/{project}', [ProjectController::class, 'showAdmin'])->name('projects.admin.show'); // Menampilkan detail project untuk admin
+});
+
+// Peserta Routes
+Route::middleware(['auth', PesertaMiddleware::class])->group(function () {
+    Route::get('projects/peserta', [ProjectController::class, 'index'])->name('projects.peserta.index'); // Menampilkan daftar project untuk peserta
+    Route::get('/projects/{project}', [ProjectController::class, 'showPeserta'])->name('projects.peserta.show'); // Menampilkan detail project untuk peserta
+    Route::get('projects/peserta/create', [ProjectController::class, 'create'])->name('projects.peserta.create'); // Form untuk membuat project baru
+    Route::post('projects/peserta', [ProjectController::class, 'store'])->name('projects.peserta.store'); // Menyimpan project baru
+    Route::get('projects/peserta/{project}/edit', [ProjectController::class, 'edit'])->name('projects.peserta.edit'); // Form untuk mengedit project
+    Route::put('projects/peserta/{project}', [ProjectController::class, 'update'])->name('projects.peserta.update'); // Update project
+    Route::delete('projects/peserta/{project}', [ProjectController::class, 'destroy'])->name('projects.peserta.destroy'); // Hapus project
+
+    Route::post('/assignments/{assignment}/submit', [SubmissionController::class, 'store'])->name('assignments.submit');
+    Route::post('/assignments/{assignment}/update', [SubmissionController::class, 'update'])->name('assignments.update');
+    Route::get('/assignments/{assignment}/submit', [SubmissionController::class, 'submissionForm'])->name('assignments.submit.form');
+    Route::get('/assignments', [SubmissionController::class, 'index'])->name('assignments.index');
+   
+});
+
+// Karyawan Routes
+Route::middleware(['auth', DivisiMiddleware::class.':APD,MRC'])->group(function () {
+    Route::get('karyawan/projects', [ProjectController::class, 'index'])->name('karyawan.projects.index'); // Menampilkan daftar project untuk karyawan
+    Route::get('karyawan/projects/{project}', [ProjectController::class, 'show'])->name('karyawan.projects.show'); // Menampilkan detail project untuk karyawan
+});
+
+// Mentor Routes
+Route::middleware(['auth', MentorMiddleware::class])->group(function () {
+    Route::get('mentor/projects', [ProjectController::class, 'index'])->name('mentor.projects.index'); // Menampilkan daftar project untuk mentor
+    Route::get('mentor/projects/{project}', [ProjectController::class, 'showMentor'])->name('mentor.projects.show'); // Menampilkan detail project untuk mentor
+});
+
+Route::prefix('admin/courses/{course}')->middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('meetings/create', [MeetingController::class, 'create'])->name('meetings.create');
+    Route::post('meetings', [MeetingController::class, 'store'])->name('meetings.store');
+    Route::get('meetings/{meeting}/edit', [MeetingController::class, 'edit'])->name('meetings.edit');
+    Route::put('meetings/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
+    Route::delete('meetings/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
+});
+  
+Route::middleware(['auth', MentorOrPesertaMiddleware::class])->group(function () {
+    Route::get('courses/{course}/meetings/{meeting}', [MeetingController::class, 'show'])->name('kursus.pertemuan.show');
+
+    Route::get('/mentor/kursus/{course}/overview', [CourseController::class, 'overview'])->name('kursus.mentor.overview');
+
+    Route::get('/mentor/kursus/{course}/assignment', [CourseController::class, 'showAssignment'])->name('kursus.mentor.assignment');
+    Route::post('{course}/assignment/store', [AssignmentController::class, 'store'])->name('kursus.mentor.assignment.store');
+    Route::get('/mentor/assignment/{assignment}/submissions', [AssignmentController::class, 'submissions'])->name('mentor.assignment.submissions');
+
+   
+    Route::get('mentor/kursus/{course}/scores', [CourseController::class, 'listMeetingsForScoring'])->name('mentor.scores.index');
+    Route::get('mentor/{course}/{meeting}/input', [ScoreController::class, 'input'])->name('mentor.scores.input');
+    Route::post('mentor/scores/{course}/{meeting}/store', [ScoreController::class, 'store'])->name('mentor.scores.store');
+
+    Route::get('rekap-nilai/{course}', [ScoreReportController::class, 'index'])->name('mentor.scores.recap');
+    Route::get('rekap-nilai/{course}/export-excel', [ScoreReportController::class, 'exportExcel'])->name('mentor.scores.export.excel');
+    Route::get('rekap-nilai/{course}/export-pdf', [ScoreReportController::class, 'exportPdf'])->name('mentor.scores.export.pdf');
+
+    Route::get('/mentor/kursus/{id}/silabus', [CourseController::class, 'showSilabus'])->name('kursus.mentor.silabus');
+    Route::get('/mentor/kursus/{id}/silabus-preview', [CourseController::class, 'previewSilabus'])->name('kursus.mentor.silabus.preview');
+
+    Route::get('/mentor/kursus/{course}/project', [CourseController::class, 'project'])->name('kursus.mentor.project');
+
+    Route::get('/mentor/kursus/{course}/peserta', [CourseController::class, 'showAllPeserta'])->name('kursus.mentor.peserta');
+});
+
 // Sekolah Routes
 Route::middleware(['auth', 'verified', SekolahMiddleware::class])->prefix('sekolah')->name('sekolah.')->group(function () {
     Route::get('/dashboard', [SekolahController::class, 'index'])->name('dashboard');
@@ -551,6 +664,12 @@ Route::middleware(['auth', SekolahMiddleware::class])->prefix('sekolah/reports')
     Route::get('/nilai/{course}', [App\Http\Controllers\Sekolah\ReportController::class, 'nilaiShow'])->name('nilai.show');
     Route::get('/nilai/{course}/export', [App\Http\Controllers\Sekolah\ReportController::class, 'exportNilai'])->name('nilai.export');
     Route::get('/nilai/{course}/export-pdf', [App\Http\Controllers\Sekolah\ReportController::class, 'exportNilaiPdf'])->name('nilai.export-pdf');
+});
+
+// Route untuk laporan absensi sekolah
+Route::middleware(['auth', SekolahMiddleware::class])->prefix('sekolah/attendances')->name('attendances.sekolah.')->group(function () {
+    Route::get('/', [App\Http\Controllers\SekolahAttendanceController::class, 'index'])->name('index');
+    Route::get('/{attendance}', [App\Http\Controllers\SekolahAttendanceController::class, 'show'])->name('show');
 });
 
 Route::resource('program', ProgramController::class);

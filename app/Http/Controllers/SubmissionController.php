@@ -11,9 +11,21 @@ class SubmissionController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $assignments = Assignment::with(['meeting.course'])->orderBy('created_at', 'desc')->get();
+        
+        // Dapatkan ID kursus yang diikuti oleh siswa
+        $enrolledCourseIds = $user->enrolledCourses()->pluck('courses.id');
+        
+        // Ambil tugas hanya dari kursus yang diikuti oleh siswa
+        $assignments = Assignment::with(['meeting.course'])
+            ->whereHas('meeting.course', function($query) use ($enrolledCourseIds) {
+                $query->whereIn('courses.id', $enrolledCourseIds);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $submissions = AssignmentSubmission::where('user_id', $user->id)->get()->keyBy('assignment_id');
+        $submissions = AssignmentSubmission::where('user_id', $user->id)
+            ->get()
+            ->keyBy('assignment_id');
 
         return view('assignments.peserta.index', compact('assignments', 'submissions'));
     }

@@ -8,9 +8,9 @@
             <p class="text-muted small mt-1">Halaman Penilaian Kursus</p>
         </div>
         <!-- Tombol Rekap Nilai -->
-        <a href="{{ route('mentor.scores.recap', $course->id) }}" class="btn btn-success btn-lg shadow-sm">
+        {{-- <a href="{{ route('mentor.scores.recap', $course->id) }}" class="btn btn-success btn-lg shadow-sm">
             <i class="bi bi-file-earmark-bar-graph me-2"></i> Rekap Nilai
-        </a>
+        </a> --}}
     </div>
 
     @include('mentor.kursus.partials.nav-tabs', ['activeTab' => 'scores'])
@@ -46,9 +46,9 @@
                                                 </p>
                                             </div>
                                             <div class="col-md-3 text-md-end">
-                                                <a href="{{ route('kursus.pertemuan.show', [$course->id, $meeting->id]) }}" class="btn btn-outline-secondary me-2">
+                                                {{-- <a href="{{ route('kursus.pertemuan.show', [$course->id, $meeting->id]) }}" class="btn btn-outline-secondary me-2">
                                                     <i class="bi bi-eye me-1"></i> Detail
-                                                </a>
+                                                </a> --}}
                                                 <a href="{{ route('mentor.scores.input', ['course' => $course->id, 'meeting' => $meeting->id]) }}" class="btn btn-primary">
                                                     <i class="bi bi-pencil-square me-1"></i> Nilai
                                                 </a>
