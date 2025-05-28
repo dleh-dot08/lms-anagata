@@ -4,7 +4,7 @@
 <div class="container">
     <div class="card shadow-sm mt-4">
         <div class="card-body">
-            <h4>{{ $lesson->judul }} (Pertemuan {{ $lesson->pertemuan_ke }})</h4>
+            <h4>{{ $lesson->meeting->judul ?? '-' }} (Pertemuan {{ $lesson->meeting->pertemuan ?? '-' }})</h4>
 
             {{-- Konten --}}
             <div class="mb-4">
@@ -17,7 +17,7 @@
             @endphp
             @if(collect($videoUrls)->filter()->isNotEmpty())
                 <h5 class="mb-3">Video Materi</h5>
-                @foreach ($videoUrls as $url)
+                @foreach ($videoUrls as $index => $url)
                     @if($url)
                         <div class="mb-3">
                             <iframe 
@@ -28,6 +28,7 @@
                                 allowfullscreen 
                                 sandbox="allow-scripts allow-same-origin allow-presentation">
                             </iframe>
+                            <p class="text-muted mt-2">Video {{ $index + 1 }}</p>
                         </div>
                     @endif
                 @endforeach
@@ -48,7 +49,7 @@
                             <iframe 
                                 src="{{ convertToPreview($file) }}" 
                                 width="100%" 
-                                height="600" 
+                                height="400" 
                                 frameborder="0" 
                                 sandbox="allow-scripts allow-same-origin allow-presentation">
                             </iframe>

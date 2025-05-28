@@ -42,7 +42,7 @@
             </a>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('sekolah.reports.nilai.*', 'attendances.activities') ? 'open active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('sekolah.reports.nilai.*', 'attendances.activities', 'sekolah.mentor-notes.index') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
                 <div data-i18n="Analytics">Laporan</div>
@@ -53,13 +53,13 @@
                         <div>Laporan Nilai</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->routeIs('attendances.activities') ? 'active' : '' }}">
-                    <a href="{{ route('attendances.activities') }}" class="menu-link">
-                        <div>Laporan Absensi</div>
+                <li class="menu-item {{ request()->routeIs('attendances.sekolah.index') ? 'active' : '' }}">
+                    <a href="{{ route('attendances.sekolah.index') }}" class="menu-link">
+                        <div>Laporan Absensi Siswa</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->routeIs('attendances.activities') ? 'active' : '' }}">
-                    <a href="{{ route('attendances.activities') }}" class="menu-link">
+                <li class="menu-item {{ request()->routeIs('sekolah.mentor-notes.index') ? 'active' : '' }}">
+                    <a href="{{ route('sekolah.mentor-notes.index') }}" class="menu-link">
                         <div>Laporan Harian Mentor</div>
                     </a>
                 </li>

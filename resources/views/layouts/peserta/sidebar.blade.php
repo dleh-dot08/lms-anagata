@@ -76,12 +76,12 @@
         </li>
 
         <!-- Helpdesk -->
-        <li class="menu-item {{ Request::is('helpdesk') ? 'active' : '' }}">
+        {{-- <li class="menu-item {{ Request::is('helpdesk') ? 'active' : '' }}">
             <a href="{{ route('peserta.helpdesk.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-help-circle"></i>
                 <div data-i18n="Analytics">Helpdesk</div>
             </a>
-        </li>
+        </li> --}}
     </ul>
 </aside>
 
