@@ -369,20 +369,18 @@ class CourseController extends Controller
         return view('peserta.kursus.show', ['course' => $course, 'isActive' => true]);
     }
 
-    // Menampilkan materi kursus untuk peserta
     public function showLesson($courseId, $lessonId)
     {
-        // Menyaring kursus dan pelajaran berdasarkan ID
-        $course = Course::with(['lessons' => function($query) use ($lessonId) {
-                        $query->where('id', $lessonId);
-                    }])
-                    ->findOrFail($courseId);
-
-        $lesson = $course->lessons->first();  // Mengambil materi yang sesuai
-
-        // Menampilkan materi kursus
+        $course = Course::with('meetings.lesson')->findOrFail($courseId);
+    
+        $lesson = Lesson::with('meeting')
+            ->where('course_id', $courseId)
+            ->where('id', $lessonId)
+            ->firstOrFail();
+    
         return view('peserta.kursus.showLesson', compact('course', 'lesson'));
     }
+    
 
     // Menampilkan kursus yang diajarkan oleh mentor
     public function indexMentor(Request $request)

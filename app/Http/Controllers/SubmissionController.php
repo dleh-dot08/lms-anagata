@@ -21,8 +21,10 @@ class SubmissionController extends Controller
     public function store(Request $request, Assignment $assignment)
     {
         $request->validate([
-            'file_submission' => 'required|file|max:10240',
+            'file_submission' => 'required|file|max:20480',
             'catatan' => 'nullable|string',
+        ], [
+            'file_submission.max' => 'Ukuran file tidak boleh lebih dari 20MB.',
         ]);
     
         $existing = AssignmentSubmission::where('assignment_id', $assignment->id)
@@ -53,8 +55,10 @@ class SubmissionController extends Controller
             ->firstOrFail();
     
         $request->validate([
-            'file_submission' => 'nullable|file|max:10240',
+            'file_submission' => 'nullable|file|max:20480',
             'catatan' => 'nullable|string',
+        ], [
+            'file_submission.max' => 'Ukuran file tidak boleh lebih dari 20MB.',
         ]);
     
         if ($request->hasFile('file_submission')) {

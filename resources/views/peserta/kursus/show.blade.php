@@ -9,75 +9,9 @@
         <div class="card-body">
             {{-- Cek status aktif --}}
             @if($course->status === 'Aktif' && now()->between($course->waktu_mulai, $course->waktu_akhir))
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p><strong>Kode Unik:</strong> {{ $course->kode_unik  ?? '-' }}</p>
-                        <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? '-' }}</p>
-                        <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? '-' }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Level:</strong> {{ ucfirst($course->level) }}</p>
-                        <p><strong>Waktu Mulai:</strong> {{ \Carbon\Carbon::parse($course->waktu_mulai)->translatedFormat('d M Y') }}</p>
-                        <p><strong>Waktu Akhir:</strong> {{ \Carbon\Carbon::parse($course->waktu_akhir)->translatedFormat('d M Y') }}</p>
-                    </div>
-                </div>
-
-                <hr>
-
-                <div class="mb-3">
-                    <h5><strong>Deskripsi Kursus </strong></h5>
-                    <p>{!! nl2br(e($course->deskripsi)) !!}</p>
-                </div>
-
-                <hr>
-
-                <div class="mb-3">
-                    <h5><strong>Materi Pembelajaran</strong></h5>
-                    @if($course->lessons && count($course->lessons))
-                        <ul class="list-group">
-                            @foreach ($course->lessons as $lesson)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Pertemuan {{ $lesson->pertemuan_ke }}: {{ $lesson->judul }}
-                                    <a href="{{ route('courses.showLesson', [$course->id, $lesson->id]) }}" class="btn btn-sm btn-outline-primary">
-                                        Lihat Materi
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="text-muted">Belum ada materi tersedia.</p>
-                    @endif
-                </div>
-
-                {{-- Tambahan Section: Projects --}}
-                <div class="mb-3">
-                    <h5><strong>Project Saya</strong></h5>
-
-                    <a href="{{ route('projects.peserta.createCourse', ['course' => $course->id]) }}" class="btn btn-primary mb-3">
-                        Buat Project
-                    </a>
-
-                    @php
-                        $myProjects = $course->projects->where('user_id', auth()->id());
-                    @endphp
-
-                    @if($myProjects->count())
-                        <div class="row">
-                            @foreach($myProjects as $project)
-                                <div class="col-md-6 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">{{ $project->title }}</h6>
-                                            <p class="card-text">Peserta: {{ $project->user->name ?? 'Tidak diketahui' }}</p>
-                                            <a href="{{ route('projects.peserta.show', $project->id) }}" class="btn btn-sm btn-primary">Lihat Project</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-muted">Kamu belum membuat project untuk kursus ini.</p>
-                    @endif
+                @include('peserta.kursus.partials.nav-tabs', ['activeTab' => 'meetings'])
+                <div class="redirect-notice alert alert-info d-none">
+                    <i class="fas fa-info-circle me-2"></i>Mengalihkan ke halaman yang sesuai...
                 </div>
             @else
                 <div class="alert alert-warning text-center">
@@ -88,4 +22,17 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Redirect to meetings page since this is the default active tab
+    document.addEventListener('DOMContentLoaded', function() {
+        const redirectNotice = document.querySelector('.redirect-notice');
+        if (redirectNotice) {
+            redirectNotice.classList.remove('d-none');
+            window.location.href = '{{ route("peserta.kursus.meetings", $course->id) }}';
+        }
+    });
+</script>
+@endpush
 @endsection

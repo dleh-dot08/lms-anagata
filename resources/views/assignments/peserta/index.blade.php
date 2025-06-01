@@ -29,6 +29,13 @@
                         </td>
                         <td style="max-width: 300px;">
                             {{ Str::limit($assignment->deskripsi, 100, '...') }}
+                            @if($assignment->file_attachment)
+                            <div class="mt-1">
+                                <a href="{{ asset('storage/'.$assignment->file_attachment) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-file-earmark"></i> Lihat Lampiran
+                                </a>
+                            </div>
+                            @endif
                         </td>
                         <td>
                             {{ $assignment->deadline ? \Carbon\Carbon::parse($assignment->deadline)->format('d M Y H:i') : '-' }}
