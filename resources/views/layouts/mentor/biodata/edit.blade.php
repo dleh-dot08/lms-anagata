@@ -38,7 +38,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
+                        <input type="email" class="form-control" value="{{ $user->email }}" readonly>
+                        <input type="hidden" name="email" value="{{ $user->email }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">No Telepon</label>
@@ -82,24 +83,27 @@
                 <div class="card p-3 border-0 shadow-sm">
                     <h5 class="fw-bold text-primary">Upload Berkas</h5>
                     <div class="mb-3">
-                        <label class="form-label">Foto KTP</label>
-                        <input type="file" name="foto_ktp" class="form-control">
+                        <label class="form-label">Foto KTP (Maks. 5MB)</label>
+                        <input type="file" name="foto_ktp" class="form-control" accept="image/*" max="5120">
+                        <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 5MB</small>
                         @if (!$biodata?->data_ktp)
-                            <span class="text-danger">Belum diupload</span>
+                            <span class="text-danger d-block mt-1">Belum diupload</span>
                         @endif
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Tanda Tangan</label>
-                        <input type="file" name="data_ttd" class="form-control">
+                        <label class="form-label">Tanda Tangan (Maks. 5MB)</label>
+                        <input type="file" name="data_ttd" class="form-control" accept="image/*" max="5120">
+                        <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 5MB</small>
                         @if (!$biodata?->data_ttd)
-                            <span class="text-danger">Belum diupload</span>
+                            <span class="text-danger d-block mt-1">Belum diupload</span>
                         @endif
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Foto Profil</label>
-                        <input type="file" name="foto" class="form-control">
+                        <label class="form-label">Foto Profil (Maks. 5MB)</label>
+                        <input type="file" name="foto" class="form-control" accept="image/*" max="5120">
+                        <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 5MB</small>
                         @if (!$biodata?->foto)
-                            <span class="text-danger">Belum diupload</span>
+                            <span class="text-danger d-block mt-1">Belum diupload</span>
                         @endif
                     </div>
                 </div>

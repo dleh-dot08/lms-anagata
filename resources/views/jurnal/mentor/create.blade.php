@@ -10,12 +10,12 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <div class="me-3">
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                                <div class="bg-white bg-opacity-20 rounded-circle p-3 text-primary">
                                     <i class="bi bi-pencil-square fs-2"></i>
                                 </div>
                             </div>
                             <div>
-                                <h3 class="mb-1 fw-bold">Buat Catatan Pembelajaran</h3>
+                                <h3 class="mb-1 fw-bold text-white">Buat Catatan Pembelajaran</h3>
                                 <p class="mb-0 fs-5 opacity-90">Pertemuan ke-{{ $meeting->pertemuan }}</p>
                                 <small class="opacity-75">
                                     <i class="bi bi-calendar3 me-1"></i>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="text-end">
                             <div class="bg-white bg-opacity-20 rounded p-2">
-                                <small class="d-block mb-1">Progress</small>
+                                <small class="d-block mb-1 text-primary">Progress</small>
                                 <div class="progress" style="height: 6px; width: 120px;">
                                     <div class="progress-bar bg-white" id="formProgress" style="width: 0%"></div>
                                 </div>
@@ -126,11 +126,7 @@
                                         <i class="bi {{ $field['icon'] }} fs-5"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <h6 class="mb-0 fw-semibold">{{ $field['label'] }}</h6>
-                                    </div>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input bg-white" type="checkbox" 
-                                               id="toggle_{{ $name }}" onchange="toggleField('{{ $name }}')">
+                                        <h6 class="mb-0 fw-semibold text-white">{{ $field['label'] }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -436,11 +432,54 @@ function loadDraft() {
 
 // Validasi submit
 document.getElementById('noteForm').addEventListener('submit', function(e) {
-    if (filledFields === 0) {
+    const textareas = document.querySelectorAll('textarea');
+    let allFieldsFilled = true;
+    textareas.forEach(textarea => {
+        if (textarea.value.trim() === '') {
+            allFieldsFilled = false;
+            // Optional: Add a visual cue to the empty field
+            textarea.style.border = '1px solid red';
+            textarea.closest('.form-card').classList.add('shake');
+        }
+    });
+
+    if (!allFieldsFilled) {
         e.preventDefault();
-        alert('Mohon isi minimal satu bagian sebelum menyimpan catatan.');
+        // Show a more user-friendly modal or toast notification
+        // For example, using Bootstrap modal if available
+        // Or a simple custom modal
+        const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
+        warningModal.show();
+
+        // Remove shake animation after it plays
+        textareas.forEach(textarea => {
+            if (textarea.closest('.form-card').classList.contains('shake')) {
+                setTimeout(() => {
+                    textarea.closest('.form-card').classList.remove('shake');
+                    textarea.style.border = ''; // Reset border
+                }, 500);
+            }
+        });
     }
 });
 </script>
+
+<!-- Warning Modal -->
+<div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="warningModalLabel">Peringatan!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Mohon isi semua bagian catatan sebelum menyimpan.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Oke</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
