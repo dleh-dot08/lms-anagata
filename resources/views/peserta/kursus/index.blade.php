@@ -70,7 +70,7 @@
                     </td>
                     <td>
                         @if ($course->status == 'Aktif')
-                            <a href="{{ route('courses.showPeserta', $course->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
+                            <a href="{{ route('peserta.kursus.overview', $course->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
                         @else
                             <span class="text-muted">Kursus Terkunci</span>
                         @endif

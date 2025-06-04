@@ -15,9 +15,9 @@
                 <span class="badge bg-light text-primary fs-6 me-2">
                     {{ $course->participants->count() }} Peserta
                 </span>
-                <button class="btn btn-sm btn-light" onclick="window.print()">
+                {{-- <button class="btn btn-sm btn-light" onclick="window.print()">
                     <i class="fas fa-print me-1"></i> Cetak
-                </button>
+                </button> --}}
             </div>
         </div>
 

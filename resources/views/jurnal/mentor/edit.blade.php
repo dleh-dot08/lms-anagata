@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div class="text-end">
-                            <div class="bg-white bg-opacity-20 rounded p-2">
+                            <div class="bg-dark bg-opacity-20 rounded p-2">
                                 <small class="d-block mb-1">Progress</small>
                                 <div class="progress" style="height: 6px; width: 120px;">
                                     <div class="progress-bar bg-white" id="formProgress" style="width: 0%"></div>
@@ -148,7 +148,7 @@
                                     <div class="flex-grow-1">
                                         <h6 class="mb-0 fw-semibold">{{ $field['label'] }}</h6>
                                     </div>
-                                    <div class="d-flex align-items-center">
+                                    {{-- <div class="d-flex align-items-center">
                                         @if(!empty(old($name, $note->$name)))
                                             <span class="badge bg-white text-{{ $field['color'] }} me-2">
                                                 <i class="bi bi-check-circle-fill"></i>
@@ -160,7 +160,7 @@
                                                    @if(!empty(old($name, $note->$name))) checked @endif
                                                    onchange="toggleField('{{ $name }}')">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="card-body p-4">

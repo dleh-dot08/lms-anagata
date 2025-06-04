@@ -141,5 +141,17 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'user_id');
     }
 
+    public function assignments()
+    {
+        return $this->hasManyThrough(
+            Assignment::class, // The final model you want to access (Assignments)
+            Meeting::class,    // The intermediate model (Meetings)
+            'course_id',       // Foreign key on the intermediate (Meetings) table relating to the Course
+            'meeting_id',      // Foreign key on the final (Assignments) table relating to the Meeting
+            'id',              // Local key on the Course model (default is 'id')
+            'id'               // Local key on the Meeting model (default is 'id')
+        );
+    }
+
 
 }

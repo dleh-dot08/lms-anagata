@@ -23,12 +23,6 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="text-end">
-                            <button class="btn btn-light btn-sm" onclick="window.print()">
-                                <i class="bi bi-printer me-1"></i>
-                                Cetak
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -237,10 +231,6 @@
                 <i class="bi bi-arrow-left me-1"></i>
                 Kembali ke Daftar Pertemuan
             </a>
-            <button class="btn btn-primary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Cetak Catatan
-            </button>
         </div>
     </div>
 </div>

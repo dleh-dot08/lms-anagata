@@ -178,6 +178,14 @@ Route::middleware(['auth', 'role:2,3'])->group(function () {
     Route::get('/rekap-absensi', [AttendanceController::class, 'rekap'])->name('attendances.rekap');
 });
 
+// Peserta Course Routes
+Route::middleware(['auth', PesertaMiddleware::class])->prefix('peserta/kursus')->name('peserta.kursus.')->group(function () {
+    Route::get('/{course}/overview', [\App\Http\Controllers\Peserta\KursusController::class, 'overview'])->name('overview');
+    Route::get('/{course}/meetings', [\App\Http\Controllers\Peserta\KursusController::class, 'meetings'])->name('meetings');
+    Route::get('/{course}/assignments', [\App\Http\Controllers\Peserta\KursusController::class, 'assignments'])->name('assignments');
+    Route::get('/{course}/projects', [\App\Http\Controllers\Peserta\KursusController::class, 'projects'])->name('projects');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -369,7 +377,7 @@ Route::get('/peserta/kursus/{course}', [CourseController::class, 'showPeserta'])
     ->middleware(PesertaMiddleware::class);
 
 // Halaman detail materi kursus
-Route::get('/peserta/kursus/{course}/lesson/{lesson}', [CourseController::class, 'showLesson'])
+Route::get('/peserta/kursus/{courseId}/lesson/{lessonId}', [CourseController::class, 'showLesson'])
     ->name('courses.showLesson')
     ->middleware(PesertaMiddleware::class);
 

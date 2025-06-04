@@ -74,9 +74,9 @@ class BiodataController extends Controller
             'pekerjaan' => 'nullable|string|max:255',
             'jenjang_id' => 'nullable|exists:jenjang,id',
             'kelas_id' => 'nullable|exists:kelas,id',
-            'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'foto_ktp' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'data_ttd' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:5120',
+            'foto_ktp' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:5120',
+            'data_ttd' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:5120',
             'pendidikan_terakhir' => 'nullable|string|max:100',
             'media_sosial' => 'nullable|string|max:255',
             'bidang_pengajaran' => 'nullable|string|max:255',
@@ -85,9 +85,12 @@ class BiodataController extends Controller
             'nik.unique' => 'NIK sudah terdaftar di akun lain.',
             'nip.unique' => 'NIP sudah terdaftar di akun lain.',
             'email.unique' => 'Email sudah digunakan.',
-            'foto.max' => 'Ukuran foto profil tidak boleh lebih dari 2MB.',
-            'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 2MB.',
-            'data_ttd.max' => 'Ukuran tanda tangan tidak boleh lebih dari 2MB.',
+            'foto.max' => 'Ukuran foto profil tidak boleh lebih dari 5MB.',
+            'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 5MB.',
+            'data_ttd.max' => 'Ukuran tanda tangan tidak boleh lebih dari 5MB.',
+            'foto.mimes' => 'Format foto profil harus JPG, PNG, atau GIF.',
+            'foto_ktp.mimes' => 'Format foto KTP harus JPG, PNG, atau GIF.',
+            'data_ttd.mimes' => 'Format tanda tangan harus JPG, PNG, atau GIF.',
         ]);
 
 

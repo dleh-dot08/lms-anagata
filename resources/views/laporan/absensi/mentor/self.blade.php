@@ -24,9 +24,12 @@
         <div class="col-12">
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-body p-4">
-                    <form action="{{ route('mentor.self.attendance') }}" method="GET" class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
-                        <div class="flex-grow-1 me-md-3 mb-3 mb-md-0">
-                            <label for="course_filter" class="form-label mb-1 fw-semibold text-muted">Filter Berdasarkan Kelas:</label>
+                    <form action="{{ route('mentor.self.attendance') }}" method="GET"
+                        class="row g-3 align-items-end">
+                        
+                        <!-- Dropdown filter kelas -->
+                        <div class="col-md-9">
+                            <label for="course_filter" class="form-label fw-semibold text-muted">Filter Berdasarkan Kelas:</label>
                             <select class="form-select form-select-lg shadow-sm" id="course_filter" name="course_id" onchange="this.form.submit()">
                                 <option value="">--- Semua Kelas ---</option>
                                 @foreach ($mentorCourses as $course)
@@ -36,14 +39,20 @@
                                 @endforeach
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary d-none d-md-block btn-lg shadow-sm">
-                            <i class="bi bi-filter me-2"></i>Terapkan Filter
-                        </button>
+    
+                        <!-- Tombol filter -->
+                        <div class="col-md-3 d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                                <i class="bi bi-filter me-2"></i>Terapkan Filter
+                            </button>
+                        </div>
+                        
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    
 
     <div class="row">
         <div class="col-12">
@@ -60,7 +69,6 @@
                                     <th class="px-4 py-3 fw-semibold text-dark text-center text-nowrap">Pertemuan Ke-</th>
                                     <th class="px-4 py-3 fw-semibold text-dark text-center text-nowrap">Tanggal Pertemuan</th>
                                     <th class="px-4 py-3 fw-semibold text-dark text-center text-nowrap">Status Absensi</th>
-                                    <th class="px-4 py-3 fw-semibold text-dark text-nowrap">Catatan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,9 +95,7 @@
                                                     }
                                                 @endphp
                                                 <span class="badge {{ $badgeClass }} py-2 px-3">{{ $absen->status }}</span>
-                                            </td>
-                                            <td class="px-4 py-3 text-muted small">{{ $absen->notes ?? '-' }}</td>
-                                        </tr>
+                                            </td>                                        </tr>
                                     @endforeach
                                 @empty
                                     <tr>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\Course;
 use App\Models\Meeting;
@@ -83,8 +84,14 @@ class MentorAttendanceController extends Controller
     
         if ($request->status === 'Hadir') {
             $rules['waktu_absen'] = 'required|date';
+            $rules['latitude'] = 'required';
+            $rules['longitude'] = 'required';
+            $rules['photo_capture'] = 'required';
         } else {
             $rules['waktu_absen'] = 'nullable';
+            $rules['latitude'] = 'nullable';
+            $rules['longitude'] = 'nullable';
+            $rules['photo_capture'] = 'nullable';
         }
     
         $validated = $request->validate($rules);
@@ -95,25 +102,42 @@ class MentorAttendanceController extends Controller
     
         // Cek apakah sudah pernah absen untuk meeting ini
         $exists = Attendance::where('user_id', $userId)
-        ->where('course_id', $validated['course_id'])
-        ->where('meeting_id', $validated['meeting_id'])
-        ->exists();
-
+            ->where('course_id', $validated['course_id'])
+            ->where('meeting_id', $validated['meeting_id'])
+            ->exists();
+    
         if ($exists) {
-            return redirect()->back()->with('warning', 'Anda sudah mengisi absen untuk pertemuan ini.');
+            return redirect()->back()->with('error', 'Anda sudah melakukan absen untuk pertemuan ini.');
+        }
+
+        // Proses foto kehadiran jika status Hadir
+        $photoPath = null;
+        if ($request->status === 'Hadir' && $request->filled('photo_capture')) {
+            $image = $request->photo_capture;
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = $userId . '_' . time() . '.jpg';
+            
+            Storage::disk('public')->put('attendance_photos/' . $imageName, base64_decode($image));
+            $photoPath = 'attendance_photos/' . $imageName;
         }
     
-        // Simpan absensi tanpa enrollment_id
-        Attendance::create([
-            'user_id'     => $userId,
-            'course_id'   => $validated['course_id'],
-            'meeting_id'  => $meetingId,
-            'tanggal'     => $today,
-            'status'      => $validated['status'],
-            'waktu_absen' => $validated['waktu_absen'] ?? now(),
+        // Simpan data absen
+        $attendance = new Attendance([
+            'user_id' => $userId,
+            'course_id' => $validated['course_id'],
+            'meeting_id' => $validated['meeting_id'],
+            'tanggal' => $validated['tanggal'],
+            'status' => $validated['status'],
+            'waktu_absen' => $validated['waktu_absen'],
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
+            'file_attache' => $photoPath,
         ]);
     
-        return redirect()->route('mentor.absen.courses')->with('success', 'Absen berhasil disimpan.');
-    }
+        $attendance->save();
     
+        return redirect()->route('mentor.absen.meetings', $validated['course_id'])
+            ->with('success', 'Absen berhasil disimpan.');
+    }
 }

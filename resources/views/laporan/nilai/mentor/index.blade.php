@@ -82,7 +82,6 @@
                 <div class="col-md-6 col-lg-4"> {{-- Kolom responsive untuk card kursus --}}
                     <div class="card shadow-lg border-0 h-100 overflow-hidden"> {{-- Card untuk setiap kursus --}}
                         <div class="card-header bg-gradient-primary text-white p-4 position-relative overflow-hidden">
-                            <div class="position-absolute top-0 end-0 w-25 h-100 bg-white opacity-10 rounded-circle translate-middle-x mt-n4 me-n4"></div> {{-- Efek lingkaran --}}
                             <div class="position-relative z-1">
                                 <div class="d-flex align-items-center mb-2">
                                     <svg class="bi text-white me-2" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">

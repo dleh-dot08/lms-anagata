@@ -35,12 +35,12 @@
                    <i class="bi bi-graph-up-arrow me-2"></i>Scores
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link custom-tab-link {{ $activeTab === 'project' ? 'active' : '' }}" 
                    href="{{ route('kursus.mentor.project', $course->id) }}">
                    <i class="bi bi-folder-fill me-2"></i>Project
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a class="nav-link custom-tab-link {{ $activeTab === 'peserta' ? 'active' : '' }}" 
                    href="{{ route('kursus.mentor.peserta', $course->id) }}">

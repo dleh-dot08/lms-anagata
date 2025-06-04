@@ -7,9 +7,9 @@
             <div class="card border-0 shadow-sm bg-gradient-primary text-white">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center">
-                        <div class="icon-shape bg-dark bg-opacity-20 rounded-circle p-3 me-3">
+                        <div class="icon-shape bg-white bg-opacity-20 rounded-circle p-3 me-3">
                             {{-- Icon: Chart Bar (fas fa-chart-bar) -> bi-bar-chart-fill --}}
-                            <i class="bi bi-backpack2 fa-2x text-white"></i>
+                            <i class="bi bi-backpack2 fa-2x text-primary"></i>
                         </div>
                         <div>
                             <h2 class="h3 mb-1 text-white">Rekap Absensi Kelas</h2>
@@ -92,10 +92,6 @@
                             <button class="btn btn-outline-primary btn-sm" onclick="exportToExcel()">
                                 {{-- Icon: Download (fas fa-download) -> bi-download --}}
                                 <i class="bi bi-download me-1"></i>Export Excel
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm" onclick="printTable()">
-                                {{-- Icon: Print (fas fa-print) -> bi-printer-fill --}}
-                                <i class="bi bi-printer-fill me-1"></i>Print
                             </button>
                         </div>
                     </div>
