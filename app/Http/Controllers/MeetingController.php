@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\Meeting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon; // Import Carbon untuk manipulasi tanggal/waktu
 
 class MeetingController extends Controller
 {
@@ -21,13 +22,19 @@ class MeetingController extends Controller
             'description' => 'required|string',
             'pertemuan' => 'required|integer',
             'tanggal_pelaksanaan' => 'required|date',
+            'jam_mulai' => 'required|date_format:H:i', // Validasi jam
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai', // Validasi jam
         ]);
     
-        $course->meetings()->create([
+        // Buat pertemuan baru
+        $meeting = $course->meetings()->create([
             'judul' => $request->judul,
             'description' => $request->description,
             'pertemuan' => $request->pertemuan,
             'tanggal_pelaksanaan' => $request->tanggal_pelaksanaan,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'schedule_history' => [], // Inisialisasi history kosong saat membuat baru
         ]);
     
         return redirect()->route('courses.show', $course->id)
@@ -47,9 +54,52 @@ class MeetingController extends Controller
             'description' => 'required|string',
             'pertemuan' => 'required|integer',
             'tanggal_pelaksanaan' => 'required|date',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+            'reason' => 'nullable|string|max:500', // Validasi alasan perubahan
         ]);
-    
-        $meeting->update($request->only('pertemuan', 'judul', 'description', 'tanggal_pelaksanaan'));
+
+        // Ambil data LAMA sebelum update
+        $oldTanggalPelaksanaan = $meeting->tanggal_pelaksanaan->format('Y-m-d'); // Format ke string untuk perbandingan
+        $oldJamMulai = $meeting->jam_mulai ? $meeting->jam_mulai->format('H:i') : null;
+        $oldJamSelesai = $meeting->jam_selesai ? $meeting->jam_selesai->format('H:i') : null;
+        
+        // Data baru dari request
+        $newTanggalPelaksanaan = $request->tanggal_pelaksanaan;
+        $newJamMulai = $request->jam_mulai;
+        $newJamSelesai = $request->jam_selesai;
+
+        // Cek apakah ada perubahan pada jadwal (tanggal atau jam)
+        $hasScheduleChanged = false;
+        if ($oldTanggalPelaksanaan != $newTanggalPelaksanaan ||
+            $oldJamMulai != $newJamMulai ||
+            $oldJamSelesai != $newJamSelesai) {
+            $hasScheduleChanged = true;
+        }
+
+        // Update data pertemuan
+        $meeting->update($request->only('pertemuan', 'judul', 'description', 'tanggal_pelaksanaan', 'jam_mulai', 'jam_selesai'));
+
+        // Jika ada perubahan jadwal, catat ke history
+        if ($hasScheduleChanged) {
+            $history = $meeting->schedule_history ?? []; // Ambil history yang sudah ada, atau array kosong
+            
+            $history[] = [
+                'old_tanggal_pelaksanaan' => $oldTanggalPelaksanaan,
+                'old_jam_mulai' => $oldJamMulai,
+                'old_jam_selesai' => $oldJamSelesai,
+                'new_tanggal_pelaksanaan' => $newTanggalPelaksanaan,
+                'new_jam_mulai' => $newJamMulai,
+                'new_jam_selesai' => $newJamSelesai,
+                'changed_by_user_id' => auth()->id(), // ID user yang sedang login
+                'changed_by_user_name' => auth()->user()->name ?? 'Guest', // Nama user
+                'reason' => $request->input('reason'),
+                'changed_at' => Carbon::now()->toDateTimeString(), // Waktu perubahan
+            ];
+
+            $meeting->schedule_history = $history; // Simpan kembali array history yang sudah diupdate
+            $meeting->save(); // Simpan perubahan pada kolom history
+        }
     
         return redirect()->route('courses.show', $course->id)->with('success', 'Pertemuan berhasil diperbarui.');
     }
@@ -59,6 +109,8 @@ class MeetingController extends Controller
         $meeting->delete();
         return redirect()->route('courses.show', $course->id)->with('success', 'Pertemuan berhasil dihapus.');
     }
+
+    // ... (metode convertToEmbed dan show lainnya) ...
 
     private function convertToEmbed($url)
     {
@@ -93,7 +145,9 @@ class MeetingController extends Controller
     {
         $course = Course::findOrFail($courseId);
 
-        $meeting = Meeting::with('lesson')->where('id', $meetingId)
+        // Eager load scheduleChanges jika Anda ingin menampilkannya di halaman show ini
+        $meeting = Meeting::with('lesson', 'schedule_history') // Tidak perlu eager load history karena sudah di meeting object
+                        ->where('id', $meetingId)
                         ->where('course_id', $courseId)
                         ->firstOrFail();
 
@@ -117,5 +171,4 @@ class MeetingController extends Controller
             'lesson' => $lesson,
         ]);
     }
-    
 }

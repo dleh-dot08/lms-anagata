@@ -7,21 +7,46 @@
     <form action="{{ route('courses.update', $course->id) }}" method="POST">
         @csrf
         @method('PUT')
-        
+
         <div class="mb-3">
             <label>Nama Kelas</label>
             <input type="text" name="nama_kelas" class="form-control" value="{{ old('nama_kelas', $course->nama_kelas ?? '') }}" required>
         </div>
 
+        {{-- START: Bagian Mentor Utama dan Cadangan --}}
         <div class="mb-3">
-            <label for="mentor_id">Mentor</label>
+            <label for="mentor_id">Mentor Utama</label>
             <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;">
-            @if($course->mentor)
-                <option value="{{ $course->mentor->id }}" selected>{{ $course->mentor->name }}</option>
-            @endif
-</select>
-
+                {{-- Pastikan mentor utama yang sudah ada terpilih saat halaman dimuat --}}
+                @if($course->mentor)
+                    <option value="{{ $course->mentor->id }}" selected>{{ $course->mentor->name }}</option>
+                @endif
+            </select>
         </div>
+
+        <div class="mb-3">
+            <label for="mentor_id_2">Mentor Cadangan 1 (Opsional)</label>
+            <select name="mentor_id_2" id="mentor_id_2" class="form-control" style="width: 100%;">
+                <option value="">-- Pilih Mentor Cadangan 1 --</option> {{-- Opsi default kosong --}}
+                {{-- Pastikan mentor cadangan 1 yang sudah ada terpilih saat halaman dimuat --}}
+                @if($course->mentor2)
+                    <option value="{{ $course->mentor2->id }}" selected>{{ $course->mentor2->name }}</option>
+                @endif
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="mentor_id_3">Mentor Cadangan 2 (Opsional)</label>
+            <select name="mentor_id_3" id="mentor_id_3" class="form-control" style="width: 100%;">
+                <option value="">-- Pilih Mentor Cadangan 2 --</option> {{-- Opsi default kosong --}}
+                {{-- Pastikan mentor cadangan 2 yang sudah ada terpilih saat halaman dimuat --}}
+                @if($course->mentor3)
+                    <option value="{{ $course->mentor3->id }}" selected>{{ $course->mentor3->name }}</option>
+                @endif
+            </select>
+        </div>
+        {{-- END: Bagian Mentor Utama dan Cadangan --}}
+
 
         <div class="mb-3">
             <label for="sekolah_id">Sekolah</label>
@@ -74,13 +99,7 @@
             <label>Kelas</label>
             <select name="kelas_id" id="kelas_id" class="form-control" {{ !isset($course->jenjang_id) ? 'disabled' : '' }}>
                 <option value="">Pilih Kelas</option>
-                @if(isset($course->jenjang_id))
-                    @foreach ($kelas as $k)
-                        <option value="{{ $k->id }}" {{ (isset($course) && $course->kelas_id == $k->id) ? 'selected' : '' }}>
-                            {{ $k->nama }}
-                        </option>
-                    @endforeach
-                @endif
+                {{-- Opsi kelas akan diisi oleh JavaScript saat halaman dimuat atau jenjang berubah --}}
             </select>
         </div>
 
@@ -141,9 +160,9 @@
 
 <script>
     $(document).ready(function() {
-        // Mentor Select2 initialization
+        // Inisialisasi Select2 untuk Mentor Utama
         $('#mentor_id').select2({
-            placeholder: 'Cari Mentor',
+            placeholder: 'Cari Mentor Utama',
             allowClear: true,
             width: 'resolve',
             minimumInputLength: 1,
@@ -160,37 +179,87 @@
             }
         });
 
-        // Jenjang change event handler
-        $('#jenjang_id').on('change', function() {
-            const jenjangId = $(this).val();
+        // Inisialisasi Select2 untuk Mentor Cadangan 1
+        $('#mentor_id_2').select2({
+            placeholder: 'Cari Mentor Cadangan 1',
+            allowClear: true,
+            width: 'resolve',
+            minimumInputLength: 1,
+            ajax: {
+                url: "{{ route('courses.searchMentor') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
+                }
+            }
+        });
+
+        // Inisialisasi Select2 untuk Mentor Cadangan 2
+        $('#mentor_id_3').select2({
+            placeholder: 'Cari Mentor Cadangan 2',
+            allowClear: true,
+            width: 'resolve',
+            minimumInputLength: 1,
+            ajax: {
+                url: "{{ route('courses.searchMentor') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
+                }
+            }
+        });
+
+        // Fungsi untuk memuat opsi kelas berdasarkan jenjang
+        function loadKelas(jenjangId, selectedKelasId = null) {
             const kelasSelect = $('#kelas_id');
-            
-            // Reset and disable kelas select if no jenjang selected
+            kelasSelect.empty(); // Kosongkan opsi kelas yang sudah ada
+            kelasSelect.append('<option value="">Pilih Kelas</option>'); // Tambahkan opsi default
+
             if (!jenjangId) {
-                kelasSelect.html('<option value="">Pilih Kelas</option>');
                 kelasSelect.prop('disabled', true);
                 return;
             }
 
-            // Enable kelas select
             kelasSelect.prop('disabled', false);
 
-            // Fetch kelas options based on selected jenjang
             fetch(`/api/jenjang/${jenjangId}/kelas`)
                 .then(response => response.json())
                 .then(data => {
                     let options = '<option value="">Pilih Kelas</option>';
                     data.forEach(kelas => {
-                        const selected = "{{ $course->kelas_id }}" == kelas.id ? 'selected' : '';
+                        // Periksa apakah kelas saat ini harus dipilih
+                        const selected = (selectedKelasId && selectedKelasId == kelas.id) ? 'selected' : '';
                         options += `<option value="${kelas.id}" ${selected}>${kelas.nama}</option>`;
                     });
                     kelasSelect.html(options);
+                })
+                .catch(error => {
+                    console.error('Error fetching kelas:', error);
+                    kelasSelect.html('<option value="">Gagal memuat kelas</option>');
+                    kelasSelect.prop('disabled', true);
                 });
+        }
+
+        // Event handler saat jenjang diubah
+        $('#jenjang_id').on('change', function() {
+            const jenjangId = $(this).val();
+            // Saat jenjang berubah, kita tidak ingin menjaga pilihan kelas sebelumnya
+            loadKelas(jenjangId);
         });
 
-        // Trigger jenjang change event if there's a selected value
-        if ($('#jenjang_id').val()) {
-            $('#jenjang_id').trigger('change');
+        // Saat dokumen siap (halaman dimuat), muat kelas berdasarkan jenjang yang sudah ada di $course
+        const initialJenjangId = $('#jenjang_id').val();
+        const initialKelasId = "{{ $course->kelas_id ?? '' }}"; // Ambil kelas_id dari objek course
+        if (initialJenjangId) {
+            loadKelas(initialJenjangId, initialKelasId);
         }
     });
 </script>

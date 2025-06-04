@@ -25,6 +25,17 @@ class MentorNoteController extends Controller
     public function meetings($courseId)
     {
         $course = Course::with('meetings')->findOrFail($courseId);
+        
+        // Cek apakah user adalah mentor utama atau cadangan untuk kursus ini
+        $user = auth()->user();
+        $isMentor = $course->mentor_id == $user->id || 
+                   $course->mentor_id_2 == $user->id || 
+                   $course->mentor_id_3 == $user->id;
+
+        if (!$isMentor) {
+            abort(403, 'Anda tidak memiliki akses ke kursus ini.');
+        }
+
         return view('jurnal.mentor.meetings', compact('course'));
     }
 

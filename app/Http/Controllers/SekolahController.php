@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Kelas;
+use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +21,9 @@ class SekolahController extends Controller
         // Get the current logged-in school's ID
         $sekolahId = Auth::user()->sekolah_id;
 
-        $query = User::with(['role', 'biodata'])
-            ->where('role_id', 3) // Only get participants (role_id 3)
-            ->where('sekolah_id', $sekolahId) // Only get peserta assigned to this school
+        $query = User::with(['role', 'biodata', 'kelas'])
+            ->where('role_id', 3)
+            ->where('sekolah_id', $sekolahId)
             ->orderBy('created_at', 'desc');
 
         // Search functionality
@@ -42,8 +44,17 @@ class SekolahController extends Controller
             $query->where('status', $request->status);
         }
 
-        $peserta = $query->paginate(10);
+        // Filter by kelas
+        if ($request->has('kelas_id') && $request->kelas_id != '') {
+            $query->where('kelas_id', $request->kelas_id);
+        }
 
-        return view('layouts.sekolah.peserta.index', compact('peserta'));
+        $peserta = $query->paginate(10);
+        
+        // Get all kelas for filter dropdown based on school's jenjang
+        $sekolah = \App\Models\Sekolah::find($sekolahId);
+        $kelas = \App\Models\Kelas::where('id_jenjang', $sekolah->jenjang_id)->get();
+
+        return view('layouts.sekolah.peserta.index', compact('peserta', 'kelas'));
     }
-} 
+}

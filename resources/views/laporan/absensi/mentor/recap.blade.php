@@ -89,10 +89,9 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 text-dark">Detail Absensi Per Siswa</h5>
                         <div class="d-flex gap-2">
-                            <button class="btn btn-outline-primary btn-sm" onclick="exportToExcel()">
-                                {{-- Icon: Download (fas fa-download) -> bi-download --}}
+                            <a href="{{ route('mentor.attendances.export_excel', $course->id) }}" class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-download me-1"></i>Export Excel
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -106,10 +105,12 @@
                                         <i class="bi bi-person-fill me-2 text-muted"></i>Nama Siswa
                                     </th>
                                     @foreach ($meetings as $meeting)
-                                        <th class="px-3 py-3 text-center fw-semibold text-dark" style="min-width: 100px;">
+                                        <th class="px-3 py-3 text-center fw-semibold text-dark" style="min-width: 120px;">
                                             <div class="d-flex flex-column align-items-center">
                                                 <span class="badge bg-primary bg-opacity-10 text-white mb-1">P{{ $meeting->pertemuan }}</span>
-                                                <small class="text-muted">{{ date('d/m', strtotime($meeting->tanggal_pelaksanaan ?? now())) }}</small>
+                                                <small class="text-muted mb-1">{{ date('d/m', strtotime($meeting->tanggal_pelaksanaan ?? now())) }}</small>
+                                                {{-- Keterangan tambahan di bawah tanggal --}}
+                                                <small class="text-muted fw-normal fst-italic">oleh Mentor</small>
                                             </div>
                                         </th>
                                     @endforeach
@@ -127,13 +128,12 @@
                                     </th>
                                     <th class="px-3 py-3 text-center fw-semibold text-info" rowspan="2" style="vertical-align: middle;">
                                         {{-- Icon: Thermometer Half (fas fa-thermometer-half) -> bi-bandaid-fill (or bi-thermometer-half if available) --}}
-                                        {{-- Note: bi-thermometer-half is not directly available, bi-bandaid-fill is a good alternative for 'Sakit' --}}
                                         <i class="bi bi-bandaid-fill me-1"></i>Sakit
                                     </th>
                                 </tr>
                                 <tr class="bg-light">
                                     @foreach ($meetings as $meeting)
-                                        <th class="px-3 py-2 text-center text-muted small">Status</th>
+                                        <th class="px-3 py-2 text-center text-muted small">Status Absensi</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -155,34 +155,37 @@
                                             @php
                                                 $attendance = $student->attendances->where('meeting_id', $meeting->id)->first();
                                                 $status = $attendance ? $attendance->status : '-';
+                                                
+                                                // Dapatkan nama mentor yang merekam absensi
+                                                $recordedByMentorName = $attendance && $attendance->recordedByMentor ? $attendance->recordedByMentor->name : 'N/A';
                                             @endphp
                                             <td class="px-3 py-3 text-center">
-                                                @if($status == 'Hadir')
-                                                    <span class="badge bg-success bg-opacity-15 text-white border border-success border-opacity-25">
-                                                        {{-- Icon: Check (fas fa-check) -> bi-check --}}
-                                                        <i class="bi bi-check me-1"></i>{{ $status }}
-                                                    </span>
-                                                @elseif($status == 'Tidak Hadir')
-                                                    <span class="badge bg-danger bg-opacity-15 text-white border border-danger border-opacity-25">
-                                                        {{-- Icon: Times (fas fa-times) -> bi-x --}}
-                                                        <i class="bi bi-x me-1"></i>Alpha
-                                                    </span>
-                                                @elseif($status == 'Izin')
-                                                    <span class="badge bg-warning bg-opacity-15 text-white border border-warning border-opacity-25">
-                                                        {{-- Icon: Exclamation (fas fa-exclamation) -> bi-exclamation --}}
-                                                        <i class="bi bi-exclamation me-1"></i>{{ $status }}
-                                                    </span>
-                                                @elseif($status == 'Sakit')
-                                                    <span class="badge bg-info bg-opacity-15 text-white border border-info border-opacity-25">
-                                                        {{-- Icon: Thermometer Half (fas fa-thermometer-half) -> bi-bandaid (or bi-thermometer if available) --}}
-                                                        <i class="bi bi-bandaid me-1"></i>{{ $status }}
-                                                    </span>
-                                                @else
-                                                    <span class="badge bg-secondary bg-opacity-15 text-white border border-secondary border-opacity-25">
-                                                        {{-- Icon: Minus (fas fa-minus) -> bi-dash --}}
-                                                        <i class="bi bi-dash me-1"></i>{{ $status }}
-                                                    </span>
-                                                @endif
+                                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                                    {{-- Tampilkan nama mentor di sini --}}
+                                                    <small class="text-muted mb-1">{{ $recordedByMentorName }}</small>
+                                                    
+                                                    @if($status == 'Hadir')
+                                                        <span class="badge bg-success bg-opacity-15 text-white border border-success border-opacity-25">
+                                                            <i class="bi bi-check me-1"></i>{{ $status }}
+                                                        </span>
+                                                    @elseif($status == 'Tidak Hadir')
+                                                        <span class="badge bg-danger bg-opacity-15 text-white border border-danger border-opacity-25">
+                                                            <i class="bi bi-x me-1"></i>Alpha
+                                                        </span>
+                                                    @elseif($status == 'Izin')
+                                                        <span class="badge bg-warning bg-opacity-15 text-white border border-warning border-opacity-25">
+                                                            <i class="bi bi-exclamation me-1"></i>{{ $status }}
+                                                        </span>
+                                                    @elseif($status == 'Sakit')
+                                                        <span class="badge bg-info bg-opacity-15 text-white border border-info border-opacity-25">
+                                                            <i class="bi bi-bandaid me-1"></i>{{ $status }}
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-secondary bg-opacity-15 text-white border border-secondary border-opacity-25">
+                                                            <i class="bi bi-dash me-1"></i>{{ $status }}
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </td>
                                         @endforeach
                                         @php
@@ -310,5 +313,15 @@ function printTable() {
 setTimeout(function() {
     location.reload();
 }, 300000);
+
+// Karena tooltip sudah dihapus, bagian ini bisa dihapus
+/*
+document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+});
+*/
 </script>
 @endsection

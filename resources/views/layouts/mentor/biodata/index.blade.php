@@ -1,124 +1,153 @@
 @extends('layouts.mentor.template')
 
 @section('content')
-<div class="container">
-    <div class="card shadow-sm p-4">
-        <h3 class="fw-bold text-center mb-4">Biodata Mentor</h3>
-        <!-- Kolom User -->
-        <div class="row">
-            <!-- Kolom Kiri: Informasi User -->
-            <div class="col-md-8">
-                <div class="card p-3 border-0 shadow-sm">
-                    <h5 class="fw-bold text-primary">Informasi User</h5>
-                    <table class="table">
-                        <tr><th>Nama</th><td>: {{ $user->name }}</td></tr>
-                        <tr><th>Email</th><td>: {{ $user->email }}</td></tr>
-                        <tr><th>No Telepon</th><td>: {{ $user->no_telepon ?? '-' }}</td></tr>
-                        <tr><th>Jabatan</th><td>: {{ $user->jabatan->nama_jabatan ?? '-' }}</td></tr>
-                        <tr><th>Divisi</th><td>: {{ $user->divisi->nama_divisi ?? '-' }}</td></tr>
-                        <tr>
-                        <th>Status</th>
-                        <td>
-                            @if ($biodata)
-                                : <span class="badge bg-{{ $biodata->status == 'aktif' ? 'success' : ($biodata->status == 'cuti' ? 'warning' : 'danger') }}">
-                                    {{ ucfirst($biodata->status) }}
-                                </span>
-                            @else
-                                : <span class="badge bg-secondary">Belum Diisi</span>
-                            @endif
-                        </td>
-                    </tr>
+<div class="container py-4"> {{-- Tambah padding atas/bawah --}}
+    <div class="card shadow-sm p-lg-4 p-3"> {{-- Sesuaikan padding untuk layar besar/kecil --}}
+        <h3 class="fw-bold text-center mb-4 text-primary">Biodata Mentor</h3> {{-- Warna judul --}}
 
-                    </table>
+        <div class="row g-4 mb-4 align-items-center"> {{-- Gunakan g-4 untuk gap antar kolom, align-items-center agar foto sejajar --}}
+            {{-- Kolom Kiri: Informasi User --}}
+            <div class="col-md-8">
+                <div class="card p-4 h-100 border-0 shadow-sm"> {{-- h-100 agar tinggi kartu sama --}}
+                    <h5 class="fw-bold text-primary mb-3">Informasi Akun</h5> {{-- Judul lebih spesifik --}}
+                    <div class="table-responsive"> {{-- Pastikan tabel responsif --}}
+                        <table class="table table-borderless mb-0"> {{-- Tanpa border agar lebih bersih --}}
+                            <tbody>
+                                <tr>
+                                    <th style="width: 150px;">Nama</th>
+                                    <td>: {{ $user->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>: {{ $user->email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>No Telepon</th>
+                                    <td>: {{ $user->no_telepon ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Jabatan</th>
+                                    <td>: {{ $user->jabatan->nama_jabatan ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Divisi</th>
+                                    <td>: {{ $user->divisi->nama_divisi ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td>
+                                        @if ($biodata)
+                                            : <span class="badge bg-{{ $biodata->status == 'aktif' ? 'success' : ($biodata->status == 'cuti' ? 'warning' : 'danger') }}">
+                                                {{ ucfirst($biodata->status) }}
+                                            </span>
+                                        @else
+                                            : <span class="badge bg-secondary">Belum Diisi</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Kolom Kanan: Foto User -->
-            <div class="col-md-4 d-flex align-items-center justify-content-center">
-                <div class="card p-3 border-0 shadow-sm text-center">
-                    <h5 class="fw-bold text-primary">Foto User</h5>
-                    <img 
-                    src="{{ $biodata && $biodata->foto ? asset('storage/' . $biodata->foto) : asset('assets/img/elements/default-avatar.png') }}" 
-                    alt="Foto User" 
-                    class="img-fluid rounded-circle border shadow" 
-                    style="width: 150px; height: 150px; object-fit: cover;">
-
+            {{-- Kolom Kanan: Foto User --}}
+            <div class="col-md-4">
+                <div class="card p-4 h-100 border-0 shadow-sm text-center d-flex flex-column justify-content-center align-items-center">
+                    <h5 class="fw-bold text-primary mb-3">Foto Profil</h5> {{-- Judul lebih umum --}}
+                    <img
+                        src="{{ $biodata && $biodata->foto ? asset('storage/' . $biodata->foto) : asset('assets/img/elements/default-avatar.png') }}"
+                        alt="Foto User"
+                        class="img-fluid rounded-circle border border-2 shadow-sm" {{-- Tambah border-2 untuk ketebalan --}}
+                        style="width: 150px; height: 150px; object-fit: cover;">
                 </div>
             </div>
         </div>
-        <!-- <br/> -->
 
-
-        <!-- Tab Content -->
-        <div class="p-3 mt-3">
-            <!-- Tab Biodata -->
-            <div class="tab-pane fade show active" id="biodata" role="tabpanel" aria-labelledby="biodata-tab">
-                <div class="row">
-                    <!-- Kolom Biodata -->
-                        <div class="card p-3 border-0 shadow-sm">
-                            <h5 class="fw-bold text-primary">Informasi Biodata</h5>
-                            <table class="table">
-                                <tr><th>NIP</th><td>: {{ $biodata->nip ?? '-' }}</td></tr>
-                                <tr><th>Nama Lengkap</th><td>: {{ $biodata->nama_lengkap ?? '-' }}</td></tr>
-                                <tr><th>NIK</th><td>: {{ $biodata->nik ?? '-' }}</td></tr>
+        {{-- Bagian Informasi Biodata --}}
+        <div class="row">
+            <div class="col-12"> {{-- Ambil lebar penuh untuk bagian biodata --}}
+                <div class="card p-4 border-0 shadow-sm">
+                    <h5 class="fw-bold text-primary mb-3">Informasi Biodata Detail</h5> {{-- Judul lebih deskriptif --}}
+                    <div class="table-responsive"> {{-- Pastikan tabel ini juga responsif --}}
+                        <table class="table table-borderless mb-0"> {{-- Tanpa border --}}
+                            <tbody>
+                                <tr>
+                                    <th style="width: 150px;">NIP</th>
+                                    <td>: {{ $biodata->nip ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nama Lengkap</th>
+                                    <td>: {{ $biodata->nama_lengkap ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>NIK</th>
+                                    <td>: {{ $biodata->nik ?? '-' }}</td>
+                                </tr>
                                 <tr>
                                     <th>Tempat, Tanggal Lahir</th>
                                     <td>
-                                        : 
-                                        {{ $biodata?->tempat_lahir ?? '-' }}, 
-                                        {{ $biodata?->tanggal_lahir ? date('d M Y', strtotime($biodata->tanggal_lahir)) : '-' }}
+                                        :
+                                        {{ $biodata?->tempat_lahir ?? '-' }},
+                                        {{ $biodata?->tanggal_lahir ? \Carbon\Carbon::parse($biodata->tanggal_lahir)->translatedFormat('d F Y') : '-' }} {{-- Gunakan Carbon untuk format tanggal yang lebih baik --}}
                                     </td>
                                 </tr>
-
-                                <tr><th>No HP</th><td>: {{ $biodata->no_hp ?? '-' }}</td></tr>
-                                <tr><th>Alamat</th><td>: {{ $biodata->alamat ?? '-' }}</td></tr>
-                                <tr><th>Jabatan</th><td>: {{ $user->jabatan->nama_jabatan ?? '-' }}</td></tr>
-                                <tr><th>Divisi</th><td>: {{ $user->divisi->nama_divisi ?? '-' }}</td></tr>
-                                <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->tanggal_bergabung)) }}</td></tr>
-
-                                <!-- Foto KTP -->
+                                <tr>
+                                    <th>Alamat</th>
+                                    <td>: {{ $biodata->alamat ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tanggal Bergabung</th>
+                                    <td>: {{ \Carbon\Carbon::parse($user->tanggal_bergabung)->translatedFormat('d F Y') }}</td> {{-- Gunakan Carbon --}}
+                                </tr>
                                 <tr>
                                     <th>Foto KTP</th>
                                     <td>
                                         @if ($biodata?->data_ktp)
-                                            <img src="{{ asset('storage/app/public/' . $biodata->data_ktp) }}" alt="Foto KTP" width="100">
-                                            <button class="btn btn-primary btn-sm" onclick="printKtp('{{ $biodata->data_ktp }}')">
-                                                <i class="menu-icon tf-icons bx bx-printer"></i>
+                                            <img src="{{ asset('storage/' . $biodata->data_ktp) }}" alt="Foto KTP" class="img-fluid rounded shadow-sm" style="max-width: 150px; height: auto;">
+                                            <button class="btn btn-outline-primary btn-sm ms-2 mt-2 mt-sm-0" onclick="printKtp('{{ $biodata->data_ktp }}')"> {{-- Sesuaikan margin --}}
+                                                <i class="bx bx-printer me-1"></i> Cetak KTP
                                             </button>
-                                            <script>
-                                                function printKtp(data_ktp) {
-                                                    window.open("{{ asset('storage/app/public/', '') }}/" + data_ktp, '_blank');
-                                                }
-                                            </script>
                                         @else
-                                            <button class="btn btn-danger btn-sm">Belum diupload</button>
+                                            <span class="text-danger">Belum diupload</span>
+                                            <button class="btn btn-outline-secondary btn-sm ms-2 mt-2 mt-sm-0" disabled>
+                                                <i class="bx bx-file-blank me-1"></i> Tidak Ada
+                                            </button>
                                         @endif
                                     </td>
                                 </tr>
-
-                                <!-- Tanda Tangan -->
                                 <tr>
                                     <th>Tanda Tangan</th>
                                     <td>
                                         @if ($biodata?->data_ttd)
-                                            <img src="{{ asset('storage/app/public/' . $biodata->data_ttd) }}" alt="Tanda Tangan" width="100">
+                                            <img src="{{ asset('storage/' . $biodata->data_ttd) }}" alt="Tanda Tangan" class="img-fluid rounded shadow-sm" style="max-width: 150px; height: auto;">
                                         @else
-                                            <button class="btn btn-danger btn-sm">Belum diupload</button>
+                                            <span class="text-danger">Belum diupload</span>
+                                            <button class="btn btn-outline-secondary btn-sm ms-2 mt-2 mt-sm-0" disabled>
+                                                <i class="bx bx-pencil me-1"></i> Tidak Ada
+                                            </button>
                                         @endif
                                     </td>
                                 </tr>
-                            </table>
-                        </div>
-                </div>
-
-                <!-- Tombol Edit -->
-                <div class="text-center mt-4">
-                <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
-                    <i class="bx bx-edit"></i> Edit Data
-                </a>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4 py-2 rounded-pill shadow">
+                <i class="bx bx-edit me-1"></i> Edit Data
+            </a>
+        </div>
     </div>
 </div>
+
+<script>
+    function printKtp(data_ktp_path) {
+        // Pastikan path ke file KTP benar. 'storage/' harus mengarah ke symlink public/storage
+        window.open("{{ asset('storage') }}/" + data_ktp_path.replace('app/public/', ''), '_blank');
+    }
+</script>
 @endsection

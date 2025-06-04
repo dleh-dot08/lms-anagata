@@ -296,5 +296,71 @@
         background-color: rgba(0, 123, 255, 0.05);
         border-bottom: 3px solid rgba(0, 123, 255, 0.2);
     }
+    @media (max-width: 768px) {
+    .content-wrapper {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .card-header h3,
+    .card-header h5 {
+        font-size: 1.25rem;
+    }
+
+    .card-header .fw-bold {
+        font-size: 0.9rem;
+    }
+
+    .ratio {
+        height: auto;
+    }
+
+    iframe {
+        width: 100%;
+        height: auto;
+    }
+
+    .dropdown-menu {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .dropdown-menu .dropdown-item {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 576px) {
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .card-header .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-tabs.nav-fill .nav-item {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-tabs .nav-link {
+        width: 100%;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.4em 0.6em;
+    }
+}
+
 </style>
 @endsection

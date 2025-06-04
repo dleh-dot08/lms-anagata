@@ -167,11 +167,17 @@
 
                                             @foreach($meetings as $meeting)
                                                 @php
-                                                    $score = $scoresData[$student->id . '-' . $meeting->id][0] ?? null;
-                                                    
+                                                    // Ambil skor untuk siswa dan pertemuan ini
+                                                    // $scoresData[$student->id . '-' . $meeting->id] akan berisi Collection, ambil yang pertama
+                                                    $scoreCollection = $scoresData->get($student->id . '-' . $meeting->id);
+                                                    $score = $scoreCollection ? $scoreCollection->first() : null; // Ambil object Score, bukan array
+
                                                     $creativity = $score->creativity_score ?? null;
                                                     $design = $score->design_score ?? null;
                                                     $program = $score->program_score ?? null;
+                                                    
+                                                    // Ambil nama mentor dari relasi 'mentor'
+                                                    $mentorName = $score && $score->mentor ? $score->mentor->name : 'N/A';
                                                     
                                                     $meetingScores = array_filter([$creativity, $design, $program], function($val) {
                                                         return !is_null($val);
@@ -207,16 +213,20 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center border-end">
-                                                    @if(is_null($avgMeeting))
-                                                        <span class="badge bg-light text-muted fs-6 py-2 px-3">-</span>
-                                                    @else
-                                                        @php
-                                                            $badgeClass = 'bg-success'; // Tetap gunakan success/danger/warning
-                                                            if ($avgMeeting < 60) $badgeClass = 'bg-danger';
-                                                            elseif ($avgMeeting < 75) $badgeClass = 'bg-warning';
-                                                        @endphp
-                                                        <span class="badge {{ $badgeClass }} fs-6 py-2 px-3">{{ number_format($avgMeeting, 1) }}</span>
-                                                    @endif
+                                                    <div class="d-flex flex-column align-items-center justify-content-center">
+                                                        @if(is_null($avgMeeting))
+                                                            <span class="badge bg-light text-muted fs-6 py-2 px-3">-</span>
+                                                        @else
+                                                            @php
+                                                                $badgeClass = 'bg-success'; // Tetap gunakan success/danger/warning
+                                                                if ($avgMeeting < 60) $badgeClass = 'bg-danger';
+                                                                elseif ($avgMeeting < 75) $badgeClass = 'bg-warning';
+                                                            @endphp
+                                                            <span class="badge {{ $badgeClass }} fs-6 py-2 px-3">{{ number_format($avgMeeting, 1) }}</span>
+                                                        @endif
+                                                        {{-- Tampilkan nama mentor di sini --}}
+                                                        <small class="text-muted mt-1" style="font-size: 0.75em;">Oleh: {{ $mentorName }}</small>
+                                                    </div>
                                                 </td>
                                             @endforeach
                                             <td class="text-center bg-white">
@@ -262,11 +272,13 @@
                                                 
                                                 @foreach($meetings as $meeting)
                                                     @php
-                                                        $score = $scoresData[$student->id . '-' . $meeting->id][0] ?? null;
-                                                        
+                                                        $scoreCollection = $scoresData->get($student->id . '-' . $meeting->id);
+                                                        $score = $scoreCollection ? $scoreCollection->first() : null; // Ambil object Score
+
                                                         $creativity = $score->creativity_score ?? null;
                                                         $design = $score->design_score ?? null;
                                                         $program = $score->program_score ?? null;
+                                                        $mentorName = $score && $score->mentor ? $score->mentor->name : 'N/A'; // Ambil nama mentor
                                                         
                                                         $meetingScores = array_filter([$creativity, $design, $program], function($val) {
                                                             return !is_null($val);
@@ -281,8 +293,9 @@
                                                     @endphp
                                                     
                                                     <div class="mb-3 p-3 bg-light rounded-3 border">
-                                                        <h6 class="text-dark mb-3 fw-bold"> {{-- Text dark --}}
-                                                            <i class="fas fa-calendar-day me-2 text-blue-main"></i>Pertemuan {{ $meeting->pertemuan }} {{-- Ikon biru --}}
+                                                        <h6 class="text-dark mb-3 fw-bold">
+                                                            <i class="fas fa-calendar-day me-2 text-blue-main"></i>Pertemuan {{ $meeting->pertemuan }}
+                                                            <span class="text-muted small fst-italic ms-2" style="font-size: 0.75em;">(Oleh: {{ $mentorName }})</span>
                                                         </h6>
                                                         <div class="row g-2 mb-2">
                                                             <div class="col-4">
@@ -343,7 +356,7 @@
                 </div>
             </div>
         </div>
-    @else
+        @else
         <div class="row">
             <div class="col-12">
                 <div class="card shadow-lg border-0 rounded-4 text-center" style="background: rgba(255, 255, 255, 0.95);">

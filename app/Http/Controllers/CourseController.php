@@ -26,7 +26,7 @@ class CourseController extends Controller
     // Menampilkan daftar kursus
     public function index(Request $request)
     {
-        $query = Course::with(['mentor', 'kategori', 'jenjang']);
+        $query = Course::with(['mentor', 'mentor2', 'mentor3', 'kategori', 'jenjang']); // Eager load mentor2 and mentor3
 
         // Filter berdasarkan tab aktif/nonaktif + waktu_akhir
         if ($request->tab === 'nonaktif') {
@@ -56,10 +56,10 @@ class CourseController extends Controller
 
         if ($user->role_id === 1) {
             return view('courses.index', compact('courses'));
-    
+
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
             return view('layouts.karyawan.kursus.index', compact('courses'));
-    
+
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -92,6 +92,8 @@ class CourseController extends Controller
         $validated = $request->validate([
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
+            'mentor_id_2' => 'nullable|exists:users,id', // Corrected to mentor_id_2
+            'mentor_id_3' => 'nullable|exists:users,id', // Corrected to mentor_id_3
             'deskripsi' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategoris,id',
             'jenjang_id' => 'required|exists:jenjang,id',
@@ -108,7 +110,7 @@ class CourseController extends Controller
 
         // Add kode_unik to validated data
         $validated['kode_unik'] = Course::generateKodeKelas();
-        
+
         $course = Course::create($validated);
 
         $user = auth()->user();
@@ -123,7 +125,7 @@ class CourseController extends Controller
             abort(403, 'Akses dilarang.');
         }
     }
-    
+
 
     // Menampilkan halaman untuk mengedit kursus
     public function edit($id)
@@ -153,6 +155,8 @@ class CourseController extends Controller
         $request->validate([
             'nama_kelas' => 'required|string|max:255',
             'mentor_id' => 'required|exists:users,id',
+            'mentor_id_2' => 'nullable|exists:users,id', // Corrected to mentor_id_2
+            'mentor_id_3' => 'nullable|exists:users,id', // Corrected to mentor_id_3
             'kategori_id' => 'required|exists:kategoris,id',
             'jenjang_id' => 'required|exists:jenjang,id',
             'kelas_id' => 'nullable|exists:kelas,id',
@@ -170,6 +174,8 @@ class CourseController extends Controller
         $course->update($request->only([
             'nama_kelas',
             'mentor_id',
+            'mentor_id_2', // Corrected to mentor_id_2
+            'mentor_id_3', // Corrected to mentor_id_3
             'kategori_id',
             'jenjang_id',
             'kelas_id',
@@ -188,10 +194,10 @@ class CourseController extends Controller
 
         if ($user->role_id === 1) {
             return redirect()->route('courses.index')->with('success', 'Kursus berhasil diperbarui.');
-    
+
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
             return redirect()->route('courses.apd.index')->with('success', 'Kursus berhasil diperbarui.');
-    
+
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -200,11 +206,13 @@ class CourseController extends Controller
     // Menampilkan halaman detail kursus
     public function show(Request $request, $id)
     {
-        $course = Course::with(['mentor', 'kategori', 'jenjang', 'program', 'meetings', 'lessons', 'projects'])->findOrFail($id);
-        
+        $course = Course::with(['mentor', 'mentor2', 'mentor3', 'kategori', 'jenjang', 'program', 'meetings', 'lessons', 'projects'])->findOrFail($id);
+
         // Get enrollments with pagination and search
-        $enrollmentsQuery = $course->enrollments()->with(['user.jenjang']);
-        
+        // PENTING: Eager load 'user', dan kemudian 'jenjang', 'sekolah', 'kelas' langsung dari model Enrollment
+        // Ini akan memuat data historis yang tersimpan di tabel enrollments
+        $enrollmentsQuery = $course->enrollments()->with(['user', 'jenjang', 'sekolah', 'kelas']);
+
         if ($request->filled('search')) {
             $search = $request->search;
             $enrollmentsQuery->whereHas('user', function($q) use ($search) {
@@ -212,7 +220,7 @@ class CourseController extends Controller
                     ->orWhere('email', 'like', "%{$search}%");
             });
         }
-        
+
         $enrollments = $enrollmentsQuery->paginate(10)->withQueryString();
 
         $user = Auth::user();
@@ -226,7 +234,6 @@ class CourseController extends Controller
         }
     }
 
-
     // Menghapus kursus (soft delete)
     public function destroy(Course $course)
     {
@@ -236,10 +243,10 @@ class CourseController extends Controller
 
         if ($user->role_id === 1) {
             return redirect()->route('courses.apd.index')->with('success', 'Kursus berhasil dihapus.');
-    
+
         } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
             return redirect()->route('courses.apd.index')->with('success', 'Kursus berhasil dihapus.');
-    
+
         } else {
             abort(403, 'Akses dilarang.');
         }
@@ -301,76 +308,127 @@ class CourseController extends Controller
         return back()->with('success', 'Peserta berhasil dihapus.');
     }
 
+    /**
+     * Menampilkan daftar kursus yang diikuti peserta.
+     * Filter berdasarkan status kursus (Aktif/Nonaktif) dan status pendaftaran (aktif/tidak_aktif).
+     */
     public function indexpeserta(Request $request)
     {
         $user = Auth::user();
 
         $query = $user->enrolledCourses()
-        ->with(['kategori', 'jenjang', 'mentor'])
-            // Filter hanya kursus yang sedang aktif
-            ->where('status', 'aktif')
-            ->whereDate('waktu_mulai', '<=', now())
-            ->whereDate('waktu_akhir', '>=', now())
-            // Pencarian nama kursus
-            ->when($request->search, function ($q) use ($request) {
-                $q->where('nama_kelas', 'like', '%' . $request->search . '%');
-            })
-            // Filter status (jika ingin override filter status di atas)
-            ->when($request->status, function ($q) use ($request) {
-                $q->where('status', $request->status);
-            })
-            ->orderBy('waktu_mulai', 'desc');
+            ->with(['kategori', 'jenjang', 'mentor']);
+
+        // Filter: Hanya kursus yang statusnya 'Aktif' di tabel courses
+        $query->where('courses.status', 'Aktif'); // Kualifikasi 'courses.status'
+
+        // Filter: Hanya kursus yang waktu mulainya sudah lewat dan waktu akhirnya belum lewat
+        $query->whereDate('courses.waktu_mulai', '<=', Carbon::now());
+        $query->whereDate('courses.waktu_akhir', '>=', Carbon::now());
+
+        // Filter: Pencarian nama kursus
+        $query->when($request->filled('search'), function ($q) use ($request) {
+            $q->where('courses.nama_kelas', 'like', '%' . $request->search . '%'); // Kualifikasi 'courses.nama_kelas'
+        });
+
+        // Filter: Status pendaftaran peserta ('aktif'/'tidak_aktif')
+        // Ini berlaku pada tabel pivot (enrollments)
+        $query->wherePivot('status', 'aktif'); // Default: Hanya tampilkan kursus dengan enrollment 'aktif'
+
+        // Jika ada permintaan filter status enrollment dari request, terapkan
+        $query->when($request->filled('enrollment_status'), function ($q) use ($request) {
+            $q->wherePivot('status', $request->enrollment_status);
+        });
+
+        $query->orderBy('courses.waktu_mulai', 'desc'); // Kualifikasi 'courses.waktu_mulai'
 
         $courses = $query->paginate(10)->withQueryString();
 
         return view('peserta.kursus.index', compact('courses'));
     }
 
+    /**
+     * Menampilkan detail satu kursus untuk peserta.
+     * Membatasi akses berdasarkan status kursus dan status pendaftaran peserta.
+     */
     public function showPeserta($courseId)
     {
-        // Menyaring kursus berdasarkan ID dan relasi yang dibutuhkan
+        $user = Auth::user();
+
+        // Cari kursus berdasarkan ID DAN pastikan user terdaftar di kursus ini
+        // dengan enrollment yang aktif
         $course = Course::with(['kategori', 'jenjang', 'mentor', 'lessons'])
+                        ->whereHas('enrollments', function ($q) use ($user) {
+                            $q->where('user_id', $user->id)
+                              ->where('status', 'aktif'); // Pastikan enrollment user ini aktif
+                        })
                         ->findOrFail($courseId);
 
-        // Mengecek apakah kursus aktif
-        if ($course->status != 'aktif' || \Carbon\Carbon::now()->notBetween($course->waktu_mulai, $course->waktu_akhir)) {
-            return view('peserta.kursus.show', ['course' => $course, 'isActive' => false]);
+        // Jika kursus ditemukan, cek status kursus itu sendiri dan rentang waktunya
+        // (cek enrollment user sudah dilakukan di whereHas di atas)
+        if ($course->status !== 'Aktif' || Carbon::now()->lt($course->waktu_mulai) || Carbon::now()->gt($course->waktu_akhir)) {
+            abort(403, 'Kursus ini sudah tidak aktif atau belum/sudah selesai.');
         }
 
+        // Jika semua cek berhasil, tampilkan kursus
         return view('peserta.kursus.show', ['course' => $course, 'isActive' => true]);
     }
 
+    /**
+     * Menampilkan detail satu lesson dalam kursus untuk peserta.
+     * Membatasi akses berdasarkan status kursus dan status pendaftaran peserta.
+     */
     public function showLesson($courseId, $lessonId)
     {
-        $course = Course::with('meetings.lesson')->findOrFail($courseId);
+        $user = Auth::user();
     
+        // Cari kursus berdasarkan ID DAN pastikan user terdaftar di kursus ini
+        // dengan enrollment yang aktif
+        $course = Course::with('meetings.lesson')
+                        ->whereHas('enrollments', function ($q) use ($user) {
+                            $q->where('user_id', $user->id)
+                              ->where('status', 'aktif'); // Pastikan enrollment user ini aktif
+                        })
+                        ->findOrFail($courseId); // Jika tidak ditemukan, akan 404
+    
+        // Setelah memastikan user terdaftar di kursus dengan enrollment aktif,
+        // cek status kursus itu sendiri dan rentang waktunya
+        if ($course->status !== 'Aktif' || Carbon::now()->lt($course->waktu_mulai) || Carbon::now()->gt($course->waktu_akhir)) {
+            abort(403, 'Materi pelajaran ini tidak tersedia. Kursus tidak aktif atau telah berakhir.');
+        }
+    
+        // Ambil lesson setelah semua pengecekan akses kursus berhasil
         $lesson = Lesson::with('meeting')
-            ->where('course_id', $courseId)
+            ->where('course_id', $course->id) // Pastikan lesson milik course yang sudah divalidasi
             ->where('id', $lessonId)
-            ->firstOrFail();
+            ->firstOrFail(); // Jika tidak ditemukan, akan 404
     
         return view('peserta.kursus.showLesson', compact('course', 'lesson'));
     }
     
-
     // Menampilkan kursus yang diajarkan oleh mentor
     public function indexMentor(Request $request)
     {
-        $user = Auth::user();
-    
-        $courses = Course::with(['kategori', 'jenjang'])
-            ->where('mentor_id', $user->id)
+        $mentorId = auth()->id();
+        $today = now();
+
+        $courses = Course::with(['mentor', 'mentor2', 'mentor3', 'kategori'])
+            ->where(function($query) use ($mentorId) {
+                $query->where('mentor_id', $mentorId)
+                      ->orWhere('mentor_id_2', $mentorId)
+                      ->orWhere('mentor_id_3', $mentorId);
+            })
             ->when($request->filled('search'), function ($query) use ($request) {
                 $query->where('nama_kelas', 'like', '%' . $request->search . '%');
             })
             ->orderBy('waktu_mulai', 'desc')
             ->paginate(10);
-    
+
         $courses->getCollection()->transform(function ($course) {
             $course->status_dinamis = now()->greaterThan(Carbon::parse($course->waktu_akhir)) ? 'Non-Aktif' : 'Aktif';
             return $course;
         });
-    
+
         return view('mentor.kursus.index', [
             'courses' => $courses,
             'search' => $request->search,
@@ -381,10 +439,10 @@ class CourseController extends Controller
     // Detail kursus untuk mentor
     public function showMentor($id)
     {
-        $course = Course::with(['kategori', 'jenjang', 'lessons', 'enrollments.user'])->findOrFail($id);
+        $course = Course::with(['kategori', 'jenjang', 'lessons', 'enrollments.user', 'mentor', 'mentor2', 'mentor3'])->findOrFail($id); // Eager load mentor2 and mentor3
 
-        // Optional: check if this mentor owns the course
-        if ($course->mentor_id !== Auth::id()) {
+        // Optional: check if this mentor owns the course or is a backup mentor
+        if ($course->mentor_id !== Auth::id() && $course->mentor_id_2 !== Auth::id() && $course->mentor_id_3 !== Auth::id()) { // Corrected
             abort(403, 'Unauthorized access');
         }
 
@@ -396,7 +454,8 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($courseId);
 
-        if ($course->mentor_id !== Auth::id()) {
+        // Optional: check if this mentor owns the course or is a backup mentor
+        if ($course->mentor_id !== Auth::id() && $course->mentor_id_2 !== Auth::id() && $course->mentor_id_3 !== Auth::id()) { // Corrected
             abort(403, 'Unauthorized access');
         }
 
@@ -410,7 +469,7 @@ class CourseController extends Controller
         {
             return view('peserta.kursus.join');
         }
-    
+
         // Proses input kode
         public function joinWithCodePeserta(Request $request)
         {
@@ -419,7 +478,7 @@ class CourseController extends Controller
             ], [
                 'kode_unik.exists' => 'Kode kursus tidak ditemukan.',
             ]);
-    
+
             $course = Course::where('kode_unik', $request->kode_unik)->first();
             $user   = auth()->user();
 
@@ -428,21 +487,21 @@ class CourseController extends Controller
                 return redirect()->route('courses.indexpeserta')
                                  ->withErrors(['kode_unik' => 'Kamu tidak memiliki jenjang yang sesuai untuk mengikuti kursus ini.']);
             }
-    
+
             // Cek sudah terdaftar?
             if ($user->courses()->where('course_id', $course->id)->exists()) {
                 return redirect()->route('courses.showPeserta', $course->id)
                                  ->with('info', 'Kamu sudah terdaftar di kursus ini.');
             }
-    
+
             // Daftarkan user ke kursus
             $user->courses()->attach($course->id, [
-                'mentor_id' => $course->mentor_id,
+                'mentor_id' => $course->mentor_id, // Still using the primary mentor ID for enrollment
                 'tanggal_daftar' => now(),
                 'tanggal_mulai' => $course->waktu_mulai,
                 'tanggal_selesai' => null,
             ]);
-    
+
             return redirect()->route('courses.showPeserta', $course->id)
                              ->with('success', 'Berhasil bergabung ke kursus!');
         }
@@ -473,7 +532,7 @@ public function searchMentor(Request $request)
 
 public function overview($courseId)
 {
-    $course = Course::with(['mentor', 'meetings', 'lessons'])->findOrFail($courseId);
+    $course = Course::with(['mentor', 'mentor2', 'mentor3', 'meetings', 'lessons'])->findOrFail($courseId); // Eager load mentor2 and mentor3
     return view('mentor.kursus.overview', compact('course'));
 }
 
@@ -488,7 +547,8 @@ public function showSilabus($id)
 {
     $course = Course::findOrFail($id);
 
-    if ($course->mentor_id !== auth()->id()) {
+    // Optional: check if this mentor owns the course or is a backup mentor
+    if ($course->mentor_id !== Auth::id() && $course->mentor_id_2 !== Auth::id() && $course->mentor_id_3 !== Auth::id()) { // Corrected
         abort(403, 'Akses ditolak.');
     }
 
@@ -502,7 +562,8 @@ public function previewSilabus($id)
 {
     $course = Course::findOrFail($id);
 
-    if ($course->mentor_id !== auth()->id()) {
+    // Optional: check if this mentor owns the course or is a backup mentor
+    if ($course->mentor_id !== Auth::id() && $course->mentor_id_2 !== Auth::id() && $course->mentor_id_3 !== Auth::id()) { // Corrected
         abort(403, 'Akses ditolak.');
     }
 
@@ -562,7 +623,7 @@ private function convertToGDrivePreview($url)
 }
 
 public function showAllPeserta($id) {
-    
+
     $course = Course::with('participants')->findOrFail($id);
 
     return view('mentor.kursus.peserta', compact('course'));
@@ -579,7 +640,8 @@ public function listMeetingsForScoring(Course $course)
 {
     $course = Course::with(['kategori', 'jenjang', 'lessons', 'enrollments.user', 'meetings'])->findOrFail($course->id);
 
-    if ($course->mentor_id !== Auth::id()) {
+    // Optional: check if this mentor owns the course or is a backup mentor
+    if ($course->mentor_id !== Auth::id() && $course->mentor_id_2 !== Auth::id() && $course->mentor_id_3 !== Auth::id()) { // Corrected
         abort(403, 'Unauthorized access');
     }
 

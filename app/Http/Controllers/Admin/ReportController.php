@@ -43,8 +43,16 @@ class ReportController extends Controller
 
     public function show($id)
     {
-        $course = Course::with(['participants.sekolah.jenjang', 'meetings'])
-            ->findOrFail($id);
+        $course = Course::with([
+            'participants.sekolah.jenjang',
+            'meetings',
+            // Eager load scores. Di dalam scores, kita filter melalui relasi 'meeting'
+            'participants.scores' => function ($query) use ($id) {
+                $query->whereHas('meeting', function ($q) use ($id) {
+                    $q->where('course_id', $id);
+                })->with('mentor'); // Tetap eager load mentor
+            }
+        ])->findOrFail($id);
 
         return view('admin.reports.nilai.show', compact('course'));
     }

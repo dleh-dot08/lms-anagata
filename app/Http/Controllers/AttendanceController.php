@@ -408,7 +408,7 @@ class AttendanceController extends Controller
             'waktu_absen' => 'required|array',
             'waktu_absen.*' => 'required|date',
         ]);
-    
+        
         DB::transaction(function () use ($validated) {
             foreach ($validated['status'] as $enrollmentId => $status) {
                 $enrollment = \App\Models\Enrollment::findOrFail($enrollmentId);
@@ -421,19 +421,18 @@ class AttendanceController extends Controller
                         'course_id' => $validated['course_id'],
                         'tanggal' => $validated['tanggal'],
                         'status' => $status,
-                        'mentor_id' => auth()->id(),
+                        'recorded_by_user_id' => auth()->id(), // <--- UBAH DI SINI!
                         'waktu_absen' => $validated['waktu_absen'][$enrollmentId],
-                        'user_id' => $enrollment->user_id,
+                        'user_id' => $enrollment->user_id, // ID siswa/peserta
                     ]
                 );
             }
         });
-    
+        
         return redirect()
             ->route('mentor.attendances.select_meeting', $validated['course_id'])
             ->with('success', 'Absensi berhasil disimpan');
-    }
-    
+    }    
     
 
     /**

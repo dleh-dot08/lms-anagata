@@ -55,6 +55,7 @@ class BiodataController extends Controller
 
     public function update(Request $request, $id)
     {
+
         if (Auth::user()->role_id != '1' && Auth::id() != $id) {
             abort(403, 'Unauthorized access.');
         }
@@ -186,10 +187,15 @@ class BiodataController extends Controller
             $biodata->foto = 'data_file_foto_profil/' . $filename;
         }
 
-
         $biodata->save();
 
         return redirect()->route('biodata.index')->with('success', 'Biodata berhasil diperbarui.');
+    }
+
+    public function getKelasByJenjang($jenjangId)
+    {
+        $kelas = Kelas::where('jenjang_id', $jenjangId)->get(['id', 'nama_kelas']); // Sesuaikan dengan nama kolom Anda
+        return response()->json($kelas);
     }
 
 }

@@ -12,6 +12,7 @@
             <a href="{{ route('admin.reports.nilai.index') }}" class="btn btn-secondary">
                 <i class="bx bx-arrow-back me-1"></i> Kembali
             </a>
+            {{-- Tombol Edit Nilai perlu disesuaikan jika Anda ingin admin bisa edit nilai --}}
             <a href="{{ route('admin.reports.nilai.edit', $course->id) }}" class="btn btn-warning">
                 <i class="bx bx-edit me-1"></i> Edit Nilai
             </a>
@@ -59,7 +60,7 @@
                             @foreach($course->meetings as $meeting)
                             <th colspan="4" class="text-center">
                                 Pertemuan {{ $loop->iteration }}
-                                <div class="small text-muted">{{ $meeting->tanggal_pelaksanaan ? $meeting->tanggal_pelaksanaan->format('d/m/Y') : '-' }}</div>
+                                <div class="small text-muted">{{ $meeting->tanggal_pelaksanaan ? \Carbon\Carbon::parse($meeting->tanggal_pelaksanaan)->format('d/m/Y') : '-' }}</div>
                             </th>
                             @endforeach
                         </tr>
@@ -68,7 +69,7 @@
                             <th class="text-center">Creativity</th>
                             <th class="text-center">Program</th>
                             <th class="text-center">Design</th>
-                            <th class="text-center">Total</th>
+                            <th class="text-center">Total<div class="small text-muted">oleh Mentor</div></th> {{-- Tambah label mentor di sini --}}
                             @endforeach
                         </tr>
                     </thead>
@@ -82,14 +83,17 @@
                             </td>
                             @foreach($course->meetings as $meeting)
                                 @php
-                                    $score = App\Models\Score::where('peserta_id', $participant->id)
-                                        ->where('meeting_id', $meeting->id)
-                                        ->first();
+                                    // Cari skor dari relasi yang sudah di-eager load
+                                    $score = $participant->scores->where('meeting_id', $meeting->id)->first();
+                                    $mentorName = ($score && $score->mentor) ? $score->mentor->name : 'N/A';
                                 @endphp
                                 <td class="text-center">{{ ($score && $score->creativity_score !== null) ? number_format($score->creativity_score, 1) : '-' }}</td>
                                 <td class="text-center">{{ ($score && $score->program_score !== null) ? number_format($score->program_score, 1) : '-' }}</td>
                                 <td class="text-center">{{ ($score && $score->design_score !== null) ? number_format($score->design_score, 1) : '-' }}</td>
-                                <td class="text-center">{{ ($score && $score->total_score !== null) ? number_format($score->total_score, 1) : '-' }}</td>
+                                <td class="text-center">
+                                    {{ ($score && $score->total_score !== null) ? number_format($score->total_score, 1) : '-' }}
+                                    <div class="small text-muted" style="font-size: 0.75em;">({{ $mentorName }})</div> {{-- Tampilkan nama mentor di sini --}}
+                                </td>
                             @endforeach
                         </tr>
                         @endforeach
@@ -99,4 +103,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

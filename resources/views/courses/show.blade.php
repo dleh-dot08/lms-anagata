@@ -16,7 +16,11 @@
         <div class="card-body">
             <h3>{{ $course->nama_kelas }}</h3>
             <p><strong>Kode Unik:</strong> {{ $course->kode_unik ?? 'Tidak Ada' }}</p>
-            <p><strong>Mentor:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
+
+            <p><strong>Mentor Utama:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
+            <p><strong>Mentor Cadangan 1:</strong> {{ $course->mentor2->name ?? 'Tidak Ada' }}</p>
+            <p><strong>Mentor Cadangan 2:</strong> {{ $course->mentor3->name ?? 'Tidak Ada' }}</p>
+
             <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</p>
             <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</p>
             <p><strong>Kelas:</strong> {{ $course->kelas->nama ?? 'Tidak Ada' }}</p>
@@ -32,7 +36,7 @@
         </div>
     </div>
 
-    <!-- Daftar Peserta -->
+    {{-- Bagian Card Daftar Peserta --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -42,7 +46,6 @@
                 </a>
             </div>
 
-            <!-- Form pencarian -->
             <form method="GET" action="{{ route('courses.show', $course->id) }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Cari peserta..." value="{{ request('search') }}">
@@ -50,113 +53,220 @@
                 </div>
             </form>
 
-            <table class="table table-hover table-bordered">
-                <thead class="table-primary">
-                    <tr>
-                        <th>#</th>
-                        <th>Nama Peserta</th>
-                        <th>Jenjang</th>
-                        <th>Status</th>
-                        <th>Persentase Kehadiran</th> <!-- Kolom baru untuk persentase -->
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($enrollments as $index => $enrollment)
+            <div class="table-responsive"> 
+                <table class="table table-hover table-bordered">
+                    <thead class="table-primary">
                         <tr>
-                            <td>{{ ($enrollments->currentPage() - 1) * $enrollments->perPage() + $loop->iteration }}</td>
-                            <td>{{ $enrollment->user->name }}</td>
-                            <td>{{ $enrollment->user->jenjang->nama_jenjang ?? '-' }}</td>
-                            <td>
-                                @if ($enrollment->tanggal_selesai)
-                                    <span class="badge bg-success">Selesai</span>
-                                @else
-                                    <span class="badge bg-warning">Aktif</span>
-                                @endif
-                            </td>
-                            <td>
-                                <!-- Menghitung persentase kehadiran -->
-                                @php
-                                    // Menghitung jumlah pertemuan total
-                                    $totalLessons = \App\Models\Lesson::where('course_id', $course->id)->count();
-                                    // Menghitung jumlah hadir atau izin
-                                    $presentCount = \App\Models\Attendance::where('course_id', $course->id)
-                                        ->where('user_id', $enrollment->user->id)
-                                        ->whereIn('status', ['Hadir', 'Izin'])
-                                        ->count();
-                                    // Menghitung persentase kehadiran
-                                    $attendancePercentage = $totalLessons > 0 ? ($presentCount / $totalLessons) * 100 : 0;
-                                @endphp
-                                {{ number_format($attendancePercentage, 2) }}%
-                            </td>
-                            <td>
-                                <form action="{{ route('courses.participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
-                            </td>
+                            <th>#</th>
+                            <th>Nama Peserta</th>
+                            <th>Jenjang</th>
+                            <th>Sekolah</th>
+                            <th>Kelas</th>
+                            <th>Status</th>
+                            <th>Persentase Kehadiran</th>
+                            <th style="min-width: 150px;">Aksi</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Belum ada peserta</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse ($enrollments as $index => $enrollment)
+                            <tr>
+                                <td>{{ ($enrollments->currentPage() - 1) * $enrollments->perPage() + $loop->iteration }}</td>
+                                <td>{{ $enrollment->user->name ?? '-' }}</td>
+                                <td>{{ $enrollment->jenjang->nama_jenjang ?? '-' }}</td>
+                                <td>{{ $enrollment->sekolah->nama_sekolah ?? '-' }}</td>
+                                <td>{{ $enrollment->kelas->nama ?? '-' }}</td>
+                                <td>
+                                    @if ($enrollment->status === 'aktif')
+                                        <span class="badge bg-success">Aktif</span>
+                                    @elseif ($enrollment->status === 'tidak_aktif')
+                                        <span class="badge bg-danger">Tidak Aktif</span>
+                                    @else
+                                        {{-- Fallback untuk status yang tidak dikenal --}}
+                                        <span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $enrollment->status)) }}</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @php
+                                        $totalLessons = \App\Models\Lesson::where('course_id', $course->id)->count();
+                                        $presentCount = \App\Models\Attendance::where('course_id', $course->id)
+                                            ->where('user_id', $enrollment->user->id)
+                                            ->whereIn('status', ['Hadir', 'Izin'])
+                                            ->count();
+                                        $attendancePercentage = $totalLessons > 0 ? ($presentCount / $totalLessons) * 100 : 0;
+                                    @endphp
+                                    {{ number_format($attendancePercentage, 2) }}%
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#editStatusModal-{{ $enrollment->id }}">
+                                            Edit
+                                        </button>
+                                        
+                                        <form action="{{ route('courses.participants.destroy', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center">Belum ada peserta</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div> 
 
-            <!-- Paginasi -->
             <div class="d-flex justify-content-center mt-4">
                 {{ $enrollments->withQueryString()->onEachSide(1)->links('pagination.custom') }}
             </div>
         </div>
     </div>
-    <!-- Pertemuan -->
+
+    @foreach($enrollments as $enrollment)
+    <div class="modal fade" id="editStatusModal-{{ $enrollment->id }}" tabindex="-1" aria-labelledby="editStatusModalLabel-{{ $enrollment->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStatusModalLabel-{{ $enrollment->id }}">Edit Status Peserta: {{ $enrollment->user->name ?? 'N/A' }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('courses.participants.updateStatus', ['course' => $course->id, 'user' => $enrollment->user->id]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="status-{{ $enrollment->id }}" class="form-label">Status</label>
+                            <select class="form-select" id="status-{{ $enrollment->id }}" name="status" required>
+                                <option value="aktif" @if($enrollment->status === 'aktif') selected @endif>Aktif</option>
+                                <option value="tidak_aktif" @if($enrollment->status === 'tidak_aktif') selected @endif>Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endforeach
+
+    {{-- Bagian Card Daftar Pertemuan --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Pertemuan</h4>
+                <h4>Daftar Pertemuan</h4>
                 <a href="{{ route('meetings.create', $course->id) }}" class="btn btn-success">
                     + Tambah Pertemuan
                 </a>
             </div>
 
-            <table class="table table-hover table-bordered">
-                <thead class="table-primary">
-                    <tr>
-                        <th>#</th>
-                        <th>Pertemuan Ke</th>
-                        <th>Judul</th>
-                        <th>Tanggal Pelaksanaan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($course->meetings as $index => $meeting)
+            <div class="table-responsive"> {{-- Wrapper untuk responsivitas tabel --}}
+                <table class="table table-hover table-bordered">
+                    <thead class="table-primary">
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $meeting->pertemuan }}</td>
-                            <td>{{ $meeting->judul }}</td>
-                            <td>{{ \Carbon\Carbon::parse($meeting->tanggal_pelaksanaan)->translatedFormat('l, d M Y') }}</td>
-                            <td>
-                                <a href="{{ route('meetings.edit', [$course->id, $meeting->id]) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('meetings.destroy', [$course->id, $meeting->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus pertemuan ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
-                            </td>
+                            <th>#</th>
+                            <th>Pertemuan Ke</th>
+                            <th>Judul</th>
+                            <th>Tanggal Pelaksanaan</th>
+                            <th>Jam Mulai</th>
+                            <th>Jam Selesai</th>
+                            <th style="min-width: 150px;">Aksi</th> {{-- Beri min-width agar tombol tidak terlalu sempit --}}
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Belum ada pertemuan</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse ($course->meetings as $index => $meeting)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $meeting->pertemuan }}</td>
+                                <td>{{ $meeting->judul }}</td>
+                                <td>{{ \Carbon\Carbon::parse($meeting->tanggal_pelaksanaan)->translatedFormat('l, d M Y') }}</td>
+                                <td>{{ $meeting->jam_mulai ? \Carbon\Carbon::parse($meeting->jam_mulai)->format('H:i') : '-' }}</td>
+                                <td>{{ $meeting->jam_selesai ? \Carbon\Carbon::parse($meeting->jam_selesai)->format('H:i') : '-' }}</td>
+                                <td>
+                                    <div class="d-flex gap-1"> {{-- Mengelompokkan tombol aksi --}}
+                                        <a href="{{ route('meetings.edit', [$course->id, $meeting->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        
+                                        @if(!empty($meeting->schedule_history))
+                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#historyModal-{{ $meeting->id }}">
+                                                Riwayat
+                                            </button>
+                                        @endif
+
+                                        <form action="{{ route('meetings.destroy', [$course->id, $meeting->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pertemuan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">Belum ada pertemuan</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    {{-- Silabus --}}
+
+    {{-- Modals untuk setiap riwayat perubahan pertemuan --}}
+    {{-- Tempatkan ini di bagian paling bawah file show.blade.php Anda, misalnya sebelum @endsection --}}
+    @foreach($course->meetings as $meeting)
+    @if(!empty($meeting->schedule_history))
+    <div class="modal fade" id="historyModal-{{ $meeting->id }}" tabindex="-1" aria-labelledby="historyModalLabel-{{ $meeting->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historyModalLabel-{{ $meeting->id }}">Riwayat Perubahan Jadwal Pertemuan {{ $meeting->pertemuan }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if(count($meeting->schedule_history) > 0)
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Waktu Perubahan</th>
+                                    <th>Diubah Oleh</th>
+                                    <th>Jadwal Lama</th>
+                                    <th>Jadwal Baru</th>
+                                    <th>Alasan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{-- Tampilkan dari yang terbaru ke terlama --}}
+                                @foreach(array_reverse($meeting->schedule_history) as $history) 
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($history['changed_at'])->format('d M Y H:i') }}</td>
+                                    <td>{{ $history['changed_by_user_name'] ?? 'N/A' }}</td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($history['old_tanggal_pelaksanaan'])->format('d/m/Y') }}<br>
+                                        {{ $history['old_jam_mulai'] }} - {{ $history['old_jam_selesai'] }}
+                                    </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($history['new_tanggal_pelaksanaan'])->format('d/m/Y') }}<br>
+                                        {{ $history['new_jam_mulai'] }} - {{ $history['new_jam_selesai'] }}
+                                    </td>
+                                    <td>{{ $history['reason'] ?? '-' }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <p>Tidak ada riwayat perubahan jadwal untuk pertemuan ini.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    @endforeach    {{-- Silabus --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h5>Upload Silabus PDF</h5>
@@ -208,7 +318,6 @@
         </div>
     </div>
 
-    <!-- Materi -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <a href="{{ route('courses.admin.createLessonForm', $course->id) }}" class="btn btn-primary mb-3">Tambah Materi Pembelajaran</a>
@@ -265,10 +374,8 @@
         </div>
     </div>
 
-    <!-- Projects -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <!-- Form pencarian Projects -->
             <form method="GET" action="{{ route('courses.show', $course->id) }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="project_search" class="form-control" placeholder="Cari project..." value="{{ request('project_search') }}">

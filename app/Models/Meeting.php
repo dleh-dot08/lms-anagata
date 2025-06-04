@@ -16,10 +16,16 @@ class Meeting extends Model
         'description',
         'pertemuan',
         'tanggal_pelaksanaan',
+        'jam_mulai',  
+        'jam_selesai',  
+        'schedule_history',
     ];
 
     protected $casts = [
         'tanggal_pelaksanaan' => 'date',
+        'jam_mulai' => 'datetime',
+        'jam_selesai' => 'datetime', 
+        'schedule_history' => 'array',
     ];    
 
     // Relasi ke model Course

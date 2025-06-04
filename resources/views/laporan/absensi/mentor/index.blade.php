@@ -19,6 +19,15 @@
                             <div>
                                 <h5 class="mb-0 fw-bold text-dark">{{ $course->nama_kelas }}</h5>
                                 <small class="text-muted">Kode: {{ $course->kode_unik }} | Level: {{ $course->level }}</small>
+                                <div class="d-flex flex-wrap gap-1 mt-2">
+                                    <span class="badge bg-primary">{{ $course->mentor->name }}</span>
+                                    @if($course->mentor2)
+                                        <span class="badge bg-info">{{ $course->mentor2->name }}</span>
+                                    @endif
+                                    @if($course->mentor3)
+                                        <span class="badge bg-info">{{ $course->mentor3->name }}</span>
+                                    @endif
+                                </div>
                             </div>
                             <i class="fas fa-chevron-right ms-auto text-blue-main"></i>
                         </div>

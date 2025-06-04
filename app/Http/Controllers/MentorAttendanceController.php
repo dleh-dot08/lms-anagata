@@ -24,6 +24,17 @@ class MentorAttendanceController extends Controller
         if ($user->role_id != 2) {
             abort(403, 'Hanya mentor yang dapat mengakses halaman ini.');
         }
+
+        // Cek apakah user adalah mentor utama atau cadangan untuk kursus ini
+        $isMentor = Course::where(function($query) use ($user) {
+            $query->where('mentor_id', $user->id)
+                  ->orWhere('mentor_id_2', $user->id)
+                  ->orWhere('mentor_id_3', $user->id);
+        })->exists();
+
+        if (!$isMentor) {
+            abort(403, 'Anda tidak memiliki akses ke kursus ini.');
+        }
     
         // Ambil hanya kursus yang status-nya 'Aktif'
         $courses = auth()->user()->mentorCourses()

@@ -55,9 +55,8 @@ use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
 use App\Http\Controllers\KelasController;
 
 // Add this route before the auth routes
-Route::get('/api/jenjang/{jenjang}/kelas', function($jenjang) {
-    return App\Models\Kelas::where('id_jenjang', $jenjang)->get();
-});
+Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
+Route::get('/get-kelas-by-jenjang/{jenjangId}', [BiodataController::class, 'getKelasByJenjang'])->name('get.kelas.by.jenjang');
 
 Route::get('/', function () {
     return view('welcome');
@@ -137,6 +136,7 @@ Route::middleware('auth', 'verified')->group(function () {
         // AJAX: Search peserta untuk Select2 autocomplete
         Route::get('search-peserta', [ParticipantController::class, 'search'])->name('participants.search');
 
+        Route::put('{course}/participants/{user}/status', [ParticipantController::class, 'updateStatusParticipant'])->name('participants.updateStatus');
         // Hapus peserta dari kursus
         Route::delete('{course}/participants/{user}', [ParticipantController::class, 'destroy'])->name('participants.destroy');
 
@@ -731,6 +731,7 @@ Route::prefix('mentor')->name('mentor.')->middleware(['auth', MentorMiddleware::
 
     Route::get('/attendance', [MentorAttendanceReportController::class, 'index'])->name('attendance.report.index');
     Route::get('/attendance/recap/{course}', [MentorAttendanceReportController::class, 'show'])->name('attendance.show');
+    Route::get('/mentor/courses/{course}/attendance/export-excel', [MentorAttendanceReportController::class, 'exportRecapExcel'])->name('attendances.export_excel');
 });
 
 

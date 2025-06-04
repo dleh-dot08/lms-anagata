@@ -90,6 +90,15 @@
                                     <span class="small fw-medium opacity-75">Kursus</span>
                                 </div>
                                 <h3 class="h5 fw-bold mb-2 text-truncate-2 text-white">{{ $course->nama_kelas }}</h3> {{-- text-truncate-2 perlu custom CSS --}}
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    <span class="badge bg-light text-primary">{{ $course->mentor->name }}</span>
+                                    @if($course->mentor2)
+                                        <span class="badge bg-light text-info">{{ $course->mentor2->name }}</span>
+                                    @endif
+                                    @if($course->mentor3)
+                                        <span class="badge bg-light text-info">{{ $course->mentor3->name }}</span>
+                                    @endif
+                                </div>
                                 <div class="d-flex align-items-center small opacity-75">
                                     <svg class="bi text-white me-1" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>

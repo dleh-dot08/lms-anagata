@@ -15,6 +15,8 @@ class Course extends Model
     protected $fillable = [
         'kode_unik',
         'mentor_id',
+        'mentor_id_2', // Tambahkan ini
+        'mentor_id_3', // Tambahkan ini
         'sekolah_id',
         'nama_kelas',
         'deskripsi',
@@ -48,6 +50,18 @@ class Course extends Model
     {
         return $this->belongsTo(User::class, 'mentor_id')->where('role_id', 2);
     }
+
+            // Relasi untuk mentor kedua
+            public function mentor2()
+            {
+                return $this->belongsTo(User::class, 'mentor_id_2')->where('role_id', 2);
+            }
+        
+            // Relasi untuk mentor ketiga
+            public function mentor3()
+            {
+                return $this->belongsTo(User::class, 'mentor_id_3')->where('role_id', 2);
+            }
 
     // Relasi ke Kategori
     public function kategori()
@@ -104,9 +118,9 @@ class Course extends Model
 
     public function participants()
     {
-        return $this->belongsToMany(User::class, 'enrollments')
-        ->withPivot(['mentor_id', 'tanggal_daftar', 'tanggal_mulai', 'tanggal_selesai'])
-        ->withTimestamps();
+        return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'user_id')
+                    ->withPivot('status', 'tanggal_daftar', 'tanggal_mulai', 'tanggal_selesai')
+                    ->using(Enrollment::class);
     }
 
     public function certificates()
@@ -152,6 +166,9 @@ class Course extends Model
             'id'               // Local key on the Meeting model (default is 'id')
         );
     }
+
+    
+
 
 
 }

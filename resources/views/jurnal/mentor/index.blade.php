@@ -19,6 +19,15 @@
                             <div class="card-body">
                                 <h5 class="card-title text-dark fw-semibold">{{ $course->nama_kelas }}</h5>
                                 <p class="card-text mb-1 text-muted"><i class="bi bi-calendar-event me-1"></i> {{ \Carbon\Carbon::parse($course->waktu_mulai)->format('d M Y') }} - {{ \Carbon\Carbon::parse($course->waktu_akhir)->format('d M Y') }}</p>
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    <span class="badge bg-primary">{{ $course->mentor->name }}</span>
+                                    @if($course->mentor2)
+                                        <span class="badge bg-info">{{ $course->mentor2->name }}</span>
+                                    @endif
+                                    @if($course->mentor3)
+                                        <span class="badge bg-info">{{ $course->mentor3->name }}</span>
+                                    @endif
+                                </div>
                                 <span class="badge bg-success">Aktif</span>
                             </div>
                             <div class="card-footer bg-white border-0 text-end">

@@ -19,8 +19,14 @@
             <h6>Jumlah Materi</h6>
             <p>{{ $course->lessons->count() }} materi</p>
 
-            <h6>Mentor</h6>
+            <h6>Mentor Utama</h6>
             <p>{{ $course->mentor->name ?? 'Belum ditentukan' }}</p>
+
+            <h6>Mentor Cadangan 1</h6>
+            <p>{{ $course->mentor2->name ?? 'Belum ditentukan' }}</p>
+
+            <h6>Mentor Cadangan 2</h6>
+            <p>{{ $course->mentor3->name ?? 'Belum ditentukan' }}</p>
 
             <h6>Jenjang</h6>
             <p>{{ $course->jenjang->nama_jenjang ?? 'Belum ditentukan' }}</p>

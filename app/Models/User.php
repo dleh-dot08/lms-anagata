@@ -137,7 +137,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function enrolledCourses()
     {
-        return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id');
+        return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id')
+                    ->withPivot('status', 'tanggal_daftar', 'tanggal_mulai', 'tanggal_selesai')
+                    ->using(Enrollment::class);
     }
 
     public function coursesTaught()
@@ -184,7 +186,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function mentorCourses()
     {
-        return $this->hasMany(Course::class, 'mentor_id');
+        return Course::where(function($query) {
+            $query->where('mentor_id', $this->id)
+                  ->orWhere('mentor_id_2', $this->id)
+                  ->orWhere('mentor_id_3', $this->id);
+        });
     }
 
     public function meetings()
@@ -194,7 +200,21 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function taughtCourses()
     {
-        return $this->hasMany(Course::class, 'mentor_id');
+        return Course::where(function($query) {
+            $query->where('mentor_id', $this->id)
+                  ->orWhere('mentor_id_2', $this->id)
+                  ->orWhere('mentor_id_3', $this->id);
+        });
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'user_id');
+    }
+
+    public function scores()
+    {
+        return $this->hasMany(Score::class, 'peserta_id');
     }
 
 }

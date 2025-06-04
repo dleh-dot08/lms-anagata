@@ -20,25 +20,11 @@ class MentorScoreReportController extends Controller
         $mentorId = auth()->id();
         $today = now();
 
-        // Ambil daftar kelas (course) yang diajar oleh mentor
-        // Asumsi relasi 'taughtCourses' ada di model User
         $courses = auth()->user()->taughtCourses()
         ->whereDate('waktu_mulai', '<=', $today)
         ->whereDate('waktu_akhir', '>=', $today)
         ->get();
 
-        // Bagian ini tidak lagi relevan di sini karena kita memisahkan halaman
-        // $selectedCourseId = $request->course_id;
-        // $students = collect();
-        // if ($selectedCourseId) {
-        //     $studentIds = Score::whereHas('meeting', function ($q) use ($selectedCourseId) {
-        //         $q->where('course_id', $selectedCourseId);
-        //     })->pluck('peserta_id')->unique();
-            
-        //     $students = User::whereIn('id', $studentIds)->get();
-        // }
-
-        // Kita hanya perlu mengirim courses ke view index
         return view('laporan.nilai.mentor.index', compact('courses'));
     }
 
@@ -48,13 +34,25 @@ class MentorScoreReportController extends Controller
     public function showReport(Request $request, $course_id)
     {
         $course = Course::findOrFail($course_id);
+        
+        // Cek apakah user adalah mentor utama atau cadangan untuk kursus ini
+        $user = auth()->user();
+        $isMentor = $course->mentor_id == $user->id || 
+                   $course->mentor_id_2 == $user->id || 
+                   $course->mentor_id_3 == $user->id;
+
+        if (!$isMentor) {
+            abort(403, 'Anda tidak memiliki akses ke kursus ini.');
+        }
 
         // Ambil semua pertemuan untuk kelas ini, diurutkan berdasarkan nomor pertemuan
         $meetings = $course->meetings()->orderBy('pertemuan')->get();
 
         // Mulai query untuk mengambil semua siswa yang terdaftar di kelas ini.
         // Kita akan menggunakan query builder untuk memungkinkan filter nama siswa.
-        $enrolledStudentsQuery = $course->users(); // Asumsi: Course has many/belongs to many Users (siswa)
+        // Asumsi: Course has many/belongs to many Users (siswa) melalui tabel pivot 'enrollments'
+        // Jika Anda menggunakan relasi students() di Course model yang mengembalikan User, maka ini benar.
+        $enrolledStudentsQuery = $course->students(); 
 
         // --- Logika Filter Siswa Berdasarkan Nama ---
         if ($request->filled('student_name')) {
@@ -74,7 +72,7 @@ class MentorScoreReportController extends Controller
                                 $query->where('course_id', $course_id);
                             })
                             ->whereIn('peserta_id', $filteredStudentIds) // Filter skor hanya untuk siswa yang relevan
-                            ->with(['meeting', 'peserta']); // Eager load meeting dan peserta (User)
+                            ->with(['meeting', 'peserta', 'mentor']); // <-- TAMBAHKAN 'mentor' DI SINI
 
         // --- Logika Filter Skor Berdasarkan Pertemuan ---
         if ($request->filled('meeting_id') && $request->input('meeting_id') !== '') {

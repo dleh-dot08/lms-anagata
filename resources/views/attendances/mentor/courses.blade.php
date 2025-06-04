@@ -35,6 +35,7 @@
                                     <th class="px-4 py-3 fw-semibold text-dark">Nama Kelas</th>
                                     <th class="px-4 py-3 fw-semibold text-dark text-center">Kategori</th>
                                     <th class="px-4 py-3 fw-semibold text-dark text-center">Jenjang</th>
+                                    <th class="px-4 py-3 fw-semibold text-dark text-center">Mentor</th>
                                     <th class="px-4 py-3 fw-semibold text-dark text-center">Pertemuan</th>
                                     <th class="px-4 py-3 fw-semibold text-dark text-center">Siswa</th>
                                     <th class="px-4 py-3 fw-semibold text-dark text-center">Status</th>
@@ -48,6 +49,17 @@
                                         <td class="px-4 py-3 fw-bold text-primary">{{ $course->nama_kelas }}</td> {{-- Emphasize class name --}}
                                         <td class="px-4 py-3 text-center">{{ $course->kategori->nama_kategori }}</td>
                                         <td class="px-4 py-3 text-center">{{ $course->jenjang->nama_jenjang }}</td>
+                                        <td class="px-4 py-3 text-center">
+                                            <div class="d-flex flex-column gap-1 align-items-center">
+                                                <span class="badge bg-primary">{{ $course->mentor->name }}</span>
+                                                @if($course->mentor2)
+                                                    <span class="badge bg-info">{{ $course->mentor2->name }}</span>
+                                                @endif
+                                                @if($course->mentor3)
+                                                    <span class="badge bg-info">{{ $course->mentor3->name }}</span>
+                                                @endif
+                                            </div>
+                                        </td>
                                         <td class="px-4 py-3 text-center">{{ $course->meetings->count() }}</td>
                                         <td class="px-4 py-3 text-center">{{ $course->enrollments->count() }}</td>
                                         <td class="px-4 py-3 text-center">

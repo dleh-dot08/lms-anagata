@@ -131,7 +131,7 @@ class ProjectController extends Controller
         $project->js_code = $request->js_code;
         $project->save();
 
-        return redirect()->route('courses.showPeserta', ['course' => $courseId])->with('success', 'Project berhasil dibuat.');
+        return redirect()->route('peserta.kursus.meetings', ['course' => $courseId])->with('success', 'Project berhasil dibuat.');
     }
 
     public function showPeserta(Project $project)

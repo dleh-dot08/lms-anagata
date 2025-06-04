@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\Jenjang; // Import model Jenjang
+use App\Models\Sekolah; // Import model Sekolah
+use App\Models\Kelas;
 
-class Enrollment extends Model
+class Enrollment extends Pivot
 {
     protected $table = 'enrollments';
+    public $incrementing = true;
 
     protected $fillable = [
         'user_id',
@@ -16,6 +21,9 @@ class Enrollment extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'status',
+        'jenjang_id', 
+        'sekolah_id', 
+        'kelas_id',   
     ];
 
     public function mentor()
@@ -30,7 +38,7 @@ class Enrollment extends Model
 
     public function jenjang()
     {
-        return $this->belongsTo(Jenjang::class);
+        return $this->belongsTo(Jenjang::class, 'jenjang_id');
     }
 
     public function course()
@@ -41,6 +49,16 @@ class Enrollment extends Model
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function sekolah()
+    {
+        return $this->belongsTo(Sekolah::class, 'sekolah_id');
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class,'kelas_id');
     }
 
 

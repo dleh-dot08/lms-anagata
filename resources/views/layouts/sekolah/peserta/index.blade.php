@@ -19,6 +19,16 @@
                         </button>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <select class="form-select" name="kelas_id" onchange="this.form.submit()">
+                        <option value="">Semua Kelas</option>
+                        @foreach($kelas as $k)
+                            <option value="{{ $k->id }}" {{ request('kelas_id') == $k->id ? 'selected' : '' }}>
+                                {{ $k->nama_kelas }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </form>
         </div>
     </div>
@@ -34,6 +44,7 @@
                             <th>Email</th>
                             <th>No. HP</th>
                             <th>Alamat</th>
+                            <th>Kelas</th>
                             <th>Terdaftar</th>
                             <th>Aksi</th>
                         </tr>
@@ -56,6 +67,7 @@
                                 <td>{{ $p->email }}</td>
                                 <td>{{ $p->biodata->no_hp ?? '-' }}</td>
                                 <td>{{ $p->biodata->alamat ?? '-' }}</td>
+                                <td>{{ $p->kelas->nama_kelas ?? '-' }}</td>
                                 <td>{{ $p->created_at->format('d M Y') }}</td>
                                 <td>
                                     <!-- Direct Button -->
@@ -86,6 +98,9 @@
 
                                                                 <dt class="col-sm-4">Alamat</dt>
                                                                 <dd class="col-sm-8">{{ $p->biodata->alamat ?? '-' }}</dd>
+
+                                                                <dt class="col-sm-4">Kelas</dt>
+                                                                <dd class="col-sm-8">{{ $p->kelas->nama_kelas ?? '-' }}</dd>
                                                             </dl>
                                                         </div>
                                                         <div class="col-md-6">
@@ -129,4 +144,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

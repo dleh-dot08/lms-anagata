@@ -21,6 +21,7 @@ class Attendance extends Model
         'latitude',
         'file_attache',
         'ttd_digital',
+        'recorded_by_user_id',
         'status',
     ];
 
@@ -56,6 +57,11 @@ class Attendance extends Model
     public function student()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function recordedByMentor() // Nama relasi untuk mentor yang merekam
+    {
+        return $this->belongsTo(User::class, 'recorded_by_user_id'); // Menggunakan 'recorded_by_user_id'
     }
 
 }

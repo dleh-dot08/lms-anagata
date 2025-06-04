@@ -166,8 +166,6 @@
         </form>
     </div>
 </div>
-
-@push('scripts')
 <script>
 document.getElementById('jenjang_id').addEventListener('change', function() {
     const jenjangId = this.value;
@@ -195,5 +193,4 @@ document.getElementById('jenjang_id').addEventListener('change', function() {
         });
 });
 </script>
-@endpush
 @endsection

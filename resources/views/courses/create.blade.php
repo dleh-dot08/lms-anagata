@@ -17,10 +17,30 @@
                 <textarea name="deskripsi" id="deskripsi" class="form-control" required></textarea>
             </div>
 
+            {{-- START: Tambahan untuk Mentor Cadangan --}}
             <div class="form-group">
-                <label for="mentor_id">Mentor</label>
-                <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;"></select>
+                <label for="mentor_id">Mentor Utama</label>
+                <select name="mentor_id" id="mentor_id" class="form-control" required style="width: 100%;">
+                    {{-- Opsi untuk mentor utama akan dimuat oleh Select2 --}}
+                </select>
             </div>
+
+            <div class="form-group">
+                <label for="mentor_id_2">Mentor Cadangan 1 (Opsional)</label>
+                <select name="mentor_id_2" id="mentor_id_2" class="form-control" style="width: 100%;">
+                    {{-- Opsi untuk mentor cadangan 1 akan dimuat oleh Select2 --}}
+                    <option value="">-- Pilih Mentor Cadangan 1 --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="mentor_id_3">Mentor Cadangan 2 (Opsional)</label>
+                <select name="mentor_id_3" id="mentor_id_3" class="form-control" style="width: 100%;">
+                    {{-- Opsi untuk mentor cadangan 2 akan dimuat oleh Select2 --}}
+                    <option value="">-- Pilih Mentor Cadangan 2 --</option>
+                </select>
+            </div>
+            {{-- END: Tambahan untuk Mentor Cadangan --}}
 
             <div class="form-group">
                 <label for="sekolah_id">Sekolah</label>
@@ -112,7 +132,6 @@
         </form>
     </div>
 @endsection
-
 @push('scripts')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -120,9 +139,11 @@
 
 <script>
     $(document).ready(function() {
-        // Mentor Select2 initialization
+        // --- Inisialisasi Select2 untuk ketiga mentor ---
+
+        // Mentor Utama
         $('#mentor_id').select2({
-            placeholder: 'Cari Mentor',
+            placeholder: 'Cari Mentor Utama',
             allowClear: true,
             width: 'resolve',
             minimumInputLength: 1,
@@ -139,22 +160,57 @@
             }
         });
 
-        // Jenjang change event handler
+        // Mentor Cadangan 1
+        $('#mentor_id_2').select2({
+            placeholder: 'Cari Mentor Cadangan 1',
+            allowClear: true,
+            width: 'resolve',
+            minimumInputLength: 1,
+            ajax: {
+                url: "{{ route('courses.searchMentor') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
+                }
+            }
+        });
+
+        // Mentor Cadangan 2
+        $('#mentor_id_3').select2({
+            placeholder: 'Cari Mentor Cadangan 2',
+            allowClear: true,
+            width: 'resolve',
+            minimumInputLength: 1,
+            ajax: {
+                url: "{{ route('courses.searchMentor') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
+                }
+            }
+        });
+
+        // --- Jenjang change event handler (tetap sama) ---
         $('#jenjang_id').on('change', function() {
             const jenjangId = $(this).val();
             const kelasSelect = $('#kelas_id');
-            
-            // Reset and disable kelas select if no jenjang selected
+
             if (!jenjangId) {
                 kelasSelect.html('<option value="">Pilih Kelas</option>');
                 kelasSelect.prop('disabled', true);
                 return;
             }
 
-            // Enable kelas select
             kelasSelect.prop('disabled', false);
 
-            // Fetch kelas options based on selected jenjang
             fetch(`/api/jenjang/${jenjangId}/kelas`)
                 .then(response => response.json())
                 .then(data => {
@@ -163,8 +219,18 @@
                         options += `<option value="${kelas.id}">${kelas.nama}</option>`;
                     });
                     kelasSelect.html(options);
+                })
+                .catch(error => {
+                    console.error('Error fetching kelas:', error);
+                    kelasSelect.html('<option value="">Gagal memuat kelas</option>');
+                    kelasSelect.prop('disabled', true);
                 });
         });
+
+        // Trigger change event on page load if jenjang_id has a value (for edit page)
+        if ($('#jenjang_id').val()) {
+            $('#jenjang_id').trigger('change');
+        }
     });
 </script>
 @endpush

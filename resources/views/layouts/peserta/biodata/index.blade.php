@@ -1,79 +1,166 @@
 @extends('layouts.peserta.template')
 
 @section('content')
-<div class="container">
-    <div class="card shadow-sm p-4">
-        <h3 class="fw-bold text-center mb-4">Biodata Peserta</h3>
-        <div class="row">
-            <!-- Informasi User -->
-            <div class="col-md-8">
-                <div class="card p-3 border-0 shadow-sm">
-                    <h5 class="fw-bold text-primary">Informasi Akun</h5>
-                    <table class="table">
-                        <tr><th>Nama</th><td>: {{ $user->name }}</td></tr>
-                        <tr><th>Email</th><td>: {{ $user->email }}</td></tr>
-                        <tr><th>No Hanphone</th><td>: {{ $user->no_telepon ?? '-' }}</td></tr>
-                        <tr><th>Status</th>
-                            <td>
-                                @if ($biodata)
-                                    : <span class="badge bg-{{ $biodata->status == 'aktif' ? 'success' : ($biodata->status == 'cuti' ? 'warning' : 'danger') }}">
-                                        {{ ucfirst($biodata->status) }}
-                                    </span>
-                                @else
-                                    : <span class="badge bg-secondary">Belum Diisi</span>
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Sekolah</th>
-                            <td>: {{ $user->sekolah->nama_sekolah ?? '-' }}</td>
-                        </tr>
-                    </table>
+<div class="container py-4"> <div class="card shadow-lg p-md-5 p-3 animated fadeIn"> <h3 class="fw-bold text-center mb-4 text-primary">Profil Peserta</h3>
+        <p class="text-center text-muted mb-5">Lihat dan kelola informasi akun serta biodata Anda.</p>
+
+        <div class="row g-4 mb-5"> <div class="col-12 col-md-4 d-flex justify-content-center align-items-center order-md-2">
+                <div class="card p-3 border-0 bg-light text-center w-100 h-100 d-flex flex-column justify-content-center align-items-center"> <img
+                        src="{{ $biodata && $biodata->foto ? asset('storage/' . $biodata->foto) : asset('assets/img/elements/default-avatar.png') }}"
+                        alt="Foto Profil Pengguna"
+                        class="img-fluid rounded-circle border border-3 border-primary shadow-sm mb-3"
+                        style="width: 120px; height: 120px; object-fit: cover; aspect-ratio: 1/1;"
+                    >
+                    <h5 class="fw-bold text-dark mb-1">{{ $user->name }}</h5>
+                    <p class="text-muted small">{{ $user->email }}</p>
                 </div>
             </div>
 
-            <!-- Foto -->
-            <div class="col-md-4 d-flex align-items-center justify-content-center">
-                <div class="card p-3 border-0 shadow-sm text-center">
-                    <h5 class="fw-bold text-primary">Foto Profil</h5>
-                    <img 
-                        src="{{ $biodata && $biodata->foto ? asset('storage/' . $biodata->foto) : asset('assets/img/elements/default-avatar.png') }}" 
-                        alt="Foto User" 
-                        class="img-fluid rounded-circle border shadow" 
-                        style="width: 150px; height: 150px; object-fit: cover;">
+            <div class="col-12 col-md-8 order-md-1">
+                <div class="card p-4 shadow-sm h-100"> <h5 class="fw-bold text-primary mb-3"><i class="bx bx-user me-2"></i> Informasi Akun</h5>
+                    <div class="row g-2"> <div class="col-6"><strong>Nama Lengkap</strong></div>
+                        <div class="col-6 text-break">{{ $user->name }}</div>
+
+                        <div class="col-6"><strong>Email</strong></div>
+                        <div class="col-6 text-break">{{ $user->email }}</div>
+
+                        <div class="col-6"><strong>No. Handphone</strong></div>
+                        <div class="col-6 text-break">{{ $user->no_telepon ?? '-' }}</div>
+
+                        <div class="col-6"><strong>Status</strong></div>
+                        <div class="col-6">
+                            @if ($biodata)
+                                <span class="badge bg-{{ $biodata->status == 'aktif' ? 'success' : ($biodata->status == 'cuti' ? 'warning' : 'danger') }} py-2 px-3 fw-semibold">
+                                    {{ ucfirst($biodata->status) }}
+                                </span>
+                            @else
+                                <span class="badge bg-secondary py-2 px-3 fw-semibold">Belum Diisi</span>
+                            @endif
+                        </div>
+
+                        <div class="col-6"><strong>Sekolah</strong></div>
+                        <div class="col-6 text-break">{{ $user->sekolah->nama_sekolah ?? '-' }}</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tombol Edit -->
-        <div class="text-center mt-4">
-            <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary px-4">
-                 <i class="bx bx-edit"></i> Edit Data
+        <div class="text-center mb-5"> <a href="{{ route('biodata.edit', Auth::id()) }}" class="btn btn-primary btn-lg px-5 shadow-sm animated pulse"> <i class="bx bx-edit me-2"></i> Edit Profil
             </a>
         </div>
 
-        <div class="p-3 mt-4">
-            <div class="card p-3 border-0 shadow-sm">
-                <h5 class="fw-bold text-primary">Informasi Biodata</h5>
-                <table class="table">
-                    <tr><th>NIK</th><td>: {{ $biodata->nik ?? '-' }}</td></tr>
-                    <tr><th>Jenis Kelamin</th><td>: {{ $user->jenis_kelamin ?? '-' }}</td></tr>
-                    <tr>
-                        <th>Tempat, Tanggal Lahir</th>
-                        <td>: {{ $biodata->tempat_lahir ?? '-' }}, {{ $biodata->tanggal_lahir ? date('d M Y', strtotime($biodata->tanggal_lahir)) : '-' }}</td>
-                    </tr>
-                    <tr><th>Alamat</th><td>: {{ $biodata->alamat ?? '-' }}</td></tr>
-                    <tr><th>Instansi</th><td>: {{ $user->instansi ?? '-' }}</td></tr>
-                    <tr><th>Pekerjaan</th><td>: {{ $user->pekerjaan ?? '-' }}</td></tr>
-                    <tr><th>Jenjang</th><td>: {{ $user->jenjang->nama_jenjang ?? '-' }}</td></tr>
-                    <tr><th>Kelas</th><td>: {{ $user->kelas->nama ?? '-' }}</td></tr>
-                    <tr><th>Bidang Pengajaran</th><td>: {{ $user->bidang_pengajaran ?? '-' }}</td></tr>
-                    <tr><th>Pendidikan Terakhir</th><td>: {{ $user->pendidikan_terakhir ?? '-' }}</td></tr>
-                    <tr><th>Sosial Media</th><td>: {{ $user->media_sosial ?? '-' }}</td></tr>
-                    <tr><th>Tanggal Bergabung</th><td>: {{ date('d M Y', strtotime($user->created_at)) }}</td></tr>
-                </table>
+        <div class="card p-4 shadow-sm animated fadeIn"> <h5 class="fw-bold text-primary mb-3"><i class="bx bx-info-circle me-2"></i> Detail Biodata</h5>
+            <div class="row g-2"> <div class="col-6"><strong>NIK</strong></div>
+                <div class="col-6 text-break">{{ $biodata->nik ?? '-' }}</div>
+
+                <div class="col-6"><strong>Jenis Kelamin</strong></div>
+                <div class="col-6 text-break">{{ $user->jenis_kelamin ?? '-' }}</div>
+
+                <div class="col-6"><strong>Tempat, Tanggal Lahir</strong></div>
+                <div class="col-6 text-break">
+                    {{ $biodata->tempat_lahir ?? '-' }},
+                    {{ $biodata->tanggal_lahir ? \Carbon\Carbon::parse($biodata->tanggal_lahir)->locale('id')->isoFormat('D MMMM YYYY') : '-' }}
+                </div>
+
+                <div class="col-6"><strong>Alamat</strong></div>
+                <div class="col-6 text-break">{{ $biodata->alamat ?? '-' }}</div>
+
+                <div class="col-6"><strong>Instansi</strong></div>
+                <div class="col-6 text-break">{{ $user->instansi ?? '-' }}</div>
+
+                <div class="col-6"><strong>Pekerjaan</strong></div>
+                <div class="col-6 text-break">{{ $user->pekerjaan ?? '-' }}</div>
+
+                <div class="col-6"><strong>Jenjang</strong></div>
+                <div class="col-6 text-break">{{ $user->jenjang->nama_jenjang ?? '-' }}</div>
+
+                <div class="col-6"><strong>Kelas</strong></div>
+                <div class="col-6 text-break">{{ $user->kelas->nama ?? '-' }}</div>
+
+                <div class="col-6"><strong>Bidang Pengajaran</strong></div>
+                <div class="col-6 text-break">{{ $user->bidang_pengajaran ?? '-' }}</div>
+
+                <div class="col-6"><strong>Pendidikan Terakhir</strong></div>
+                <div class="col-6 text-break">{{ $user->pendidikan_terakhir ?? '-' }}</div>
+
+                <div class="col-6"><strong>Media Sosial</strong></div>
+                <div class="col-6 text-break">{{ $user->media_sosial ?? '-' }}</div>
+
+                <div class="col-6"><strong>Tanggal Bergabung</strong></div>
+                <div class="col-6 text-break">{{ \Carbon\Carbon::parse($user->created_at)->locale('id')->isoFormat('D MMMM YYYY') }}</div>
             </div>
         </div>
     </div>
 </div>
+
+@push('css')
+<style>
+    /* Animasi Fade In */
+    .animated.fadeIn {
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Animasi Pulse untuk tombol */
+    .animated.pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    /* Override gaya tabel default agar lebih responsif untuk daftar detail */
+    .row.g-2 > div {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    .row.g-2 > div:nth-child(even) { /* Untuk nilai, agar terlihat berbeda dari label */
+        font-weight: normal;
+        color: #555;
+    }
+    .row.g-2 > div:nth-child(odd) { /* Untuk label, agar tebal */
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Pastikan gambar profil tetap bulat di semua kondisi */
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    /* Tambahan untuk text-break pada nilai yang panjang */
+    .text-break {
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    /* Responsive adjustments for the info layout inside cards */
+    @media (max-width: 575.98px) { /* Extra small devices (phones, 320px and up) */
+        .card.p-md-5 {
+            padding: 1rem !important; /* Kurangi padding di mobile */
+        }
+        .row.g-2 > div.col-6 {
+            flex: 0 0 100%; /* Buat setiap label dan nilai menjadi baris penuh */
+            max-width: 100%;
+        }
+        .row.g-2 > div.col-6:nth-child(odd) { /* Label */
+            padding-bottom: 0; /* Kurangi padding antara label dan nilai */
+        }
+        .row.g-2 > div.col-6:nth-child(even) { /* Nilai */
+            padding-top: 0; /* Kurangi padding antara label dan nilai */
+            margin-bottom: 0.5rem; /* Tambah jarak ke item berikutnya */
+        }
+        .row.g-2 > div.col-6:last-child {
+            margin-bottom: 0; /* Hapus margin bawah di item terakhir */
+        }
+    }
+</style>
+@endpush
 @endsection
