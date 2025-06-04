@@ -106,17 +106,10 @@
                     </select>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Kelas</label>
-                    <select name="kelas_id" id="kelas_id" class="form-select" {{ !$user?->jenjang_id ? 'disabled' : '' }}>
-                        <option value="">-- Pilih Kelas --</option>
-                        @if($user?->jenjang_id)
-                            @foreach ($kelas->where('id_jenjang', $user->jenjang_id) as $k)
-                                <option value="{{ $k->id }}" {{ $user->kelas_id == $k->id ? 'selected' : '' }}>
-                                    {{ $k->nama }}
-                                </option>
-                            @endforeach
-                        @endif
+                <div class="form-group">
+                    <label for="kelas_id">Kelas</label>
+                    <select name="kelas_id" id="kelas_id" class="form-control" disabled>
+                        <option value="">Pilih Kelas</option>
                     </select>
                 </div>
 
@@ -166,31 +159,61 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 <script>
-document.getElementById('jenjang_id').addEventListener('change', function() {
-    const jenjangId = this.value;
-    const kelasSelect = document.getElementById('kelas_id');
-    
-    // Reset and disable kelas select if no jenjang selected
-    if (!jenjangId) {
-        kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
-        kelasSelect.disabled = true;
-        return;
-    }
-
-    // Enable kelas select
-    kelasSelect.disabled = false;
-
-    // Fetch kelas options based on selected jenjang
-    fetch(`/api/jenjang/${jenjangId}/kelas`)
-        .then(response => response.json())
-        .then(data => {
-            let options = '<option value="">-- Pilih Kelas --</option>';
-            data.forEach(kelas => {
-                options += `<option value="${kelas.id}">${kelas.nama}</option>`;
-            });
-            kelasSelect.innerHTML = options;
+    $(document).ready(function() {
+        // Mentor Select2 initialization
+        $('#mentor_id').select2({
+            placeholder: 'Cari Mentor',
+            allowClear: true,
+            width: 'resolve',
+            minimumInputLength: 1,
+            ajax: {
+                url: "{{ route('courses.searchMentor') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data };
+                }
+            }
         });
-});
+
+        // Jenjang change event handler
+        $('#jenjang_id').on('change', function() {
+            const jenjangId = $(this).val();
+            const kelasSelect = $('#kelas_id');
+            
+            // Reset and disable kelas select if no jenjang selected
+            if (!jenjangId) {
+                kelasSelect.html('<option value="">Pilih Kelas</option>');
+                kelasSelect.prop('disabled', true);
+                return;
+            }
+
+            // Enable kelas select
+            kelasSelect.prop('disabled', false);
+
+            // Fetch kelas options based on selected jenjang
+            fetch(`/api/jenjang/${jenjangId}/kelas`)
+                .then(response => response.json())
+                .then(data => {
+                    let options = '<option value="">Pilih Kelas</option>';
+                    data.forEach(kelas => {
+                        options += `<option value="${kelas.id}">${kelas.nama}</option>`;
+                    });
+                    kelasSelect.html(options);
+                });
+        });
+    });
 </script>
+@endpush
+
 @endsection
