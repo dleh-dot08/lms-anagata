@@ -1,5 +1,7 @@
 @extends('layouts.sekolah.template') {{-- Sesuaikan dengan layout admin sekolah Anda --}}
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('content')
 <div class="container mt-4">
     <h2 class="mb-4">Manajemen Dokumen Sekolah: {{ $sekolah->nama_sekolah }}</h2>
