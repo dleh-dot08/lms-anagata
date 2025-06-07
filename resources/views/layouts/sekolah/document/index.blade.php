@@ -111,7 +111,7 @@
                                     <tr>
                                         <td>{{ $label }}</td>
                                         <td>
-                                            <a href="{{ route('sekolah.documents.download', $doc) }}" target="_blank" class="text-decoration-none text-primary">
+                                            <a href="{{ route('sekolah.documents.download', ['document' => $doc->id]) }}" target="_blank" class="text-decoration-none text-primary">
                                                 <i class="bi bi-file-earmark{{ Str::endsWith($doc->mime_type, 'pdf') ? '-pdf-fill' : (Str::startsWith($doc->mime_type, 'image/') ? '-image-fill' : (Str::endsWith($doc->mime_type, 'spreadsheetml.sheet') || Str::endsWith($doc->mime_type, 'excel') ? '-excel-fill' : '-fill')) }} me-1"></i>
                                                 {{ $doc->file_name }}
                                             </a>
