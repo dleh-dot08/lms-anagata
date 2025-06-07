@@ -108,6 +108,7 @@
                                 @endphp
 
                                 @forelse($docsOfType as $doc)
+                                    @if($doc)
                                     <tr>
                                         <td>{{ $label }}</td>
                                         <td>
@@ -139,6 +140,7 @@
                                             </form>
                                         </td>
                                     </tr>
+                                    @endif
                                 @empty
                                     @if ($key !== 'daftar_peserta') {{-- Hanya tampilkan "Belum diunggah" untuk dokumen non-daftar_peserta --}}
                                         <tr>
