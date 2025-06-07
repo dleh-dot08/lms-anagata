@@ -110,30 +110,12 @@
                                 @forelse($docsOfType as $doc)
                                     <tr>
                                         <td>{{ $label }}</td>
-                                       <td>
-                                            @if ($doc)
-                                                @php
-                                                    $mime = $doc->mime_type ?? '';
-                                                    if (Str::endsWith($mime, 'pdf')) {
-                                                        $icon = 'pdf-fill';
-                                                    } elseif (Str::startsWith($mime, 'image/')) {
-                                                        $icon = 'image-fill';
-                                                    } elseif (Str::endsWith($mime, 'spreadsheetml.sheet') || Str::endsWith($mime, 'excel')) {
-                                                        $icon = 'excel-fill';
-                                                    } else {
-                                                        $icon = 'fill';
-                                                    }
-                                                @endphp
-
-                                                <a href="{{ route('sekolah.documents.download', ['document' => $doc->id]) }}" target="_blank" class="text-decoration-none text-primary">
-                                                    <i class="bi bi-file-earmark-{{ $icon }} me-1"></i>
-                                                    {{ $doc->file_name }}
-                                                </a>
-                                            @else
-                                                <span class="text-danger">Dokumen tidak tersedia</span>
-                                            @endif
+                                        <td>
+                                            <a href="{{ route('sekolah.documents.download', $doc) }}" target="_blank" class="text-decoration-none text-primary">
+                                                <i class="bi bi-file-earmark{{ Str::endsWith($doc->mime_type, 'pdf') ? '-pdf-fill' : (Str::startsWith($doc->mime_type, 'image/') ? '-image-fill' : (Str::endsWith($doc->mime_type, 'spreadsheetml.sheet') || Str::endsWith($doc->mime_type, 'excel') ? '-excel-fill' : '-fill')) }} me-1"></i>
+                                                {{ $doc->file_name }}
+                                            </a>
                                         </td>
-                                        {{-- Ukuran file dalam KB --}}
                                         <td class="text-center">
                                             {{ number_format($doc->file_size / 1024, 2) }} KB
                                         </td>
