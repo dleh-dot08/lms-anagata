@@ -216,5 +216,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Score::class, 'peserta_id');
     }
-
 }

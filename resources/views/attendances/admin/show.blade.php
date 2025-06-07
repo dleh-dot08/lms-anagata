@@ -8,10 +8,6 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-    {{-- Detail Absensi --}}
-    <div class="mb-4">
-        <a href="{{ route('attendances.admin.index') }}" class="btn btn-secondary">Kembali</a>
-    </div>
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">Absensi: {{ $attendance->user->name }}</h5>

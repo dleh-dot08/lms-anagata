@@ -15,7 +15,7 @@
                                 </div>
                             </div>
                             <div>
-                                <h3 class="mb-1 fw-bold">Catatan Mentor</h3>
+                                <h3 class="mb-1 fw-bold text-white">Catatan Mentor</h3>
                                 <p class="mb-0 fs-5 opacity-90">Pertemuan ke-{{ $meeting->pertemuan }}</p>
                                 <small class="opacity-75">
                                     <i class="bx bx-calendar me-1"></i>
@@ -26,9 +26,6 @@
                         <div>
                             <a href="{{ route('admin.notes.meetings', $meeting->course_id) }}" class="btn btn-light btn-sm">
                                 <i class="bx bx-arrow-back me-1"></i> Kembali
-                            </a>
-                            <a href="#" onclick="window.print()" class="btn btn-light btn-sm ms-2">
-                                <i class="bx bx-printer me-1"></i> Cetak
                             </a>
                         </div>
                     </div>
@@ -115,7 +112,7 @@
                 <div class="card-header bg-primary text-white py-3">
                     <div class="d-flex align-items-center">
                         <i class="bx bx-book me-2 fs-5"></i>
-                        <h5 class="mb-0 fw-bold">Materi yang Disampaikan</h5>
+                        <h5 class="mb-0 fw-bold text-white">Materi yang Disampaikan</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -144,7 +141,7 @@
                 <div class="card-header bg-success text-white py-3">
                     <div class="d-flex align-items-center">
                         <i class="bx bx-folder-open me-2 fs-5"></i>
-                        <h5 class="mb-0 fw-bold">Project yang Dikerjakan</h5>
+                        <h5 class="mb-0 fw-bold text-white">Project yang Dikerjakan</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -173,7 +170,7 @@
                 <div class="card-header bg-info text-white py-3">
                     <div class="d-flex align-items-center">
                         <i class="bx bx-group me-2 fs-5"></i>
-                        <h5 class="mb-0 fw-bold">Sikap Siswa</h5>
+                        <h5 class="mb-0 fw-bold text-white">Sikap Siswa</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -202,7 +199,7 @@
                 <div class="card-header bg-warning text-dark py-3">
                     <div class="d-flex align-items-center">
                         <i class="bx bx-error-circle me-2 fs-5"></i>
-                        <h5 class="mb-0 fw-bold">Hambatan</h5>
+                        <h5 class="mb-0 fw-bold text-white">Hambatan</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -231,7 +228,7 @@
                 <div class="card-header bg-success text-white py-3">
                     <div class="d-flex align-items-center">
                         <i class="bx bx-bulb me-2 fs-5"></i>
-                        <h5 class="mb-0 fw-bold">Solusi</h5>
+                        <h5 class="mb-0 fw-bold text-white">Solusi</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -260,7 +257,7 @@
                 <div class="card-header bg-secondary text-white py-3">
                     <div class="d-flex align-items-center">
                         <i class="bx bx-comment-detail me-2 fs-5"></i>
-                        <h5 class="mb-0 fw-bold">Masukan</h5>
+                        <h5 class="mb-0 fw-bold text-white">Masukan</h5>
                     </div>
                 </div>
                 <div class="card-body">

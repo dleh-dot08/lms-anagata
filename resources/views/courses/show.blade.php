@@ -18,8 +18,8 @@
             <p><strong>Kode Unik:</strong> {{ $course->kode_unik ?? 'Tidak Ada' }}</p>
 
             <p><strong>Mentor Utama:</strong> {{ $course->mentor->name ?? 'Tidak Ada' }}</p>
-            <p><strong>Mentor Cadangan 1:</strong> {{ $course->mentor2->name ?? 'Tidak Ada' }}</p>
-            <p><strong>Mentor Cadangan 2:</strong> {{ $course->mentor3->name ?? 'Tidak Ada' }}</p>
+            <p><strong>Mentor Pengganti 1:</strong> {{ $course->mentor2->name ?? 'Tidak Ada' }}</p>
+            <p><strong>Mentor Pengganti 2:</strong> {{ $course->mentor3->name ?? 'Tidak Ada' }}</p>
 
             <p><strong>Kategori:</strong> {{ $course->kategori->nama_kategori ?? 'Tidak Ada' }}</p>
             <p><strong>Jenjang:</strong> {{ $course->jenjang->nama_jenjang ?? 'Tidak Ada' }}</p>

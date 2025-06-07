@@ -4,11 +4,11 @@
         <div class="authentication-inner">
           <div class="card">
             <div class="card-body">
-              <div class="app-brand justify-content-center mb-1">
+              {{-- <div class="app-brand justify-content-center mb-1">
                   <a href="/" class="app-brand-link">
                       <img src="/assets/img/icons/logo-anagata-academy.png" alt="Logo Aplikasi" class="app-brand-logo" style="max-width: 200px;">
                       </a>
-              </div>
+              </div> --}}
               <h4 class="mb-3 text-center">Selamat Datang Kembali! 👋</h4>
               <p class="mb-4 text-center text-muted">Silakan login untuk melanjutkan.</p>
 

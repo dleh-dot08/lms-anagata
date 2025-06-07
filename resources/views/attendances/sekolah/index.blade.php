@@ -85,8 +85,7 @@
                             </option>
                         </select>
                     </div>
-                </div>
-                
+                </div>               
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex gap-2 justify-content-end">
@@ -95,6 +94,9 @@
                             </a>
                             <button type="submit" class="btn btn-primary btn-lg px-4">
                                 <i class="bi bi-search me-1"></i>Terapkan Filter
+                            </button>
+                            <button type="submit" name="export_excel" value="1" class="btn btn-success btn-lg px-4">
+                                <i class="bi bi-file-earmark-spreadsheet me-1"></i>Export Excel
                             </button>
                         </div>
                     </div>

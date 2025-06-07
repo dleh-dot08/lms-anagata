@@ -50,13 +50,67 @@ class ReportController extends Controller
         $user = Auth::user();
         $sekolahId = $user->sekolah_id;
 
-        $course = Course::with(['mentor', 'kategori', 'jenjang', 'enrollments.user'])
-            ->where('sekolah_id', $sekolahId)
-            ->findOrFail($id);
+        $course = Course::with([
+            'mentor',
+            'kategori',
+            'jenjang',
+            'kelas',
+            'program',
+            'enrollments.user.kelas',
+            'meetings'
+        ])
+        ->where('sekolah_id', $sekolahId)
+        ->findOrFail($id);
 
-        return view('layouts.sekolah.nilai.show', compact('course'));
+        // --- Data untuk Grafik ---
+
+        // 1. Rata-rata Nilai per Kriteria dan Total per Pertemuan
+        $averageScoresPerMeeting = [];
+        $meetingIteration = 1; // Inisialisasi penghitung manual
+        foreach ($course->meetings as $meeting) {
+            $meetingScores = Score::where('meeting_id', $meeting->id)->get();
+
+            $avgCreativity = $meetingScores->avg('creativity_score');
+            $avgProgram = $meetingScores->avg('program_score');
+            $avgDesign = $meetingScores->avg('design_score');
+            $avgTotal = $meetingScores->avg('total_score');
+
+            $averageScoresPerMeeting[] = [
+                'meeting_name' => 'Pertemuan ' . $meetingIteration, // Gunakan penghitung manual di sini
+                'date' => $meeting->tanggal_pelaksanaan ? $meeting->tanggal_pelaksanaan->format('d/m/Y') : '-',
+                'avg_creativity' => round($avgCreativity ?? 0, 1),
+                'avg_program' => round($avgProgram ?? 0, 1),
+                'avg_design' => round($avgDesign ?? 0, 1),
+                'avg_total' => round($avgTotal ?? 0, 1),
+            ];
+            $meetingIteration++; // Tingkatkan penghitung
+        }
+
+        // 2. Rata-rata Nilai Total per Siswa
+        $averageScoresPerStudent = [];
+        foreach ($course->enrollments as $enrollment) {
+            $studentTotalScores = Score::where('peserta_id', $enrollment->user->id)
+                                    ->whereIn('meeting_id', $course->meetings->pluck('id'))
+                                    ->avg('total_score');
+            $averageScoresPerStudent[] = [
+                'student_name' => $enrollment->user->name,
+                'avg_total_score' => round($studentTotalScores ?? 0, 1),
+            ];
+        }
+
+        // Urutkan siswa berdasarkan rata-rata nilai total (opsional, untuk tampilan chart yang lebih baik)
+        usort($averageScoresPerStudent, function($a, $b) {
+            return $b['avg_total_score'] <=> $a['avg_total_score'];
+        });
+
+
+        return view('layouts.sekolah.nilai.show', compact(
+            'course',
+            'averageScoresPerMeeting',
+            'averageScoresPerStudent'
+        ));
     }
-
+    
     public function exportNilai($id)
     {
         $user = Auth::user();

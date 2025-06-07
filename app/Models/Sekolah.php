@@ -29,4 +29,9 @@ class Sekolah extends Model
     {
         return $this->hasMany(User::class, 'sekolah_id')->where('role_id', 3);
     }
+
+    public function documents()
+    {
+        return $this->hasMany(SchoolDocument::class);
+    }
 } 

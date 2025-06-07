@@ -15,7 +15,7 @@
                                 </div>
                             </div>
                             <div>
-                                <h3 class="mb-1 fw-bold">Daftar Pertemuan</h3>
+                                <h3 class="mb-1 fw-bold text-white">Daftar Pertemuan</h3>
                                 <p class="mb-0 fs-5 opacity-90">{{ $course->nama_kelas }}</p>
                                 <small class="opacity-75">
                                     <i class="bx bx-calendar me-1"></i>

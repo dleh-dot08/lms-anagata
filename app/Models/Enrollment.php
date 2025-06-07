@@ -48,7 +48,7 @@ class Enrollment extends Pivot
 
     public function attendances()
     {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(Attendance::class, 'user_id', 'user_id');
     }
 
     public function sekolah()

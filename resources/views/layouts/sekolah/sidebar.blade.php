@@ -20,29 +20,36 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
-        <!-- Dashboard -->
         <li class="menu-item {{ request()->routeIs('sekolah.dashboard') ? 'active' : '' }}">
             <a href="{{ route('sekolah.dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Dashboard">Dashboard</div>
             </a>
         </li>
-
+    
         <li class="menu-item {{ request()->routeIs('sekolah.peserta') ? 'active' : '' }}">
             <a href="{{ route('sekolah.peserta') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Daftar Peserta">Daftar Peserta</div>
             </a>
         </li>
-
+    
         <li class="menu-item {{ request()->routeIs('biodata.*') ? 'active' : '' }}">
             <a href="{{ route('biodata.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-user-account"></i>
                 <div data-i18n="Analytics">Biodata</div>
             </a>
         </li>
-
-        <li class="menu-item {{ request()->routeIs('sekolah.reports.nilai.*', 'attendances.activities', 'sekolah.mentor-notes.index') ? 'open active' : '' }}">
+    
+        {{-- Menu Dokumen Sekolah Baru --}}
+        <li class="menu-item {{ request()->routeIs('sekolah.documents.*') ? 'active' : '' }}">
+            <a href="{{ route('sekolah.documents.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-folder"></i> {{-- Icon folder, Anda bisa pilih yang lain --}}
+                <div data-i18n="Dokumen Sekolah">Dokumen Sekolah</div>
+            </a>
+        </li>
+    
+        <li class="menu-item {{ request()->routeIs('sekolah.reports.nilai.*', 'attendances.activities', 'sekolah.mentor-notes.index', 'attendances.sekolah.index') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
                 <div data-i18n="Analytics">Laporan</div>
@@ -77,6 +84,8 @@
                     </a>
                 </li>
             </ul>
+        </li>
+    </ul>
         </li>        
     </ul>
 </aside>

@@ -4,9 +4,7 @@
 <div class="container py-4"> {{-- Tambah padding vertikal untuk tampilan yang lebih baik --}}
     <h3 class="fw-bold py-2 mb-3 text-primary text-center text-md-start">Daftar Kursus Anda</h3> {{-- Judul lebih menonjol dan responsif --}}
 
-    <div class="card shadow-sm p-lg-4 p-3"> {{-- Sesuaikan padding untuk layar besar/kecil --}}
-
-        {{-- Pencarian dan Filter --}}
+    <div class="card shadow-sm p-lg-4 p-3">
         <form method="GET" action="{{ route('mentor.kursus.index') }}" class="mb-4"> {{-- Tambah margin-bottom --}}
             <div class="row g-3"> {{-- Gunakan g-3 untuk gap antar elemen form --}}
                 <div class="col-md-5 col-lg-6"> {{-- Lebar kolom untuk input pencarian --}}
@@ -51,10 +49,10 @@
                         <td>
                             <div class="small text-muted">Utama: <span class="fw-medium text-dark">{{ $course->mentor->name ?? 'N/A' }}</span></div>
                             @if($course->mentor2)
-                                <div class="small text-muted">Cadangan 1: <span class="fw-normal text-dark">{{ $course->mentor2->name }}</span></div>
+                                <div class="small text-muted">Pengganti 1: <span class="fw-normal text-dark">{{ $course->mentor2->name }}</span></div>
                             @endif
                             @if($course->mentor3)
-                                <div class="small text-muted">Cadangan 2: <span class="fw-normal text-dark">{{ $course->mentor3->name }}</span></div>
+                                <div class="small text-muted">Pengganti 2: <span class="fw-normal text-dark">{{ $course->mentor3->name }}</span></div>
                             @endif
                         </td>
                         <td>

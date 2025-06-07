@@ -131,6 +131,30 @@
         </div>
     </div>
 
+    ---
+
+    {{-- Charts Section --}}
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header fw-bold text-dark py-3">Perkembangan Rata-rata Nilai Kelas per Pertemuan</div>
+                <div class="card-body">
+                    <canvas id="classAverageChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header fw-bold text-dark py-3">Rata-rata Nilai Total Siswa (Semua Pertemuan)</div>
+                <div class="card-body">
+                    <canvas id="studentAverageChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    ---
+
     {{-- Scores Table --}}
     <div class="card mb-4 shadow-sm">
         <h5 class="card-header fw-bold text-dark py-3">Tabel Nilai Siswa per Pertemuan</h5>
@@ -164,7 +188,7 @@
                             <td class="text-center">{{ $index + 1 }}</td>
                             <td>{{ $enrollment->user->name }}</td>
                             <td class="text-center">
-                                {{ $enrollment->user->kelas ? $enrollment->user->kelas->nama : '-' }}
+                                {{ $enrollment->kelas ? $enrollment->kelas->nama : '-' }}
                             </td>
                             @foreach($course->meetings as $meeting)
                                 @php
@@ -214,137 +238,310 @@
         </div>
     </div>
 </div>
-
 <style>
     /* Umum */
-    .container-p-y {
-        padding-top: 1.5rem !important;
-        padding-bottom: 1.5rem !important;
+.container-p-y {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+}
+.card {
+    border-radius: 0.75rem;
+    transition: all 0.2s ease-in-out;
+}
+.card-body {
+    padding: 1.5rem;
+}
+.fw-bold {
+    font-weight: 700 !important;
+}
+.fw-semibold {
+    font-weight: 600 !important;
+}
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Header */
+h4 .text-primary {
+    color: #696cff !important; /* Warna primary Bootstrap */
+}
+
+/* Course Details & Summary Cards */
+.card.border-start {
+    border-left-width: 5px !important; /* Tebalkan border kiri */
+}
+.card-title {
+    font-size: 1.25rem;
+}
+.badge.rounded-pill {
+    font-size: 0.85em;
+    font-weight: 600;
+}
+.score-legend {
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+/* Table Styles */
+.table-responsive {
+    border-radius: 0.75rem; /* Border radius untuk responsif tabel */
+    overflow-x: auto; /* Pastikan scrollable horizontal */
+}
+.table {
+    margin-bottom: 0; /* Hapus margin bawah default tabel */
+}
+.table thead th {
+    vertical-align: middle;
+    white-space: nowrap; /* Pastikan teks di header tidak pecah baris */
+    padding: 0.75rem 0.5rem; /* Padding lebih kecil untuk header */
+    font-size: 0.9em; /* Ukuran font lebih kecil di header */
+}
+.table tbody td {
+    white-space: nowrap; /* Pastikan teks di sel tidak pecah baris */
+    vertical-align: middle;
+    padding: 0.6rem 0.5rem; /* Padding sel lebih kecil */
+    font-size: 0.85em; /* Ukuran font lebih kecil di body */
+}
+.table-bordered th, .table-bordered td {
+    border-color: #dee2e6 !important; /* Pastikan border tabel konsisten */
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.03); /* Warna stripe yang lebih halus */
+}
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075); /* Warna hover yang lebih jelas */
+}
+.table-danger {
+    background-color: #fce8e8 !important; /* Latar belakang merah muda untuk nilai rendah */
+    color: #d12f2f !important; /* Teks merah gelap */
+    font-weight: 600;
+}
+.table-info {
+    background-color: #e0f2f7 !important;
+    color: #0d6efd !important;
+}
+
+/* Charts Specific Styles (tambahan) */
+#classAverageChart, #studentAverageChart {
+    max-height: 400px; /* Batasi tinggi grafik agar tidak terlalu besar */
+    width: 100% !important; /* Pastikan lebar 100% */
+}
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    padding: 1rem 1.5rem;
+    font-size: 1.15rem;
+}
+
+
+/* Media Queries for Responsiveness */
+@media (max-width: 767.98px) { /* Small devices (phones) */
+    .d-flex.flex-wrap {
+        justify-content: center !important; /* Pusatkan tombol di mobile */
     }
-    .card {
-        border-radius: 0.75rem;
-        transition: all 0.2s ease-in-out;
+    .gap-2 > .btn {
+        width: 100%; /* Tombol mengambil lebar penuh di mobile */
+        margin-bottom: 0.5rem; /* Tambah jarak antar tombol */
     }
+    .gap-2 > .btn:last-child {
+        margin-bottom: 0;
+    }
+
     .card-body {
-        padding: 1.5rem;
-    }
-    .fw-bold {
-        font-weight: 700 !important;
-    }
-    .fw-semibold {
-        font-weight: 600 !important;
-    }
-    .btn {
-        border-radius: 0.5rem;
-        font-weight: 500;
-        transition: all 0.2s ease;
-    }
-    .btn:hover {
-        transform: translateY(-1px);
-    }
-
-    /* Header */
-    h4 .text-primary {
-        color: #696cff !important; /* Warna primary Bootstrap */
-    }
-
-    /* Course Details & Summary Cards */
-    .card.border-start {
-        border-left-width: 5px !important; /* Tebalkan border kiri */
+        padding: 1rem; /* Kurangi padding card di mobile */
     }
     .card-title {
-        font-size: 1.25rem;
+        font-size: 1.15rem; /* Ukuran judul card lebih kecil */
+        text-align: center; /* Judul card di tengah */
     }
-    .badge.rounded-pill {
-        font-size: 0.85em;
-        font-weight: 600;
+    .col-sm-6 {
+        flex: 0 0 100%; /* Setiap detail mengambil 100% lebar */
+        max-width: 100%;
     }
-    .score-legend {
-        font-size: 0.85em;
-        font-weight: 600;
-    }
-
-    /* Table Styles */
-    .table-responsive {
-        border-radius: 0.75rem; /* Border radius untuk responsif tabel */
-        overflow-x: auto; /* Pastikan scrollable horizontal */
-    }
-    .table {
-        margin-bottom: 0; /* Hapus margin bawah default tabel */
-    }
-    .table thead th {
-        vertical-align: middle;
-        white-space: nowrap; /* Pastikan teks di header tidak pecah baris */
-        padding: 0.75rem 0.5rem; /* Padding lebih kecil untuk header */
-        font-size: 0.9em; /* Ukuran font lebih kecil di header */
-    }
-    .table tbody td {
-        white-space: nowrap; /* Pastikan teks di sel tidak pecah baris */
-        vertical-align: middle;
-        padding: 0.6rem 0.5rem; /* Padding sel lebih kecil */
-        font-size: 0.85em; /* Ukuran font lebih kecil di body */
-    }
-    .table-bordered th, .table-bordered td {
-        border-color: #dee2e6 !important; /* Pastikan border tabel konsisten */
-    }
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.03); /* Warna stripe yang lebih halus */
-    }
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.075); /* Warna hover yang lebih jelas */
-    }
-    .table-danger {
-        background-color: #fce8e8 !important; /* Latar belakang merah muda untuk nilai rendah */
-        color: #d12f2f !important; /* Teks merah gelap */
-        font-weight: 600;
-    }
-    .table-info {
-        background-color: #e0f2f7 !important;
-        color: #0d6efd !important;
+    .text-center.text-md-start {
+        text-align: center !important; /* Pastikan teks di tengah di mobile */
     }
 
-    /* Media Queries for Responsiveness */
-    @media (max-width: 767.98px) { /* Small devices (phones) */
-        .d-flex.flex-wrap {
-            justify-content: center !important; /* Pusatkan tombol di mobile */
-        }
-        .gap-2 > .btn {
-            width: 100%; /* Tombol mengambil lebar penuh di mobile */
-            margin-bottom: 0.5rem; /* Tambah jarak antar tombol */
-        }
-        .gap-2 > .btn:last-child {
-            margin-bottom: 0;
-        }
-
-        .card-body {
-            padding: 1rem; /* Kurangi padding card di mobile */
-        }
-        .card-title {
-            font-size: 1.15rem; /* Ukuran judul card lebih kecil */
-            text-align: center; /* Judul card di tengah */
-        }
-        .col-sm-6 {
-            flex: 0 0 100%; /* Setiap detail mengambil 100% lebar */
-            max-width: 100%;
-        }
-        .text-center.text-md-start {
-            text-align: center !important; /* Pastikan teks di tengah di mobile */
-        }
-
-        .table thead th, .table tbody td {
-            font-size: 0.75em; /* Ukuran font tabel lebih kecil di mobile */
-            padding: 0.5rem 0.3rem; /* Padding lebih kecil */
-        }
+    .table thead th, .table tbody td {
+        font-size: 0.75em; /* Ukuran font tabel lebih kecil di mobile */
+        padding: 0.5rem 0.3rem; /* Padding lebih kecil */
     }
-
-    @media (min-width: 768px) and (max-width: 991.98px) { /* Medium devices (tablets) */
-        .card-body {
-            padding: 1.25rem;
-        }
-        .table thead th, .table tbody td {
-            font-size: 0.8em;
-            padding: 0.6rem 0.4rem;
-        }
+    /* Charts Specific Styles for Mobile */
+    #classAverageChart, #studentAverageChart {
+        height: 300px; /* Tinggi grafik di mobile */
     }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) { /* Medium devices (tablets) */
+    .card-body {
+        padding: 1.25rem;
+    }
+    .table thead th, .table tbody td {
+        font-size: 0.8em;
+        padding: 0.6rem 0.4rem;
+    }
+    /* Charts Specific Styles for Tablets */
+    #classAverageChart, #studentAverageChart {
+        height: 350px; /* Tinggi grafik di tablet */
+    }
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Data dari Controller
+        const averageScoresPerMeeting = @json($averageScoresPerMeeting);
+        const averageScoresPerStudent = @json($averageScoresPerStudent);
+
+        // --- Grafik Rata-rata Kelas per Pertemuan (Line Chart) ---
+        const classAvgCtx = document.getElementById('classAverageChart').getContext('2d');
+        if (classAvgCtx) {
+            new Chart(classAvgCtx, {
+                type: 'line',
+                data: {
+                    labels: averageScoresPerMeeting.map(data => data.meeting_name + ' (' + data.date + ')'),
+                    datasets: [
+                        {
+                            label: 'Creativity',
+                            data: averageScoresPerMeeting.map(data => data.avg_creativity),
+                            borderColor: '#696cff', // Primary color
+                            backgroundColor: 'rgba(105, 108, 255, 0.2)',
+                            tension: 0.4,
+                            fill: false,
+                        },
+                        {
+                            label: 'Program',
+                            data: averageScoresPerMeeting.map(data => data.avg_program),
+                            borderColor: '#0dcaf0', // Info color
+                            backgroundColor: 'rgba(13, 202, 240, 0.2)',
+                            tension: 0.4,
+                            fill: false,
+                        },
+                        {
+                            label: 'Design',
+                            data: averageScoresPerMeeting.map(data => data.avg_design),
+                            borderColor: '#dc3545', // Danger color
+                            backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                            tension: 0.4,
+                            fill: false,
+                        },
+                        {
+                            label: 'Total',
+                            data: averageScoresPerMeeting.map(data => data.avg_total),
+                            borderColor: '#212529', // Dark color
+                            backgroundColor: 'rgba(33, 37, 41, 0.2)',
+                            tension: 0.4,
+                            fill: false,
+                            borderWidth: 2, // Lebih tebal
+                            pointRadius: 4, // Titik lebih besar
+                            pointBackgroundColor: '#212529',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100, // Nilai maksimal 100
+                            title: {
+                                display: true,
+                                text: 'Rata-rata Nilai'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Pertemuan'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: false, // Judul sudah ada di card header
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label;
+                                },
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        // --- Grafik Rata-rata Nilai Total Siswa (Bar Chart) ---
+        const studentAvgCtx = document.getElementById('studentAverageChart').getContext('2d');
+        if (studentAvgCtx) {
+            new Chart(studentAvgCtx, {
+                type: 'bar',
+                data: {
+                    labels: averageScoresPerStudent.map(data => data.student_name),
+                    datasets: [{
+                        label: 'Rata-rata Nilai Total',
+                        data: averageScoresPerStudent.map(data => data.avg_total_score),
+                        backgroundColor: averageScoresPerStudent.map(data => data.avg_total_score < 70 ? '#dc3545' : '#198754'), // Hijau untuk lulus, merah untuk tidak lulus (contoh KKM 70)
+                        borderColor: averageScoresPerStudent.map(data => data.avg_total_score < 70 ? '#dc3545' : '#198754'),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Rata-rata Nilai Total'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Nama Siswa'
+                            },
+                            ticks: {
+                                autoSkip: true, // Untuk menghindari label yang bertumpuk jika banyak siswa
+                                maxRotation: 45, // Rotasi label
+                                minRotation: 45
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: false,
+                        },
+                        legend: {
+                            display: false // Tidak perlu legend jika hanya ada 1 dataset
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label;
+                                },
+                                label: function(context) {
+                                    return 'Rata-rata: ' + context.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
 @endsection

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Kelas;
 use App\Models\Course;
+use App\Models\Jenjang;
 use App\Models\Meeting;
+use App\Models\Sekolah;
 use App\Models\Activity;
 use App\Models\Attendance;
 use Illuminate\Support\Str;
@@ -18,14 +21,24 @@ use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic;
+use Maatwebsite\Excel\Facades\Excel; 
+use App\Exports\AttendancesExport;
 
 class AttendanceController extends Controller
 {
     // ADMIN - Lihat semua absensi dengan filter tanggal
     public function adminIndex(Request $request)
     {
-        $query = Attendance::with(['user', 'course', 'activity']);
-
+        $query = Attendance::with([
+            'user.kelas',
+            'user.sekolah',
+            'user.jenjang',
+            'course',
+            'activity',
+            'recordedByMentor' // <-- Add this line to eager load the recorder's details
+        ]);
+    
+        // Filter yang sudah ada
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
         }
@@ -35,20 +48,81 @@ class AttendanceController extends Controller
         } elseif ($request->tipe === 'kegiatan') {
             $query->whereNotNull('activity_id')->whereNull('course_id');
         }
-
+    
         if ($request->role === 'mentor') {
-            $query->whereHas('user', function ($q) {
-                $q->where('role_id', 2);
-            });
+            $query->whereHas('user', fn($q) => $q->where('role_id', 2));
         } elseif ($request->role === 'peserta') {
-            $query->whereHas('user', function ($q) {
-                $q->where('role_id', 3);
-            });
+            $query->whereHas('user', fn($q) => $q->where('role_id', 3));
+        }
+    
+        // Filter tambahan
+        if ($request->filled('kelas')) {
+            $query->whereHas('user', fn($q) => $q->where('kelas_id', $request->kelas));
+        }
+    
+        if ($request->filled('sekolah')) {
+            $query->whereHas('user', fn($q) => $q->where('sekolah_id', $request->sekolah));
+        }
+    
+        if ($request->filled('jenjang')) {
+            $query->whereHas('user', fn($q) => $q->where('jenjang_id', $request->jenjang));
+        }
+    
+        if ($request->filled('course_id')) {
+            $query->where('course_id', $request->course_id);
         }
     
         $attendances = $query->latest()->paginate(10);
     
-        return view('attendances.admin.index', compact('attendances'));
+        // Data untuk dropdown filter
+        $kelas = Kelas::all();
+        $sekolah = Sekolah::all();
+        $jenjang = Jenjang::all();
+        $courses = Course::all();
+    
+        return view('attendances.admin.index', compact('attendances', 'kelas', 'sekolah', 'jenjang', 'courses'));
+    }
+
+    public function exportAttendances(Request $request)
+    {
+        $exportType = $request->input('export_type');
+        $selectedCourseId = $request->input('export_course_id');
+        $selectedSchoolId = $request->input('export_school_id');
+        $startDate = $request->input('export_start_date');
+        $endDate = $request->input('export_end_date');
+
+        $filename = 'Absensi';
+        $dateSuffix = date('Ymd_His');
+
+        // Tambahkan nama kursus/sekolah ke nama file jika spesifik
+        if ($exportType === 'selected_course' && $selectedCourseId) {
+            $course = Course::find($selectedCourseId);
+            if ($course) {
+                // Pastikan nama kursus tidak mengandung karakter yang tidak valid untuk nama file
+                $safeCourseName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '', $course->nama_kelas);
+                $filename .= '_Kursus_' . $safeCourseName;
+            }
+        } elseif ($exportType === 'selected_school' && $selectedSchoolId) {
+            $school = Sekolah::find($selectedSchoolId);
+            if ($school) {
+                // Pastikan nama sekolah tidak mengandung karakter yang tidak valid untuk nama file
+                $safeSchoolName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '', $school->nama_sekolah);
+                $filename .= '_Sekolah_' . $safeSchoolName;
+            }
+        }
+
+        $filename .= '_' . $dateSuffix . '.xlsx';
+
+        return Excel::download(
+            new AttendancesExport(
+                $exportType,
+                $selectedCourseId,
+                $selectedSchoolId,
+                $startDate,
+                $endDate
+            ),
+            $filename
+        );
     }
 
 

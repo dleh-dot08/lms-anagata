@@ -9,9 +9,10 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KelasController;
 use App\Http\Controllers\ScoreController;
-use App\Http\Middleware\DivisiMiddleware;
 //use App\Http\Controllers\Admin\UserController;
+use App\Http\Middleware\DivisiMiddleware;
 use App\Http\Middleware\MentorMiddleware;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
@@ -23,16 +24,16 @@ use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProgramController;
 
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\DashboardController;
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MentorNoteController;
@@ -41,6 +42,7 @@ use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ScoreReportController;
 use App\Http\Controllers\HelpdeskTicketController;
+use App\Http\Controllers\SchoolDocumentController;
 use App\Http\Controllers\Sekolah\ReportController;
 use App\Http\Middleware\MentorOrPesertaMiddleware;
 use App\Http\Controllers\AdminMentorNoteController;
@@ -52,7 +54,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\MentorAttendanceReportController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
-use App\Http\Controllers\KelasController;
+use App\Http\Controllers\Admin\SchoolDocumentController as AdminSchoolDocumentController;
 
 // Add this route before the auth routes
 Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
@@ -169,6 +171,7 @@ Route::middleware('auth', 'verified')->group(function () {
 Route::middleware(['auth', 'verified'])->prefix('admin/attendances')->group(function () {
     Route::get('/', [AttendanceController::class, 'adminIndex'])->name('attendances.admin.index');
     Route::get('/{attendance}', [AttendanceController::class, 'show'])->name('attendances.admin.show');
+    Route::post('attendances/export', [AttendanceController::class, 'exportAttendances'])->name('attendances.admin.export');
 });
 
 // Peserta & Mentor routes
@@ -734,6 +737,26 @@ Route::prefix('mentor')->name('mentor.')->middleware(['auth', MentorMiddleware::
     Route::get('/mentor/courses/{course}/attendance/export-excel', [MentorAttendanceReportController::class, 'exportRecapExcel'])->name('attendances.export_excel');
 });
 
+Route::prefix('sekolah')->name('sekolah.')->middleware(['auth', SekolahMiddleware::class])->group(function () {
+    // ... rute-rute lain untuk akun sekolah
+
+    Route::get('/documents', [SchoolDocumentController::class, 'index'])->name('documents.index');
+    Route::post('/documents', [SchoolDocumentController::class, 'store'])->name('documents.store'); // Ini akan menangani upload Excel juga
+    Route::delete('/documents/{document}', [SchoolDocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::get('/documents/{document}/download', [SchoolDocumentController::class, 'download'])->name('documents.download');
+
+    // Rute Baru untuk Download Template Excel Peserta
+    Route::get('/documents/download-participant-template', [SchoolDocumentController::class, 'downloadParticipantTemplate'])->name('documents.download_participant_template');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', AdminMiddleware::class])->group(function () {
+    // ... rute-rute admin lainnya
+
+    Route::get('/school-documents', [AdminSchoolDocumentController::class, 'index'])->name('school_documents.index');
+    Route::get('/school-documents/{document}/download', [AdminSchoolDocumentController::class, 'download'])->name('school_documents.download');
+    // Jika admin juga bisa menghapus, tambahkan ini:
+    // Route::delete('/school-documents/{document}', [AdminSchoolDocumentController::class, 'destroy'])->name('school_documents.destroy');
+});
 
 
 
