@@ -110,8 +110,21 @@
                                 @forelse($docsOfType as $doc)
                                     <tr>
                                         <td>{{ $label }}</td>
-                                        <td>
+                                       <td>
                                             @if ($doc)
+                                                @php
+                                                    $mime = $doc->mime_type ?? '';
+                                                    if (Str::endsWith($mime, 'pdf')) {
+                                                        $icon = 'pdf-fill';
+                                                    } elseif (Str::startsWith($mime, 'image/')) {
+                                                        $icon = 'image-fill';
+                                                    } elseif (Str::endsWith($mime, 'spreadsheetml.sheet') || Str::endsWith($mime, 'excel')) {
+                                                        $icon = 'excel-fill';
+                                                    } else {
+                                                        $icon = 'fill';
+                                                    }
+                                                @endphp
+
                                                 <a href="{{ route('sekolah.documents.download', ['document' => $doc->id]) }}" target="_blank" class="text-decoration-none text-primary">
                                                     <i class="bi bi-file-earmark-{{ $icon }} me-1"></i>
                                                     {{ $doc->file_name }}
@@ -120,6 +133,7 @@
                                                 <span class="text-danger">Dokumen tidak tersedia</span>
                                             @endif
                                         </td>
+                                        {{-- Ukuran file dalam KB --}}
                                         <td class="text-center">
                                             {{ number_format($doc->file_size / 1024, 2) }} KB
                                         </td>
