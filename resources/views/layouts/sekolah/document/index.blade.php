@@ -1,5 +1,7 @@
 @extends('layouts.sekolah.template') {{-- Sesuaikan dengan layout admin sekolah Anda --}}
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('content')
 <div class="container mt-4">
     <h2 class="mb-4">Manajemen Dokumen Sekolah: {{ $sekolah->nama_sekolah }}</h2>
@@ -106,6 +108,7 @@
                                 @endphp
 
                                 @forelse($docsOfType as $doc)
+                                    @if($doc)
                                     <tr>
                                         <td>{{ $label }}</td>
                                         <td>
@@ -137,6 +140,7 @@
                                             </form>
                                         </td>
                                     </tr>
+                                    @endif
                                 @empty
                                     @if ($key !== 'daftar_peserta') {{-- Hanya tampilkan "Belum diunggah" untuk dokumen non-daftar_peserta --}}
                                         <tr>
