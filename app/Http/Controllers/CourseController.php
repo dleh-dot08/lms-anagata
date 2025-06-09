@@ -89,40 +89,45 @@ class CourseController extends Controller
     // Menyimpan kursus baru ke database
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama_kelas' => 'required|string|max:255',
-            'mentor_id' => 'required|exists:users,id',
-            'mentor_id_2' => 'nullable|exists:users,id', // Corrected to mentor_id_2
-            'mentor_id_3' => 'nullable|exists:users,id', // Corrected to mentor_id_3
-            'deskripsi' => 'required|string|max:255',
-            'kategori_id' => 'required|exists:kategoris,id',
-            'jenjang_id' => 'required|exists:jenjang,id',
-            'kelas_id' => 'nullable|exists:kelas,id',
-            'program_id' => 'nullable|exists:programs,id',
-            'sekolah_id' => 'nullable|exists:sekolah,id',
-            'level' => 'required|in:Beginner,Intermediate,Advanced',
-            'status' => 'required|in:Aktif,Nonaktif',
-            'waktu_mulai' => 'required|date',
-            'waktu_akhir' => 'required|date|after:waktu_mulai',
-            'harga' => 'nullable|numeric',
-            'jumlah_peserta' => 'required|integer|min:0',
-        ]);
-
-        // Add kode_unik to validated data
-        $validated['kode_unik'] = Course::generateKodeKelas();
-
-        $course = Course::create($validated);
-
-        $user = auth()->user();
-
-        if ($user->role_id === 1) {
-            return redirect()->route('courses.index')
-                ->with('success', 'Kursus berhasil dibuat');
-        } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
-            return redirect()->route('courses.apd.index')
-                ->with('success', 'Kursus berhasil dibuat');
-        } else {
-            abort(403, 'Akses dilarang.');
+        try {
+            $validated = $request->validate([
+                'nama_kelas' => 'required|string|max:255',
+                'mentor_id' => 'required|exists:users,id',
+                'mentor_id_2' => 'nullable|exists:users,id',
+                'mentor_id_3' => 'nullable|exists:users,id',
+                'deskripsi' => 'required|string|max:255',
+                'kategori_id' => 'required|exists:kategoris,id',
+                'jenjang_id' => 'required|exists:jenjang,id',
+                'kelas_id' => 'nullable|exists:kelas,id',
+                'program_id' => 'nullable|exists:programs,id',
+                'sekolah_id' => 'nullable|exists:sekolah,id',
+                'level' => 'required|in:Beginner,Intermediate,Advanced',
+                'status' => 'required|in:Aktif,Nonaktif',
+                'waktu_mulai' => 'required|date',
+                'waktu_akhir' => 'required|date|after:waktu_mulai',
+                'harga' => 'nullable|numeric',
+                'jumlah_peserta' => 'required|integer|min:0',
+            ]);
+    
+            // Tambahkan kode_unik ke data yang divalidasi
+            $validated['kode_unik'] = Course::generateKodeKelas();
+    
+            $course = Course::create($validated);
+    
+            $user = auth()->user();
+    
+            if ($user->role_id === 1) {
+                return redirect()->route('courses.index')
+                    ->with('success', 'Kursus berhasil dibuat');
+            } elseif ($user->role_id === 4 && $user->divisi === 'APD') {
+                return redirect()->route('courses.apd.index')
+                    ->with('success', 'Kursus berhasil dibuat');
+            } else {
+                abort(403, 'Akses dilarang.');
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Ini akan mengarahkan kembali dengan input dan error
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }
     }
 

@@ -7,6 +7,16 @@
         <form action="{{ route('courses.store') }}" method="POST">
             @csrf
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="form-group">
                 <label for="nama_kelas">Nama Kelas</label>
                 <input type="text" name="nama_kelas" id="nama_kelas" class="form-control" required>

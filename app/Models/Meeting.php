@@ -55,5 +55,10 @@ class Meeting extends Model
         return $this->hasOne(MentorNote::class);
     }
 
+    public function schedule_history()
+    {
+        return $this->hasMany(Meeting::class, 'id'); // Adjust 'meeting_id' to your actual foreign key in the schedule_histories table
+    }
+
 
 }

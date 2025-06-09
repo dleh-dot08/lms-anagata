@@ -14,7 +14,8 @@ class Biodata extends Model
     protected $fillable = [
         'id_user', 'nip', 'nama_lengkap', 'jabatan', 'divisi', 'nik',
         'tempat_lahir', 'tanggal_lahir', 'foto', 'data_ktp','data_ttd', 'no_hp', 'alamat',
-        'tanggal_bergabung', 'status'
+        'tanggal_bergabung', 'status', 'foto_ktp', 'ijazah', 'nama_bank', 'nama_pemilik_bank',
+        'no_rekening', 'sertifikat'
     ];
 
     // Relasi ke User
