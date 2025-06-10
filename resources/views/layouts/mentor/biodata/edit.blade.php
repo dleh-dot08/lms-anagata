@@ -81,10 +81,10 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label class="form-label">No HP</label>
                         <input type="text" name="no_hp" class="form-control" value="{{ $biodata?->no_hp }}">
-                    </div>
+                    </div> -->
 
                     <div class="mb-3">
                         <label class="form-label">Ijazah Terakhir (PDF / JPG)</label>

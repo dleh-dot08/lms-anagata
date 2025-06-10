@@ -22,7 +22,7 @@
                                     <td>: {{ $user->email }}</td>
                                 </tr>
                                 <tr>
-                                    <th>No Telepon</th>
+                                    <th>No Telepon WhatsApp</th>
                                     <td>: {{ $user->no_telepon ?? '-' }}</td>
                                 </tr>
                                 <tr>

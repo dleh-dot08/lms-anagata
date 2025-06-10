@@ -24,7 +24,7 @@
                         <div class="col-6"><strong>Email</strong></div>
                         <div class="col-6 text-break">{{ $user->email }}</div>
 
-                        <div class="col-6"><strong>No. Handphone</strong></div>
+                        <div class="col-6"><strong>No. WhatsApp</strong></div>
                         <div class="col-6 text-break">{{ $user->no_telepon ?? '-' }}</div>
 
                         <div class="col-6"><strong>Status</strong></div>
@@ -50,9 +50,7 @@
         </div>
 
         <div class="card p-4 shadow-sm animated fadeIn"> <h5 class="fw-bold text-primary mb-3"><i class="bx bx-info-circle me-2"></i> Detail Biodata</h5>
-            <div class="row g-2"> <div class="col-6"><strong>NIK</strong></div>
-                <div class="col-6 text-break">{{ $biodata->nik ?? '-' }}</div>
-
+            <div class="row g-2">
                 <div class="col-6"><strong>Jenis Kelamin</strong></div>
                 <div class="col-6 text-break">{{ $user->jenis_kelamin ?? '-' }}</div>
 
@@ -65,23 +63,11 @@
                 <div class="col-6"><strong>Alamat</strong></div>
                 <div class="col-6 text-break">{{ $biodata->alamat ?? '-' }}</div>
 
-                <div class="col-6"><strong>Instansi</strong></div>
-                <div class="col-6 text-break">{{ $user->instansi ?? '-' }}</div>
-
-                <div class="col-6"><strong>Pekerjaan</strong></div>
-                <div class="col-6 text-break">{{ $user->pekerjaan ?? '-' }}</div>
-
                 <div class="col-6"><strong>Jenjang</strong></div>
                 <div class="col-6 text-break">{{ $user->jenjang->nama_jenjang ?? '-' }}</div>
 
                 <div class="col-6"><strong>Kelas</strong></div>
                 <div class="col-6 text-break">{{ $user->kelas->nama ?? '-' }}</div>
-
-                <div class="col-6"><strong>Bidang Pengajaran</strong></div>
-                <div class="col-6 text-break">{{ $user->bidang_pengajaran ?? '-' }}</div>
-
-                <div class="col-6"><strong>Pendidikan Terakhir</strong></div>
-                <div class="col-6 text-break">{{ $user->pendidikan_terakhir ?? '-' }}</div>
 
                 <div class="col-6"><strong>Media Sosial</strong></div>
                 <div class="col-6 text-break">{{ $user->media_sosial ?? '-' }}</div>
