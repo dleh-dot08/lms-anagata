@@ -6,6 +6,10 @@
         <h2 class="fw-bold mb-0">
             <i class="bi bi-people-fill text-primary me-2"></i>Daftar Pengguna
         </h2>
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{{ route('users.create') }}" class="btn btn-primary me-2">Tambah User</a>
+            <a href="{{ route('users.import.form') }}" class="btn btn-success">Import Users</a>
+        </div>
     </div>
 
     <!-- Card untuk filter dan pencarian -->

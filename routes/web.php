@@ -233,6 +233,10 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
         Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('restore');
+        
+        // Add import routes
+        Route::get('/import/csv', [UserController::class, 'showImportForm'])->name('import.form');
+        Route::post('/import/csv', [UserController::class, 'import'])->name('import');
     });
 
     Route::get('/faq', [FaqController::class, 'redirectBasedOnRole'])->name('faq');

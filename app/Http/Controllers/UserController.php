@@ -68,39 +68,49 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role_id' => 'required|exists:roles,id',
-            'foto_diri' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            // Validasi input
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:8|confirmed',
+                'role_id' => 'required|exists:roles,id',
+                'foto_diri' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'verify_email' => 'nullable|boolean'
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                return redirect()->route('users.create')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            // Prepare user data
+            $userData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role_id' => $request->role_id,
+                'created_by' => Auth::id(),
+                'email_verified_at' => $request->has('verify_email') ? now() : null
+            ];
+
+            // Handle foto_diri upload if present
+            if ($request->hasFile('foto_diri')) {
+                $userData['foto_diri'] = $request->file('foto_diri')->store('uploads/foto_diri', 'public');
+            }
+
+            // Simpan user baru
+            $user = User::create($userData);
+
+            return redirect()->route('users.index')
+                ->with('success', 'User berhasil dibuat.');
+
+        } catch (\Exception $e) {
             return redirect()->route('users.create')
-                ->withErrors($validator)
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
-
-        // Prepare user data
-        $userData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $request->role_id,
-            'created_by' => Auth::id()
-        ];
-
-        // Handle foto_diri upload if present
-        if ($request->hasFile('foto_diri')) {
-            $userData['foto_diri'] = $request->file('foto_diri')->store('uploads/foto_diri', 'public');
-        }
-
-        // Simpan user baru
-        $user = User::create($userData);
-
-        return redirect()->route('users.index')->with('success', 'User berhasil dibuat.');
     }
 
     /**
@@ -210,5 +220,108 @@ class UserController extends Controller
         $user = User::withTrashed()->findOrFail($id);
         $user->restore(); // Restore from soft delete
         return redirect()->route('users.index')->with('success', 'User telah dipulihkan.');
+    }
+
+    /**
+     * Show the form for importing users.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showImportForm()
+    {
+        $roles = Role::all();
+        return view('users.import', compact('roles'));
+    }
+
+    /**
+     * Import users from CSV file.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt',
+            'role_id' => 'required|exists:roles,id',
+        ]);
+
+        try {
+            $file = $request->file('csv_file');
+            $path = $file->getRealPath();
+            
+            // Read CSV file
+            $handle = fopen($path, "r");
+            
+            // Read header row
+            $header = fgetcsv($handle);
+            
+            // Convert header to lowercase and trim
+            $header = array_map(function($value) {
+                return strtolower(trim($value));
+            }, $header);
+            
+            // Required columns
+            $requiredColumns = ['no', 'nama', 'email', 'waktu verifikasi email', 'password'];
+            
+            // Verify required columns exist
+            foreach ($requiredColumns as $column) {
+                if (!in_array($column, $header)) {
+                    throw new \Exception("Kolom '$column' tidak ditemukan di file CSV");
+                }
+            }
+
+            $users = [];
+            $row = 1;
+            
+            while (($data = fgetcsv($handle)) !== false) {
+                $row++;
+                
+                // Create associative array of row data
+                $userData = array_combine($header, $data);
+                
+                // Validate email
+                if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
+                    throw new \Exception("Baris $row: Format email tidak valid");
+                }
+                
+                // Check if email already exists
+                if (User::where('email', $userData['email'])->exists()) {
+                    throw new \Exception("Baris $row: Email sudah terdaftar");
+                }
+
+                // Convert date format from d/m/Y H:i:s to Y-m-d H:i:s
+                $verificationDate = \DateTime::createFromFormat('d/m/Y H:i:s', $userData['waktu verifikasi email']);
+                if (!$verificationDate) {
+                    throw new \Exception("Baris $row: Format tanggal verifikasi tidak valid. Gunakan format dd/mm/yyyy HH:ii:ss");
+                }
+                
+                // Prepare user data
+                $user = [
+                    'name' => $userData['nama'],
+                    'email' => $userData['email'],
+                    'password' => Hash::make($userData['password']),
+                    'email_verified_at' => $verificationDate->format('Y-m-d H:i:s'),
+                    'role_id' => $request->role_id,
+                    'created_by' => Auth::id(),
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+                
+                $users[] = $user;
+            }
+            
+            fclose($handle);
+            
+            // Insert all users
+            User::insert($users);
+            
+            return redirect()->route('users.import.form')
+                ->with('success', count($users) . ' user berhasil diimport');
+
+        } catch (\Exception $e) {
+            return redirect()->route('users.import.form')
+                ->with('error', 'Error: ' . $e->getMessage());
+        }
     }
 }
