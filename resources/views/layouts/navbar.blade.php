@@ -45,6 +45,9 @@
                                     <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/faq') }}">FAQ</a>
                                 </li>
                                 <li class="nav-item px-3 px-xl-1">
+                                    <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/kodingka25') }}">Koding-KA 2025</a>
+                                </li>
+                                <li class="nav-item px-3 px-xl-1">
                                     <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/login') }}">Login</a>
                                 </li>
                                 <li class="nav-item px-3 px-xl-1">
