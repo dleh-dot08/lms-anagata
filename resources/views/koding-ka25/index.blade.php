@@ -27,7 +27,7 @@
               <a class="nav-link fw-semibold text-dark" href="#">Beranda</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-semibold text-dark" href="#">Fasilitator</a>
+              <a class="nav-link fw-semibold text-dark" href="#fasilitator">Fasilitator</a>
             </li>
             <li class="nav-item">
               <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id/faq">FAQ</a>
@@ -36,11 +36,6 @@
               <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id">LMS-RuangAnagata</a>
             </li>
           </ul>
-        </div>
-
-        <!-- Tombol kanan -->
-        <div>
-          <a href="#" class="btn btn-dark fw-bold rounded-2 px-4">Hubungi Kami</a>
         </div>
       </div>
     </nav>
@@ -384,52 +379,53 @@
     </section>
 
     <!-- Fasilitator -->
-    <section class="py-5 bg-light">
+    <section id="fasilitator" class="py-5 bg-light">
       <div class="container">
-        <div class="row align-items-start">
-          <!-- Kolom Kiri (Teks) -->
-          <div class="col-lg-4 mb-4">
-            <h2 class="text-primary fw-bold mb-3 fs-1">Fasilitator Kami</h2>
-            <p class="fs-5" style="text-align: justify">
-              Pelatihan didampingi oleh fasilitator profesional dari Anagata Academy <strong>(CodingMU)</strong> yang berpengalaman
-              dalam dunia pendidikan dan teknologi.
+        <div class="row mb-4">
+          <div class="col-lg-6">
+            <h2 class="text-primary fw-bold fs-1">Fasilitator Kami</h2>
+            <p class="fs-5 text-muted">
+              Pelatihan didampingi oleh fasilitator profesional dari <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
             </p>
-            <ul class="list-unstyled fs-5">
-              <li>✅ Instruktur Bersertifikat</li>
-              <li>✅ Latar Belakang Teknologi & Pendidikan</li>
-              <li>✅ Pendekatan Interaktif dan Aplikatif</li>
-            </ul>
-          </div>
-
-          <!-- Kolom Kanan (Dinamis) -->
-          <div class="col-lg-8">
-            <div id="fasilitator-container" class="d-flex flex-nowrap overflow-auto gap-3 pb-3"></div>
           </div>
         </div>
+        
+        <div class="row" id="fasilitator-container" style="gap: 1rem; flex-wrap: wrap;"></div>
       </div>
     </section>
 
+
     <script>
-    fetch('{{ asset('koding_ka25/fasilitator.json') }}')
-      .then((res) => res.json())
-      .then((data) => {
-        const container = document.getElementById('fasilitator-container');
-        data.forEach((fasil) => {
-          const card = `
-            <div class="card shadow-sm rounded-4" style="max-width: 20rem; flex: 0 0 auto">
-              <img src="{{ asset('koding_ka25/') }}/${fasil.foto}" class="card-img-top rounded-top-4" style="height: 350px; object-fit: cover" />
-              <div class="card-body">
-                <p class="text-muted mb-1">${fasil.kota}</p>
-                <h5 class="fw-bold text-primary mb-1">${fasil.nama}</h5>
+      const jsonUrl = "{{ asset('koding_ka25/fasilitator.json') }}";
+      const assetBase = "{{ asset('koding_ka25') }}";
+
+      fetch(jsonUrl)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('fasilitator-container');
+          container.classList.add('d-flex', 'justify-content-start'); // Flex container
+
+          data.forEach(fasil => {
+            const card = document.createElement('div');
+            card.className = 'card shadow-sm rounded-4 p-3';
+            card.style.width = '100%';
+            card.style.maxWidth = '350px';
+
+            card.innerHTML = `
+              <img src="${assetBase}/${fasil.foto}" alt="${fasil.nama}" class="rounded-4 mb-3" style="width: 100%; height: auto; object-fit: cover;">
+
+              <div>
+                <h5 class="fw-bold text-dark mb-1">${fasil.nama}</h5>
                 <p class="mb-1">🎓 ${fasil.pendidikan}</p>
-                <p class="mb-1">🏫 ${fasil.kampus}</p>
-                <p class="text-muted">${fasil.pengalaman}</p>
+                <p class="mb-1 text-muted small">${fasil.pengalaman}</p>
+                <p class="mb-0"><i class="bi bi-geo-alt-fill me-1 text-danger"></i><span class="text-muted small">${fasil.penugasan}</span></p>
               </div>
-            </div>
-          `;
-          container.innerHTML += card;
-        });
-      });
+            `;
+
+            container.appendChild(card);
+          });
+        })
+        .catch(err => console.error('Gagal load fasilitator:', err));
     </script>
 
   </body>
