@@ -56,7 +56,7 @@
               Anagata Academy <strong>(CodingMU)</strong> 
             </h1>
             <p class="fs-5 text-muted">
-              Merupakan LPD resmi yang mengadakan diklat guru Koding dan KA untuk jenjang SD - SMA/SMK dengan metode praktik dan proyek.
+              Anagata Academy ada Lembaga Kursus dan Pelatihan (LKP) resmi yang memberikan pelatihan digital dan pengembangan skill SDM Indonesia baik formal maupun informal.
             </p>
             <a
               href="#"
