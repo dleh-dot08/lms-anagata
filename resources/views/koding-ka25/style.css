@@ -1,0 +1,22 @@
+.facilitator-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+/* Card style */
+.facilitator-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 48%; /* 2 kolom */
+  box-sizing: border-box;
+}
+
+
+
+/* slider */
+
+

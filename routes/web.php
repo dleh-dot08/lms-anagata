@@ -64,6 +64,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/koding-ka25', function () {
+    return view('koding-ka25.index');
+})->name('koding-ka25');
+
 // Route buat verifikasi
 Route::get('/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
