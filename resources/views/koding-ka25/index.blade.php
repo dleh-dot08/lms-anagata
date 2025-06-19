@@ -389,19 +389,13 @@
             </p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Section 2: Daftar Fasilitator -->
-    <section class="pb-5">
-      <div class="container">
+        <div class="container">
         <div id="fasilitator-container" class="row g-3 overflow-auto" style="max-height: 600px;">
           <!-- Data fasilitator akan dimuat di sini lewat JavaScript -->
         </div>
       </div>
+      </div>
     </section>
-
-
 
     <script>
       fetch('{{ asset('koding_ka25/fasilitator.json') }}')
