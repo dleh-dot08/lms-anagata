@@ -8,7 +8,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/koding-ka25/style.css" />
+    <link rel="stylesheet" href="{{ asset('koding-ka25/style.css') }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   </head>
   <body>
@@ -17,7 +17,7 @@
       <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="#">
-          <img src="https://drive.google.com/file/d/1ZbEwYg9sz_UybwLg8QsMRj_mD6WLUp43/view?usp=share_link" alt="" style="height: 70px" />
+          <img src="{{ asset('koding-ka25/logo-asn.png') }}" alt="" style="height: 70px" />
         </a>
 
         <!-- Menu tengah -->
@@ -68,7 +68,7 @@
           <div class="col-lg-6 position-relative">
             <div class="position-relative">
               <img
-                src="/koding-ka25/img/section.jpg"
+                src="/koding-ka25/section.jpg"
                 alt="Pelatihan Guru"
                 class="img-fluid rounded-4 shadow-lg"
                 style="max-height: 500px; object-fit: cover; position: relative; z-index: 2;"
@@ -341,14 +341,14 @@
           <!-- Baris atas -->
           <div class="col-md-6">
             <img
-              src="/koding-ka25/img/mengapa1.png"
+              src="/koding-ka25/mengapa1.png"
               class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
               alt="Pelatihan 1"
             />
           </div>
           <div class="col-md-6">
             <img
-              src="/koding-ka25/img/mengapa2.JPG"
+              src="/koding-ka25/mengapa2.JPG"
               class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
               alt="Pelatihan 2"
             />
@@ -357,21 +357,21 @@
           <!-- Baris bawah -->
           <div class="col-md-4">
             <img
-              src="/koding-ka25/img/mengapa3.png"
+              src="/koding-ka25/mengapa3.png"
               class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
               alt="Pelatihan 3"
             />
           </div>
           <div class="col-md-4">
             <img
-              src="/koding-ka25/img/mengapa4.jpg"
+              src="/koding-ka25/mengapa4.jpg"
               class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
               alt="Pelatihan 4"
             />
           </div>
           <div class="col-md-4">
             <img
-              src="/koding-ka25/img/mengapa5.jpg"
+              src="/koding-ka25/mengapa5.jpg"
               class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
               alt="Pelatihan 5"
             />
