@@ -406,9 +406,6 @@
       </div>
     </section>
 
-
-    <script src="{{ asset('koding_ka25/index.js') }}"></script>
-
     <script>
     fetch('{{ asset('koding_ka25/fasilitator.json') }}')
       .then((res) => res.json())
