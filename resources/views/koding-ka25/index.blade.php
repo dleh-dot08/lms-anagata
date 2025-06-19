@@ -407,31 +407,30 @@
     </section>
 
 
-    <script src="./js/index.js"></script>
+    <script src="{{ asset('koding-ka25/index.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Taruh ini sebelum </body> -->
     <script>
-      fetch('./fasilitator.json')
-        .then((res) => res.json())
-        .then((data) => {
-          const container = document.getElementById('fasilitator-container');
-          data.forEach((fasil) => {
-            const card = `
-              <div class="card shadow-sm rounded-4" style="max-width: 20rem; flex: 0 0 auto">
-                <img src="${fasil.foto}" class="card-img-top rounded-top-4" style="height: 350px; object-fit: cover" />
-                <div class="card-body">
-                  <p class="text-muted mb-1">${fasil.kota}</p>
-                  <h5 class="fw-bold text-primary mb-1">${fasil.nama}</h5>
-                  <p class="mb-1">🎓 ${fasil.pendidikan}</p>
-                  <p class="mb-1">🏫 ${fasil.kampus}</p>
-                  <p class="text-muted">${fasil.pengalaman}</p>
-                </div>
+    fetch('{{ asset('koding-ka25/fasilitator.json') }}')
+      .then((res) => res.json())
+      .then((data) => {
+        const container = document.getElementById('fasilitator-container');
+        data.forEach((fasil) => {
+          const card = `
+            <div class="card shadow-sm rounded-4" style="max-width: 20rem; flex: 0 0 auto">
+              <img src="{{ asset('koding-ka25/') }}/${fasil.foto}" class="card-img-top rounded-top-4" style="height: 350px; object-fit: cover" />
+              <div class="card-body">
+                <p class="text-muted mb-1">${fasil.kota}</p>
+                <h5 class="fw-bold text-primary mb-1">${fasil.nama}</h5>
+                <p class="mb-1">🎓 ${fasil.pendidikan}</p>
+                <p class="mb-1">🏫 ${fasil.kampus}</p>
+                <p class="text-muted">${fasil.pengalaman}</p>
               </div>
-            `;
-            container.innerHTML += card;
-          });
+            </div>
+          `;
+          container.innerHTML += card;
         });
+      });
     </script>
+
   </body>
 </html>
