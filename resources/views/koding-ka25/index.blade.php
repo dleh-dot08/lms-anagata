@@ -30,7 +30,10 @@
               <a class="nav-link fw-semibold text-dark" href="#">Fasilitator</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-semibold text-dark" href="#">FAQ</a>
+              <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id/faq">FAQ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id">LMS-RuangAnagata</a>
             </li>
           </ul>
         </div>
@@ -327,8 +330,8 @@
           </div>
           <div class="col-lg-6">
             <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-lg">
-              <iframe src="https://www.youtube.com/embed/6df39018-dffb-435e-bd4b-3553950b7d80"
-                      title="Empowering Educators with AI" allowfullscreen></iframe>
+              <iframe src="https://www.youtube.com/embed/EN2CaOJf1To?si=I3JIFY9ukNxpc48T&amp;controls=0"
+                      title="Yuk Ngulik Coding, Mulai dari Sejarahnya!" allowfullscreen></iframe>
             </div>
           </div>
         </div>
@@ -406,11 +409,8 @@
       </div>
     </section>
 
-
-    <script src="{{ asset('koding_ka25/index.js') }}"></script>
-
-    <script data-json-url="{{ asset('koding_ka25/fasilitator.json') }}">
-    fetch(document.currentScript.dataset.jsonUrl)
+    <script>
+    fetch('{{ asset('koding_ka25/fasilitator.json') }}')
       .then((res) => res.json())
       .then((data) => {
         const container = document.getElementById('fasilitator-container');
