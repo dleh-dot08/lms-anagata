@@ -378,8 +378,8 @@
       </div>
     </section>
 
-    <!-- Fasilitator -->
-    <section id="fasilitator" class="py-5 bg-light">
+    <!-- Section 1: Judul -->
+    <section class="py-5 bg-light">
       <div class="container">
         <div class="row mb-4">
           <div class="col-lg-6">
@@ -389,44 +389,47 @@
             </p>
           </div>
         </div>
-        
-        <div class="row" id="fasilitator-container" style="gap: 1rem; flex-wrap: wrap;"></div>
+      </div>
+    </section>
+
+    <!-- Section 2: Daftar Fasilitator -->
+    <section class="pb-5">
+      <div class="container">
+        <div id="fasilitator-container" class="row g-3 overflow-auto" style="max-height: 600px;">
+          <!-- Data fasilitator akan dimuat di sini lewat JavaScript -->
+        </div>
       </div>
     </section>
 
 
-    <script>
-      const jsonUrl = "{{ asset('koding_ka25/fasilitator.json') }}";
-      const assetBase = "{{ asset('koding_ka25') }}";
 
-      fetch(jsonUrl)
+    <script>
+      fetch('{{ asset('koding_ka25/fasilitator.json') }}')
         .then(res => res.json())
         .then(data => {
           const container = document.getElementById('fasilitator-container');
-          container.classList.add('d-flex', 'justify-content-start'); // Flex container
 
           data.forEach(fasil => {
             const card = document.createElement('div');
-            card.className = 'card shadow-sm rounded-4 p-3';
-            card.style.width = '100%';
-            card.style.maxWidth = '350px';
+            card.className = 'col-md-6 col-lg-4';
 
             card.innerHTML = `
-              <img src="${assetBase}/${fasil.foto}" alt="${fasil.nama}" class="rounded-4 mb-3" style="width: 100%; height: auto; object-fit: cover;">
-
-              <div>
-                <h5 class="fw-bold text-dark mb-1">${fasil.nama}</h5>
-                <p class="mb-1">🎓 ${fasil.pendidikan}</p>
-                <p class="mb-1 text-muted small">${fasil.pengalaman}</p>
-                <p class="mb-0"><i class="bi bi-geo-alt-fill me-1 text-danger"></i><span class="text-muted small">${fasil.penugasan}</span></p>
+              <div class="card shadow-sm h-100 rounded-4">
+                <img src="{{ asset('koding_ka25/') }}/${fasil.foto}" class="card-img-top rounded-top-4" style="height: 200px; object-fit: cover" />
+                <div class="card-body">
+                  <h5 class="fw-bold text-primary mb-2">${fasil.nama}</h5>
+                  <p class="mb-1">🎓 ${fasil.pendidikan}</p>
+                  <p class="mb-1">📍 ${fasil.penugasan}</p>
+                  <p class="text-muted">${fasil.pengalaman}</p>
+                </div>
               </div>
             `;
 
             container.appendChild(card);
           });
-        })
-        .catch(err => console.error('Gagal load fasilitator:', err));
+        });
     </script>
+
 
   </body>
 </html>
