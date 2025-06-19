@@ -388,7 +388,7 @@
           <div class="col-lg-4 mb-4">
             <h2 class="text-primary fw-bold mb-3 fs-1">Fasilitator Kami</h2>
             <p class="fs-5" style="text-align: justify">
-              Pelatihan didampingi oleh fasilitator profesional dari Koding Next yang berpengalaman
+              Pelatihan didampingi oleh fasilitator profesional dari Anagata Academy <strong>(CodingMU)</strong> yang berpengalaman
               dalam dunia pendidikan dan teknologi.
             </p>
             <ul class="list-unstyled fs-5">
@@ -409,8 +409,8 @@
 
     <script src="{{ asset('koding_ka25/index.js') }}"></script>
 
-    <script>
-    fetch('{{ asset('koding_ka25/fasilitator.json') }}')
+    <script data-json-url="{{ asset('koding_ka25/fasilitator.json') }}">
+    fetch(document.currentScript.dataset.jsonUrl)
       .then((res) => res.json())
       .then((data) => {
         const container = document.getElementById('fasilitator-container');
