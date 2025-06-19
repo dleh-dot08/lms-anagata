@@ -17,7 +17,7 @@
       <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="#">
-          <img src="/koding-ka25/img/logo-asn.png" alt="Koding Next" style="height: 70px" />
+          <img src="{{ asset('koding-ka25/img/logo-asn.png') }}" alt="" style="height: 70px" />
         </a>
 
         <!-- Menu tengah -->
