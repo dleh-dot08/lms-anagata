@@ -392,9 +392,9 @@
             Pelatihan didampingi oleh fasilitator profesional dari 
             <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
           </p>
-          <div class="table-responsive">
-            <table class="table table-bordered mt-4" id="lokasiTable">
-              <thead>
+          <div class="table-container mt-4">
+            <table class="table table-bordered table-striped" id="lokasiTable">
+              <thead class="table-primary">
                 <tr>
                   <th>Provinsi</th>
                   <th>Kabupaten/Kota</th>
