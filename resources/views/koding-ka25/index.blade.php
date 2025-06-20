@@ -377,7 +377,7 @@
         <div class="row mb-4">
             <h2 class="text-primary fw-bold fs-1">Fasilitator Kami</h2>
             <p class="fs-5 text-muted">
-              Pelatihan didampingi oleh fasilitator profesional dari <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
+              Pelatihan ini didampingi oleh fasilitator profesional dari Anagata Academy (CodingMU), yang terdiri dari <strong>tim ahli di bidang teknologi, pendidikan, dan pengembangan kurikulum digital</strong>. Para fasilitator merupakan praktisi dan edukator yang telah berpengalaman luas dalam mengajar coding kepada berbagai jenjang pendidikan, mulai dari anak-anak hingga pendidik profesional. Dengan latar belakang sebagai pengembang, instruktur, dan perancang program pembelajaran interaktif, tim ini menggabungkan pendekatan pedagogis modern dengan penguasaan teknis untuk memastikan proses pelatihan berjalan efektif, aplikatif, dan menyenangkan.
             </p>
           </div>
       </div>
