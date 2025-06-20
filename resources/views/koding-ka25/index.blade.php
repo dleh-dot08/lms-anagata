@@ -387,13 +387,49 @@
     <section class="py-5 bg-light">
       <div class="container">
         <div class="row mb-4">
-            <h2 class="text-primary fw-bold fs-1">Lokasi kegiatan</h2>
-            <p class="fs-5 text-muted">
-              Pelatihan didampingi oleh fasilitator profesional dari <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
-            </p>
+          <h2 class="text-primary fw-bold fs-1">Lokasi kegiatan</h2>
+          <p class="fs-5 text-muted">
+            Pelatihan didampingi oleh fasilitator profesional dari 
+            <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
+          </p>
+          <div class="table-responsive">
+            <table class="table table-bordered mt-4" id="lokasiTable">
+              <thead>
+                <tr>
+                  <th>Provinsi</th>
+                  <th>Kabupaten/Kota</th>
+                  <th>Jenjang</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
+        </div>
       </div>
     </section>
+
+    <script>
+      const lokasiData = [
+        { provinsi: "Jawa Barat", kabupaten: "Bandung", jenjang: "SD" },
+        { provinsi: "Jawa Tengah", kabupaten: "Semarang", jenjang: "SMP" },
+        { provinsi: "DKI Jakarta", kabupaten: "Jakarta Selatan", jenjang: "SMA" },
+        { provinsi: "DI Yogyakarta", kabupaten: "Sleman", jenjang: "SMK" }
+      ];
+
+      const tbody = document.querySelector("#lokasiTable tbody");
+
+      lokasiData.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.provinsi}</td>
+          <td>${item.kabupaten}</td>
+          <td>${item.jenjang}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    </script>
+
+
 
   </body>
 </html>
