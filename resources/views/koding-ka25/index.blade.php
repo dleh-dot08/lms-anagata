@@ -410,10 +410,62 @@
 
     <script>
       const lokasiData = [
-        { provinsi: "Jawa Barat", kabupaten: "Bandung", jenjang: "SD" },
-        { provinsi: "Jawa Tengah", kabupaten: "Semarang", jenjang: "SMP" },
-        { provinsi: "DKI Jakarta", kabupaten: "Jakarta Selatan", jenjang: "SMA" },
-        { provinsi: "DI Yogyakarta", kabupaten: "Sleman", jenjang: "SMK" }
+          { "provinsi": "Aceh", "kabupaten": "Kota Lhoksumawe", "jenjang": "SD" },
+          { "provinsi": "Aceh", "kabupaten": "Kota Lhoksumawe", "jenjang": "SMP" },
+          { "provinsi": "Aceh", "kabupaten": "Kota Lhoksumawe", "jenjang": "SMA" },
+
+          { "provinsi": "Banten", "kabupaten": "Kab. Tanggerang", "jenjang": "SMP" },
+          { "provinsi": "Banten", "kabupaten": "Kota Tanggerang", "jenjang": "SMA/K" },
+
+          { "provinsi": "D.I Yogyakarta", "kabupaten": "Kab Bantul", "jenjang": "SD" },
+          { "provinsi": "D.I Yogyakarta", "kabupaten": "Kab Bantul", "jenjang": "SMP" },
+          { "provinsi": "D.I Yogyakarta", "kabupaten": "Kab. Kulon Progo", "jenjang": "SMA/K" },
+
+          { "provinsi": "D.K.I Jakarta", "kabupaten": "Jakarta Selatan", "jenjang": "SMP" },
+
+          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Bogor", "jenjang": "SD" },
+          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Bogor", "jenjang": "SMA/K" },
+          { "provinsi": "Jawa Barat", "kabupaten": "Kab. kuningan", "jenjang": "SD" },
+          { "provinsi": "Jawa Barat", "kabupaten": "Kab. kuningan", "jenjang": "SMP" },
+          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Garut", "jenjang": "SMA/K" },
+          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Karawang", "jenjang": "SMA/K" },
+
+          { "provinsi": "Jawa Tengah", "kabupaten": "Kab. Wonosobo", "jenjang": "SD" },
+          { "provinsi": "Jawa Tengah", "kabupaten": "Kab. Wonosobo", "jenjang": "SMP" },,
+          { "provinsi": "Jawa Tengah", "kabupaten": "Kab. Wonosobo", "jenjang": "SMA/K" },
+          { "provinsi": "Jawa Tengah", "kabupaten": "Kota Salatiga", "jenjang": "SMA/K" },
+
+          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Jombang", "jenjang": "SD" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Magetan", "jenjang": "SMA/K" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Malang", "jenjang": "SD" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Malang", "jenjang": "SMA/K" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Sidoarjo", "jenjang": "SD" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Tulong agung", "jenjang": "SD" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kota Madiun", "jenjang": "SD" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kota Madiun", "jenjang": "SMP" },
+          { "provinsi": "Jawa Timur", "kabupaten": "Kota Madiun", "jenjang": "SMA/K" },
+
+          { "provinsi": "Sumatera Selatan", "kabupaten": "Kab. Ogan Komering Ulu Timur", "jenjang": "SD" },
+          { "provinsi": "Sumatera Selatan", "kabupaten": "Kab. Ogan Komering Ulu Timur", "jenjang": "SMP" },
+          { "provinsi": "Sumatera Selatan", "kabupaten": "Kab. Ogan Komering Ulu Timur", "jenjang": "SMA/K" },
+
+          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Barat", "jenjang": "SD" },
+          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Barat", "jenjang": "SMA/K" },
+          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Barat", "jenjang": "SMP" },
+          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Utara", "jenjang": "SMP" },
+          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Utara", "jenjang": "SMA/K" },
+          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Utara", "jenjang": "SD" },
+
+          { "provinsi": "NTB", "kabupaten": "Kab. Bima", "jenjang": "SD" },
+          { "provinsi": "NTB", "kabupaten": "Kab. Bima", "jenjang": "SMA/K" },
+          { "provinsi": "NTB", "kabupaten": "Kab. Bima", "jenjang": "SMP" },
+
+          { "provinsi": "Riau", "kabupaten": "Kota Pekanbaru", "jenjang": "SMA/K" },
+
+          { "provinsi": "Sulawesi Selatan", "kabupaten": "Bulukumba", "jenjang": "SD" },
+          { "provinsi": "Sulawesi Selatan", "kabupaten": "Bulukumba", "jenjang": "SMP" },
+
+          { "provinsi": "Maluku Utara", "kabupaten": "Kota Tidore Kepulauan", "jenjang": "SMA/K" },
       ];
 
       const tbody = document.querySelector("#lokasiTable tbody");
