@@ -375,13 +375,23 @@
     <section class="py-5 bg-light">
       <div class="container">
         <div class="row mb-4">
-          <div class="col-lg-6">
             <h2 class="text-primary fw-bold fs-1">Fasilitator Kami</h2>
             <p class="fs-5 text-muted">
               Pelatihan didampingi oleh fasilitator profesional dari <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
             </p>
           </div>
-        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: Judul -->
+    <section class="py-5 bg-light">
+      <div class="container">
+        <div class="row mb-4">
+            <h2 class="text-primary fw-bold fs-1">Lokasi kegiatan</h2>
+            <p class="fs-5 text-muted">
+              Pelatihan didampingi oleh fasilitator profesional dari <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
+            </p>
+          </div>
       </div>
     </section>
 
