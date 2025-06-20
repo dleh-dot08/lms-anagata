@@ -19,7 +19,7 @@
         <a class="navbar-brand d-flex align-items-center" href="#">
           <img src="{{ asset('koding_ka25/Logo_kementrian.svg') }}" alt="" style="height: 70px" />
           <img src="{{ asset('koding_ka25/logo-asn.png') }}" alt="" style="height: 70px" />
-          <img src="{{ asset('koding_ka25/logo-aa.png') }}" alt="" style="height: 70px" />
+          <img src="{{ asset('koding_ka25/logo_aa.png') }}" alt="" style="height: 70px" />
           <img src="{{ asset('koding_ka25/logo_codingmu.png') }}" alt="" style="height: 70px" />
         </a>
 
