@@ -212,19 +212,6 @@
       </div>
     </section>
 
-    <!-- Video Section -->
-    <section>
-      <div class="mx-auto my-5" style="max-width: 720px">
-        <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow">
-          <iframe
-            src="https://www.youtube.com/embed/6df39018-dffb-435e-bd4b-3553950b7d80"
-            title="Empowering Educators with AI"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </div>
-    </section>
-
     <!-- Fasilitas Pelatihan -->
     <section class="py-5" style="background-color: #f8fafc;">
       <div class="container">
@@ -324,8 +311,6 @@
             <p class="fs-5 mb-3">
               Anagata Academy adalah <strong>Lembaga Kursus dan Pelatihan (LKP)</strong> resmi yang menyediakan program peningkatan skill digital bagi SDM Indonesia.
             </p>
-            <p class="fs-6 text-white-50 mb-2"><strong>2021</strong> – Kami mulai memberikan layanan pelatihan digital melalui platform <strong>CodingMU</strong></p>
-            <p class="fs-6 text-white-50 mb-2"><strong>2022 - sekarang</strong> – CodingMU berkembang menjadi platform pengembangan <em>skill digital</em> nasional, mendukung pendidikan Indonesia secara berkelanjutan.</p>
             <div class="mt-4">
               <h1 class="display-4 fw-bold">1,200+</h1>
               <p class="fs-5">Kreator CodingMU di seluruh Indonesia</p>
@@ -397,41 +382,8 @@
             </p>
           </div>
         </div>
-        <div class="container">
-        <div id="fasilitator-container" class="row g-3 overflow-auto" style="max-height: 600px;">
-          <!-- Data fasilitator akan dimuat di sini lewat JavaScript -->
-        </div>
-      </div>
       </div>
     </section>
-
-    <script>
-      fetch('{{ asset('koding_ka25/fasilitator.json') }}')
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById('fasilitator-container');
-
-          data.forEach(fasil => {
-            const card = document.createElement('div');
-            card.className = 'col-md-6 col-lg-4';
-
-            card.innerHTML = `
-              <div class="card shadow-sm h-100 rounded-4">
-                <img src="{{ asset('koding_ka25/') }}/${fasil.foto}" class="card-img-top rounded-top-4" style="height: 200px; object-fit: cover" />
-                <div class="card-body">
-                  <h5 class="fw-bold text-primary mb-2">${fasil.nama}</h5>
-                  <p class="mb-1">🎓 ${fasil.pendidikan}</p>
-                  <p class="mb-1">📍 ${fasil.penugasan}</p>
-                  <p class="text-muted">${fasil.pengalaman}</p>
-                </div>
-              </div>
-            `;
-
-            container.appendChild(card);
-          });
-        });
-    </script>
-
 
   </body>
 </html>
