@@ -16,11 +16,8 @@
     <nav class="navbar navbar-expand-lg bg-white border-bottom">
       <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
         <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-          <img src="{{ asset('koding_ka25/Logo_kementrian.svg') }}" alt="" style="height: 70px; margin-right: 16px;" />
-          <img src="{{ asset('koding_ka25/logo-asn.png') }}" alt="" style="height: 70px; margin-right: 16px;" />
-          <img src="{{ asset('koding_ka25/logo_aa.png') }}" alt="" style="height: 70px; margin-right: 16px;" />
-          <img src="{{ asset('koding_ka25/logo_codingmu.png') }}" alt="" style="height: 70px;" />
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <img src="{{ asset('koding_ka25/logo_all.png') }}" alt="" style="height: 70px" />
         </a>
 
         <!-- Menu tengah -->
