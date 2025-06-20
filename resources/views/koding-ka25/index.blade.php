@@ -17,7 +17,10 @@
       <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="#">
+          <img src="{{ asset('koding_ka25/Logo_kementrian.svg') }}" alt="" style="height: 70px" />
           <img src="{{ asset('koding_ka25/logo-asn.png') }}" alt="" style="height: 70px" />
+          <img src="{{ asset('koding_ka25/logo-aa.png') }}" alt="" style="height: 70px" />
+          <img src="{{ asset('koding_ka25/logo_codingmu.png') }}" alt="" style="height: 70px" />
         </a>
 
         <!-- Menu tengah -->
@@ -51,7 +54,7 @@
               Anagata Academy <strong>(CodingMU)</strong> 
             </h1>
             <p class="fs-5 text-muted">
-              Anagata Academy ada Lembaga Kursus dan Pelatihan (LKP) resmi yang memberikan pelatihan digital dan pengembangan skill SDM Indonesia baik formal maupun informal.
+              Anagata Academy adalah Lembaga Kursus dan Pelatihan (LKP) berizin resmi yang memberikan pelatihan digital dan pengembangan bakat serta kemampuan sumber daya manusia Indonesia.
             </p>
             <a
               href="#"
@@ -191,7 +194,7 @@
         <!-- Jenjang SMA/SMK -->
         <div class="col-md-4">
           <div class="p-4 h-100 rounded-4 border shadow-sm bg-white">
-            <h4 class="fw-bold text-primary mb-3">Pendidikan Menengah Atas (SMA/SMK)</h4>
+            <h4 class="fw-bold text-primary mb-3">Pendidikan Menengah Atas / Kejuruan (SMA/SMK)</h4>
             <ul class="ps-3">
               <li>Pemrograman teks (Python) & pengembangan aplikasi sederhana</li>
               <li>Struktur data lanjutan (list, dict, set) & algoritma efisien</li>
@@ -314,7 +317,7 @@
           <div class="col-lg-6">
             <h2 class="fw-bold display-5 mb-4">Kenapa <span style="color: #fca311;">Anagata Academy?</span></h2>
             <p class="fs-5 mb-3">
-              Anagata Academy adalah <strong>Lembaga Kursus dan Pelatihan (LKP)</strong> resmi yang menyediakan program peningkatan skill digital bagi SDM Indonesia, baik formal maupun informal.
+              Anagata Academy adalah <strong>Lembaga Kursus dan Pelatihan (LKP)</strong> resmi yang menyediakan program peningkatan skill digital bagi SDM Indonesia.
             </p>
             <p class="fs-6 text-white-50 mb-2"><strong>2021</strong> – Kami mulai memberikan layanan pelatihan digital melalui platform <strong>CodingMU</strong></p>
             <p class="fs-6 text-white-50 mb-2"><strong>2022 - sekarang</strong> – CodingMU berkembang menjadi platform pengembangan <em>skill digital</em> nasional, mendukung pendidikan Indonesia secara berkelanjutan.</p>
