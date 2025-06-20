@@ -13,14 +13,14 @@
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <nav class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
       <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="#">
           <img src="{{ asset('koding_ka25/logo_all.png') }}" alt="" style="height: 70px" />
         </a>
 
-        <!-- Menu tengah -->
+        <!-- Menu tengah (hanya muncul di layar besar) -->
         <div class="d-none d-lg-flex mx-auto">
           <ul class="navbar-nav gap-4">
             <li class="nav-item">
@@ -39,6 +39,14 @@
         </div>
       </div>
     </nav>
+
+    <!-- Tambahkan style agar konten tidak tertutup navbar -->
+    <style>
+      body {
+        padding-top: 80px;
+      }
+    </style>
+
 
     <!-- Hero Section Full Width Background -->
     <section class="position-relative overflow-hidden" style="background: linear-gradient(to bottom right, #fffaf3, #fff0e1);">
