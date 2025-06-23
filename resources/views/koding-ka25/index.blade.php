@@ -412,10 +412,7 @@
     <section class="py-5 bg-light">
       <div class="container">
         <div class="row mb-4 text-center">
-          <h2 class="text-primary fw-bold fs-1">📌 Fasilitator Kami</h2>
-          <p class="fs-5 text-muted">
-            Tim fasilitator kami tersebar di berbagai wilayah Indonesia, siap membantu Anda dalam pelatihan, konsultasi teknis, dan kebutuhan administrasi. Hubungi admin sesuai wilayah Anda:
-          </p>
+          <h2 class="text-primary fw-bold fs-1">Admin Wilayah</h2>
         </div>
 
         <!-- Tabel Wilayah Admin -->
