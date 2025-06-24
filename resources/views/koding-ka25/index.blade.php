@@ -62,7 +62,7 @@
               Anagata Academy adalah Lembaga Kursus dan Pelatihan (LKP) berizin resmi yang memberikan pelatihan digital dan pengembangan bakat serta kemampuan sumber daya manusia Indonesia.
             </p>
             <a
-              href="#"
+               href="#tabel-admin"
               class="btn btn-lg mt-3 px-4 py-2 rounded-pill text-white shadow"
               style="background: linear-gradient(135deg, #ff9900, #ff6600); border: none;"
             >
@@ -416,7 +416,7 @@
         </div>
 
         <!-- Tabel Wilayah Admin -->
-        <div class="table-responsive">
+        <div id="tabel-admin" class="table-responsive">
           <table class="table table-bordered table-hover table-striped align-middle text-center bg-white shadow-sm">
             <thead class="table-primary">
               <tr>
