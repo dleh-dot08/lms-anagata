@@ -383,6 +383,16 @@
       </div>
     </section>
 
+    <section class="py-5 bg-light">
+      <div class="container">
+        <div class="row mb-4">
+            <h2 class="text-primary fw-bold fs-1">Alur Pendaftaran</h2>
+            <div class="text-center">
+              <img src="/koding_ka25/alur_pendaftaran.jpeg" alt="Alur Pendaftaran" class="img-fluid rounded-4" style="max-width: 75%; height: auto;">
+            </div>
+          </div>
+      </div>
+    </section>
     <!-- Section 1: Judul -->
     <section class="py-5 bg-light">
       <div class="container">
