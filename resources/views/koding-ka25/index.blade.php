@@ -386,9 +386,16 @@
     <section class="py-5 bg-light">
       <div class="container">
         <div class="row mb-4">
-            <h2 class="text-primary fw-bold fs-1">Alur Pendaftaran</h2>
+            <h2 class="text-primary fw-bold fs-1">Alur Pendaftaran dan Pembayaran</h2>
             <div class="text-center">
-              <img src="/koding_ka25/alur_pendaftaran.jpeg" alt="Alur Pendaftaran" class="img-fluid rounded-4" style="max-width: 75%; height: auto;">
+              <div class="row g-4 justify-content-center">
+                <div class="col-md-6">
+                  <img src="/koding_ka25/alur_pendaftaran.jpeg" alt="Alur Pendaftaran" class="img-fluid rounded-4" style="max-width: 100%; height: auto;">
+                </div>
+                <div class="col-md-6">
+                  <img src="/koding_ka25/Pembayaran.png" alt="Alur Pendaftaran" class="img-fluid rounded-4" style="max-width: 100%; height: auto;">
+                </div>
+              </div>
             </div>
           </div>
       </div>
