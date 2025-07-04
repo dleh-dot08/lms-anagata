@@ -75,9 +75,15 @@ Route::get('/cek-invoice', function () {
 })->name('cek-invoice');
 Route::post('/cek-invoice', [InvoiceController::class, 'cariInvoice']);
 Route::match(['get', 'post'], '/cek-recipt', [ReciptController::class, 'checkReceipt'])->name('receipt.check');
-Route::get('/cek-invoice', function () { // Atau nama route lain yang Anda inginkan
-    return view('koding-ka25.invoice'); // Mengarahkan ke invoice.blade.php
-})->name('invoice.ui');
+
+Route::get('/cek-invoice-sekolah', function () {
+    // PASTIKAN INI SESUAI DENGAN LOKASI FILE BLADE ANDA: 'folder.nama_file_tanpa_ekstensi'
+    return view('koding-ka25.invoice');
+})->name('invoice.ui.form'); // Memberi nama route ini, bisa Anda gunakan jika ingin link ke halaman ini
+
+// 2. Route untuk MEMPROSES pencarian invoice (method POST)
+// Ini adalah route yang akan dipanggil oleh JavaScript fetch() di invoice.blade.php
+Route::post('/cek-invoice', [InvoiceController::class, 'checkInvoice'])->name('invoice.check'); // NAMA INI HARUS SAMA DENGAN route('invoice.check') DI BLADE
 
 
 // Route buat verifikasi
