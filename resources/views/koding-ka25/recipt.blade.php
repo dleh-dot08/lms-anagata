@@ -193,7 +193,7 @@
                 <div class="detail-item"><strong>Nomor Invoice:</strong> <span>{{ $receiptDetails['no_invoice'] }}</span></div>
                 <div class="detail-item"><strong>Email Pendaftar:</strong> <span>{{ $receiptDetails['email'] }}</span></div>
                 <div class="detail-item"><strong>Lokasi Pelatihan:</strong> <span>{{ $receiptDetails['nama_lokus'] }}</span></div>
-                <div class="detail-item"><strong>Tanggal Input:</strong> <span>{{ \Carbon\Carbon::parse($receiptDetails['timestamp'])->isoFormat('DD MMMM YYYY, HH:mm') }} WIB</span></div>
+                <div class="detail-item"><strong>Tanggal Input:</strong> <span>{{ \Carbon\Carbon::createFromFormat('d/m/Y H:i:s', $receiptDetails['timestamp'])->isoFormat('DD MMMM YYYY, HH:mm') }} WIB</span></div>
 
                 <hr class="my-4 border-gray-300">
 
