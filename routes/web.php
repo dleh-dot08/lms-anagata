@@ -76,7 +76,7 @@ Route::get('/cek-invoice', function () {
 Route::post('/cek-invoice', [InvoiceController::class, 'cariInvoice']);
 Route::match(['get', 'post'], '/cek-recipt', [ReciptController::class, 'checkReceipt'])->name('receipt.check');
 Route::get('/cek-invoice', function () { // Atau nama route lain yang Anda inginkan
-    return view('invoice'); // Mengarahkan ke invoice.blade.php
+    return view('koding-ka25.invoice'); // Mengarahkan ke invoice.blade.php
 })->name('invoice.ui');
 
 
