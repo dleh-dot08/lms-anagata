@@ -1,198 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencarian Invoice - LPD Anagata Academy</title>
+    <title>Cek Invoice Sekolah</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f3f4f6; /* Warna abu-abu muda */
-        }
-        .container-custom {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 40px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: #2563eb; /* Biru */
-            color: white;
-            text-decoration: none;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            margin: 10px 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-            font-size: 1em;
-        }
-        .btn:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-        }
-        .btn-danger {
-            background-color: #dc2626; /* Merah */
-            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
-        }
-        .btn-danger:hover {
-            background-color: #b91c1c;
-        }
-        #result-area {
-            margin-top: 30px;
-            padding: 20px;
-            border-top: 1px solid #eee;
-        }
-        .success-message {
-            color: #16a34a; /* Hijau */
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .error-message {
-            color: #dc2626; /* Merah */
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        #loader {
-            display: none;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #2563eb;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @media (max-width: 768px) {
-            .container-custom {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 1.5em;
-            }
-            p {
-                font-size: 1em;
-            }
-            .btn {
-                padding: 10px 20px;
-                font-size: 0.9em;
-            }
-        }
-    </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="container-custom text-center">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">Cari Invoice Anda</h1>
-        <p class="text-gray-600 mb-6">Masukkan NPSN sekolah Anda untuk melihat atau mengunduh invoice.</p>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-        <div class="form-group">
-            <label for="npsnInput" class="block text-gray-700 text-sm font-bold mb-2">NPSN:</label>
-            <input type="text" id="npsnInput" placeholder="Contoh: 10101010" maxlength="10"
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div class="bg-white rounded-xl shadow-xl p-8 max-w-md w-full">
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Cek Invoice Sekolah</h2>
+        <p class="text-center text-sm text-gray-500 mb-6">Masukkan NPSN untuk mencari invoice sekolah</p>
+
+        <div class="mb-4">
+            <label for="npsnInput" class="block text-sm font-medium text-gray-700 mb-1">NPSN:</label>
+            <input type="text" id="npsnInput" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: 12345678">
         </div>
-        <button class="btn" onclick="searchInvoice()">Cari Invoice</button>
 
-        <div id="loader"></div>
-        <div id="result-area">
-            </div>
+        <button onclick="searchInvoice()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">Cari Invoice</button>
+
+        <div id="loader" class="mt-4 text-center hidden">
+            <div class="w-8 h-8 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+        </div>
+
+        <div id="result-area" class="mt-6 text-sm text-gray-800"></div>
     </div>
 
     <script>
-        const npsnInput = document.getElementById('npsnInput');
-        const resultArea = document.getElementById('result-area');
-        const loader = document.getElementById('loader');
-
-        // !!! PENTING: GANTI DENGAN URL API EXECUTABLE DARI DEPLOYMENT APPS SCRIPT ANDA !!!
-        const APPS_SCRIPT_API_URL = '{{ url("/cek-invoice") }}'
-
-        // URL Publik Google Form Anda
-        const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdX4uYgDk3eX9c2qZ0tJ8R6cWvV_7M2hY7pL9Q/viewform'; // GANTI INI
+        const npsnInput = document.getElementById("npsnInput");
+        const resultArea = document.getElementById("result-area");
+        const loader = document.getElementById("loader");
 
         async function searchInvoice() {
             const npsn = npsnInput.value.trim();
-            resultArea.innerHTML = ''; // Clear previous results
-
+            resultArea.innerHTML = "";
             if (!npsn) {
-                resultArea.innerHTML = '<p class="error-message">Mohon masukkan NPSN.</p>';
+                resultArea.innerHTML = `<p class="text-red-500 font-semibold">NPSN wajib diisi.</p>`;
                 return;
             }
 
-            loader.style.display = 'block'; // Show loader
+            loader.classList.remove('hidden');
 
             try {
-                const response = await fetch(APPS_SCRIPT_API_URL, {
-                    method: 'POST',
+                const response = await fetch("{{ url('/cek-invoice') }}", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                     },
-                    body: JSON.stringify({
-                        functionName: 'searchInvoiceByNPSN', // Nama fungsi Apps Script yang ingin dipanggil
-                        params: [npsn] // Array parameter yang dikirim ke fungsi
-                    }),
+                    body: JSON.stringify({ npsn: npsn })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                loader.classList.add('hidden');
 
-                const data = await response.json(); // Assuming Apps Script returns JSON
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-                loader.style.display = 'none'; // Hide loader
+                const data = await response.json();
 
                 if (data.success) {
                     resultArea.innerHTML = `
-                        <p class="success-message">Invoice ditemukan untuk NPSN ${npsn}:</p>
-                        <p><b>Nomor Invoice:</b> ${data.noInvoice}</p>
-                        <p><b>Nama Sekolah:</b> ${data.sekolahNama}</p>
-                        <a href="${data.pdfUrl}" target="_blank" class="btn">Lihat / Unduh Invoice</a>
-                        <a href="${GOOGLE_FORM_URL}" class="btn btn-danger">Submit Respons Lain</a>
+                        <div class="text-green-600 font-semibold mb-2">Invoice ditemukan:</div>
+                        <p><strong>Nama Sekolah:</strong> ${data.sekolahNama}</p>
+                        <p><strong>No Invoice:</strong> ${data.noInvoice}</p>
+                        <a href="${data.pdfUrl}" target="_blank" class="inline-block mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Lihat / Unduh Invoice</a>
                     `;
                 } else {
-                    resultArea.innerHTML = `
-                        <p class="error-message">${data.message}</p>
-                        <a href="${GOOGLE_FORM_URL}" class="btn btn-danger">Submit Ulang Formulir</a>
-                    `;
+                    resultArea.innerHTML = `<p class="text-red-500 font-semibold">${data.message}</p>`;
                 }
             } catch (error) {
-                loader.style.display = 'none'; // Hide loader
-                resultArea.innerHTML = `<p class="error-message">Terjadi kesalahan: ${error.message}. Mohon coba lagi nanti.</p>`;
-                console.error("Error calling Apps Script API:", error);
+                loader.classList.add('hidden');
+                resultArea.innerHTML = `<p class="text-red-500 font-semibold">Terjadi error: ${error.message}</p>`;
+                console.error("Fetch error:", error);
             }
         }
 
-        // Add event listener for Enter key
-        npsnInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                searchInvoice();
-            }
+        // Enter key support
+        npsnInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") searchInvoice();
         });
     </script>
+
 </body>
 </html>
