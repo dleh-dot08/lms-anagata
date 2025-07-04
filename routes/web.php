@@ -68,6 +68,12 @@ Route::get('/koding-ka25', function () {
     return view('koding-ka25.index');
 })->name('koding-ka25');
 
+Route::get('/cek-invoice', function () {
+    return view('koding-ka25.invoice');
+})->name('cek-invoice');
+Route::post('/cek-invoice', [InvoiceController::class, 'cariInvoice']);
+
+
 // Route buat verifikasi
 Route::get('/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
