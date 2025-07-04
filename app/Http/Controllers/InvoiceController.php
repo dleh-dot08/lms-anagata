@@ -11,11 +11,11 @@ class InvoiceController extends Controller
     {
         $npsn = $request->input('npsn');
 
-        // ✅ Ganti dengan link CSV kamu yang sudah publish
+        // ✅ Ganti dengan link CSV kamu (yang format output=csv)
         $csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNzBpELuuwAn8mGFO3f5iKnmOGB1TWToRYNTouAS5I7bP6mRPSR6GdyBhCjtybEtO6ftxv1REe5DQo/pub?gid=2102280756&single=true&output=csv';
 
         try {
-            // Ambil data CSV dari Google Spreadsheet
+            // Ambil CSV
             $response = Http::get($csvUrl);
 
             if (!$response->ok()) {
@@ -25,17 +25,17 @@ class InvoiceController extends Controller
                 ]);
             }
 
-            // Proses CSV
+            // Parse CSV ke array
             $rows = array_map('str_getcsv', explode("\n", $response->body()));
             $header = array_map('trim', array_shift($rows));
 
-            // Proteksi: skip baris yang kolomnya gak lengkap atau kosong
+            // Bersihkan dan gabungkan data
             $data = collect($rows)
                 ->filter(function ($row) use ($header) {
                     return count($row) === count($header) && !empty(array_filter($row));
                 })
                 ->map(function ($row) use ($header) {
-                    return array_combine($header, $row);
+                    return array_combine(array_map('trim', $header), array_map('trim', $row));
                 });
 
             // Cari berdasarkan NPSN
@@ -44,9 +44,9 @@ class InvoiceController extends Controller
             if ($result) {
                 return response()->json([
                     'success' => true,
-                    'noInvoice' => $result['No Invoice'] ?? '',
-                    'sekolahNama' => $result['Nama Sekolah'] ?? '',
-                    'pdfUrl' => $result['Link Invoice'] ?? '',
+                    'noInvoice' => $result['Column 1'] ?? '(No Invoice Kosong)',
+                    'sekolahNama' => $result['EMAIL'] ?? '(Nama tidak tersedia)',
+                    'pdfUrl' => $result['Column 2'] ?? '',
                 ]);
             } else {
                 return response()->json([
