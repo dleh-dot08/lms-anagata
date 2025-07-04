@@ -24,6 +24,7 @@ use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReciptController;
 
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProjectController;
@@ -72,7 +73,11 @@ Route::get('/koding-ka25', function () {
 Route::get('/cek-invoice', function () {
     return view('koding-ka25.invoice');
 })->name('cek-invoice');
+Route::get('/cek-recipt', function () {
+    return view('koding-ka25.recipt');
+})->name('cek-recipt');
 Route::post('/cek-invoice', [InvoiceController::class, 'cariInvoice']);
+Route::post('/cek-recipt', [ReciptController::class, 'checkReceipt']);
 
 
 // Route buat verifikasi
