@@ -32,6 +32,7 @@ use App\Http\Middleware\KaryawanMiddleware;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\InvoiceController;
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AssignmentController;
