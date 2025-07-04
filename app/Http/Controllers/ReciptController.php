@@ -9,7 +9,7 @@ use Exception; // Untuk menangani exception
 class ReciptController extends Controller
 {
     // GANTI URL INI dengan URL CSV yang Anda dapatkan dari Langkah 1
-    const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQOFbseWnJ4BQ_WCUx3fIi0KAGhOphAP2Lgwb5yf59n3jRvsMIIBWBwrsyq1y_oSMXRdZ9_FpKdYeU/pub?output=csv&gid=1957615865';
+    const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQOFbseWnJ4BQ_WCUx3fIi0KAGhOphAP2Lgwb5yf59n3jRvsMIIBWBwrsyq1y6_oSMXRdZ9_FpKdYeU/pub?gid=1957615865&single=true&output=csv';
 
     /**
      * Menampilkan form untuk mencari nomor receipt dan menampilkan hasilnya.
