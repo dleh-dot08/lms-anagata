@@ -11,7 +11,7 @@
             background-color: #f0f2f5;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Mengubah align-items agar konten mulai dari atas */
+            align-items: flex-start;
             min-height: 100vh;
             padding: 40px 20px;
             box-sizing: border-box;
@@ -22,20 +22,20 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 768px; /* Sedikit lebih lebar */
+            max-width: 768px;
             margin-top: 20px;
         }
         h1 {
-            font-size: 2.5rem; /* text-4xl */
-            font-weight: 700; /* font-bold */
+            font-size: 2.5rem;
+            font-weight: 700;
             color: #2c3e50;
             text-align: center;
             margin-bottom: 25px;
             line-height: 1.2;
         }
         .guide-section {
-            background-color: #ecf8f8; /* Warna latar belakang panduan */
-            border-left: 5px solid #20c997; /* Border kiri warna hijau cerah */
+            background-color: #ecf8f8;
+            border-left: 5px solid #20c997;
             padding: 20px 25px;
             border-radius: 8px;
             margin-bottom: 30px;
@@ -56,7 +56,7 @@
             line-height: 1.5;
         }
         .guide-section ol li strong {
-            color: #0d9488; /* Warna teks penekanan */
+            color: #0d9488;
         }
         .form-group {
             display: flex;
@@ -64,7 +64,7 @@
         }
         .form-group input[type="text"] {
             flex-grow: 1;
-            padding: 14px 18px; /* Padding sedikit lebih besar */
+            padding: 14px 18px;
             border: 1px solid #d1d5db;
             border-radius: 8px 0 0 8px;
             outline: none;
@@ -76,7 +76,7 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
         }
         .form-group button {
-            padding: 14px 28px; /* Padding sedikit lebih besar */
+            padding: 14px 28px;
             background-color: #3b82f6;
             color: white;
             border: none;
@@ -120,10 +120,10 @@
             display: flex;
             margin-bottom: 12px;
             align-items: baseline;
-            flex-wrap: wrap; /* Izinkan wrap pada layar kecil */
+            flex-wrap: wrap;
         }
         .detail-item strong {
-            min-width: 170px; /* Lebar minimum label */
+            min-width: 170px;
             color: #4a5568;
             font-weight: 600;
             margin-right: 10px;
@@ -148,24 +148,21 @@
         <h1>Cek Kwitansi Pembayaran <br> Anagata Academy</h1>
 
         <div class="guide-section">
-            <h2>Panduan Penggunaan</h2>
+            <h2>Panduan Pencarian Kwitansi</h2>
             <ol>
                 <li>
-                    Pastikan Anda telah melakukan pembayaran dan mengisi Google Form dari Anagata Academy.
-                    Detail pembayaran seperti **NPSN**, **Email**, dan **Nomor Invoice** Anda akan terekam otomatis.
+                    Silakan masukkan **Nomor Pokok Sekolah Nasional (NPSN)** Anda pada kolom di bawah ini.
+                    NPSN adalah identitas unik sekolah Anda.
                 </li>
                 <li>
-                    Setelah mengisi Google Form, Anda akan menerima **Email Kwitansi Pembayaran** dari Anagata Academy.
-                    Di dalam email tersebut, Anda akan menemukan **Nomor Kwitansi** (contoh: `REC0001-AA/07/2025-TOT`).
-                </li>
-                <li>
-                    Masukkan **Nomor Kwitansi** yang Anda terima tersebut pada kolom di bawah.
+                    Pastikan NPSN yang Anda masukkan sudah benar dan sesuai dengan data yang Anda daftarkan.
                 </li>
                 <li>
                     Klik tombol **"Cari Kwitansi"**.
                 </li>
                 <li>
-                    Jika kwitansi ditemukan, detailnya akan ditampilkan di halaman ini, dan Anda bisa mengunduh file PDF kwitansi Anda.
+                    Jika NPSN Anda ditemukan dan memiliki kwitansi, detail kwitansi terbaru akan ditampilkan di halaman ini.
+                    Anda dapat mengunduh file PDF kwitansi Anda langsung dari sini.
                 </li>
             </ol>
         </div>
@@ -174,10 +171,8 @@
             @csrf
             <input
                 type="text"
-                name="receipt_number"
-                placeholder="Masukkan Nomor Kwitansi Anda (mis: REC0001-AA/07/2025-TOT)"
-                value="{{ old('receipt_number', $receiptNumber) }}"
-                required
+                name="npsn" placeholder="Masukkan NPSN Sekolah Anda (contoh: 12345678)"
+                value="{{ old('npsn', $inputNPSN) }}" required
             >
             <button type="submit">Cari Kwitansi</button>
         </form>
@@ -188,7 +183,8 @@
             </div>
         @elseif ($receiptDetails)
             <div class="message-box success-message">
-                <p>Kwitansi ditemukan! Detail pembayaran Anda:</p>
+                <p>Kwitansi ditemukan untuk NPSN **{{ $receiptDetails['npsn'] }}**!</p>
+                <p>Detail pembayaran terbaru Anda:</p>
             </div>
             <div class="detail-card">
                 <div class="detail-item"><strong>Nomor Kwitansi:</strong> <span>{{ $receiptDetails['nomor_receipt'] }}</span></div>
@@ -196,7 +192,18 @@
                 <div class="detail-item"><strong>NPSN:</strong> <span>{{ $receiptDetails['npsn'] }}</span></div>
                 <div class="detail-item"><strong>Nomor Invoice:</strong> <span>{{ $receiptDetails['no_invoice'] }}</span></div>
                 <div class="detail-item"><strong>Email Pendaftar:</strong> <span>{{ $receiptDetails['email'] }}</span></div>
+                <div class="detail-item"><strong>Lokasi Pelatihan:</strong> <span>{{ $receiptDetails['nama_lokus'] }}</span></div>
                 <div class="detail-item"><strong>Tanggal Input:</strong> <span>{{ \Carbon\Carbon::parse($receiptDetails['timestamp'])->isoFormat('DD MMMM YYYY, HH:mm') }} WIB</span></div>
+
+                <hr class="my-4 border-gray-300">
+
+                <div class="detail-item"><strong>Bukti Transfer:</strong> <span>
+                    @if ($receiptDetails['bukti_transfer'] && filter_var($receiptDetails['bukti_transfer'], FILTER_VALIDATE_URL))
+                        <a href="{{ $receiptDetails['bukti_transfer'] }}" target="_blank">Lihat Bukti Transfer</a>
+                    @else
+                        Tidak tersedia
+                    @endif
+                </span></div>
                 <div class="detail-item">
                     <strong>Link Kwitansi (PDF):</strong>
                     <span>
@@ -208,10 +215,10 @@
                     </span>
                 </div>
             </div>
-        @elseif ($receiptNumber && !$receiptDetails)
+        @elseif ($inputNPSN && !$receiptDetails)
             <div class="message-box error-message">
-                <p>Nomor kwitansi "{{ htmlspecialchars($receiptNumber) }}" tidak ditemukan.</p>
-                <p>Pastikan nomor yang Anda masukkan sudah benar dan kwitansi sudah diterbitkan.</p>
+                <p>NPSN "{{ htmlspecialchars($inputNPSN) }}" tidak ditemukan atau belum memiliki kwitansi.</p>
+                <p>Pastikan NPSN yang Anda masukkan sudah benar dan proses kwitansi sudah selesai.</p>
             </div>
         @endif
     </div>
