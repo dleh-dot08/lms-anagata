@@ -11,7 +11,7 @@ class InvoiceController extends Controller
     {
         $npsn = $request->input('npsn');
 
-        $csvUrl = 'https://docs.google.com/spreadsheets/d/1zwJA7YZJTDqV3O5S31Y4rl93skO-kfZ71sBemM8xiS4/edit?usp=sharing';
+        $csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNzBpELuuwAn8mGFO3f5iKnmOGB1TWToRYNTouAS5I7bP6mRPSR6GdyBhCjtybEtO6ftxv1REe5DQo/pubhtml?gid=2102280756&single=true';
 
         try {
             $response = Http::get($csvUrl);
