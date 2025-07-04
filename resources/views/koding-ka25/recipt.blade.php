@@ -196,16 +196,7 @@
                 <div class="detail-item"><strong>NPSN:</strong> <span>{{ $receiptDetails['npsn'] }}</span></div>
                 <div class="detail-item"><strong>Nomor Invoice:</strong> <span>{{ $receiptDetails['no_invoice'] }}</span></div>
                 <div class="detail-item"><strong>Email Pendaftar:</strong> <span>{{ $receiptDetails['email'] }}</span></div>
-                <div class="detail-item"><strong>Lokasi Pelatihan:</strong> <span>{{ $receiptDetails['nama_lokus'] }}</span></div>
                 <div class="detail-item"><strong>Tanggal Input:</strong> <span>{{ \Carbon\Carbon::parse($receiptDetails['timestamp'])->isoFormat('DD MMMM YYYY, HH:mm') }} WIB</span></div>
-
-                <hr class="my-4 border-gray-300"> <div class="detail-item"><strong>Bukti Transfer:</strong> <span>
-                    @if ($receiptDetails['bukti_transfer'] && filter_var($receiptDetails['bukti_transfer'], FILTER_VALIDATE_URL))
-                        <a href="{{ $receiptDetails['bukti_transfer'] }}" target="_blank">Lihat Bukti Transfer</a>
-                    @else
-                        Tidak tersedia
-                    @endif
-                </span></div>
                 <div class="detail-item">
                     <strong>Link Kwitansi (PDF):</strong>
                     <span>
