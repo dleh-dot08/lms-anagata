@@ -73,11 +73,8 @@ Route::get('/koding-ka25', function () {
 Route::get('/cek-invoice', function () {
     return view('koding-ka25.invoice');
 })->name('cek-invoice');
-Route::get('/cek-recipt', function () {
-    return view('koding-ka25.recipt');
-})->name('cek-recipt');
 Route::post('/cek-invoice', [InvoiceController::class, 'cariInvoice']);
-Route::post('/cek-recipt', [ReciptController::class, 'checkReceipt']);
+Route::match(['get', 'post'], '/cek-recipt', [ReciptController::class, 'checkReceipt'])->name('receipt.check');
 
 
 // Route buat verifikasi
