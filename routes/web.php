@@ -62,13 +62,7 @@ use App\Http\Controllers\Admin\SchoolDocumentController as AdminSchoolDocumentCo
 Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
 Route::get('/get-kelas-by-jenjang/{jenjangId}', [BiodataController::class, 'getKelasByJenjang'])->name('get.kelas.by.jenjang');
 
-// Apply rate limiting to all routes
-Route::middleware(['throttle:100,1'])->group(function() {
-    Route::get('/', function () {
-        return view('welcome');
-    });
-
-    Route::get('/koding-ka25', function () {
+Route::get('/koding-ka25', function () {
         return view('koding-ka25.index');
     })->name('koding-ka25');
 
@@ -87,6 +81,13 @@ Route::middleware(['throttle:100,1'])->group(function() {
     // Ini adalah route yang akan dipanggil oleh JavaScript fetch() di invoice.blade.php
     Route::post('/cek-invoice', [InvoiceController::class, 'checkInvoice'])->name('invoice.check'); // NAMA INI HARUS SAMA DENGAN route('invoice.check') DI BLADE
 
+// Apply rate limiting to all routes
+Route::middleware(['throttle:100,1'])->group(function() {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    
 
     // Route buat verifikasi
     Route::get('/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
