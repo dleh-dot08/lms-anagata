@@ -63,7 +63,7 @@ Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJ
 Route::get('/get-kelas-by-jenjang/{jenjangId}', [BiodataController::class, 'getKelasByJenjang'])->name('get.kelas.by.jenjang');
 
 // Apply rate limiting to all routes
-Route::middleware(['throttle:5,1'])->group(function() {
+Route::middleware(['throttle:100,1'])->group(function() {
     Route::get('/', function () {
         return view('welcome');
     });

@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Storage;
 class BlockSuspiciousIP
 {
     // Batas request per menit
-    private $maxRequests = 5; // Test value
+    private $maxRequests = 100; // Test value
     // Lama blokir (menit)
-    private $banDuration = 1; // Test value
+    private $banDuration = 60; // Test value
 
     public function handle(Request $request, Closure $next)
     {
