@@ -21,7 +21,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\BlockSuspiciousIP::class,
     ];
 
     /**
@@ -31,6 +30,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            \App\Http\Middleware\BlockSuspiciousIP::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'divisi' => \App\Http\Middleware\DivisiMiddleware::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'sekolah' => \App\Http\Middleware\SekolahMiddleware::class,
+        'block.suspicious.ip' => \App\Http\Middleware\BlockSuspiciousIP::class,
     ];
 
     /**

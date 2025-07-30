@@ -19,4 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']); 
+Route::get('/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
+
+// Simple ping route for testing
+Route::get('/ping', function() {
+    return response()->json(['message' => 'pong']);
+}); 
