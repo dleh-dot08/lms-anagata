@@ -571,6 +571,11 @@ Route::middleware(['throttle:100,1'])->group(function() {
         Route::get('/dashboard', [SekolahController::class, 'index'])->name('dashboard');
         Route::get('/peserta', [SekolahController::class, 'peserta'])->name('peserta');
 
+        // Mentor Notes Routes
+        Route::get('/mentor-notes', [SekolahMentorNoteController::class, 'index'])->name('mentor-notes.index');
+        Route::get('/mentor-notes/{course}/meetings', [SekolahMentorNoteController::class, 'meetings'])->name('mentor-notes.meetings');
+        Route::get('/mentor-notes/meeting/{meeting}', [SekolahMentorNoteController::class, 'show'])->name('mentor-notes.show');
+
         // Reports Routes
         Route::get('/reports/nilai', [ReportController::class, 'nilaiIndex'])->name('reports.nilai.index');
         Route::get('/reports/nilai/{id}', [ReportController::class, 'nilaiShow'])->name('reports.nilai.show');
