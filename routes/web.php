@@ -66,6 +66,10 @@ Route::get('/koding-ka25', function () {
         return view('koding-ka25.index');
     })->name('koding-ka25');
 
+Route::get('/kka-paud', function () {
+        return view('kka-paud.index');
+    })->name('kka-paud');
+
     Route::get('/cek-invoice', function () {
         return view('koding-ka25.invoice');
     })->name('cek-invoice');
