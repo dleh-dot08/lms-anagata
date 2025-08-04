@@ -31,28 +31,43 @@
           "@context": "https://schema.org",
           "@type": "EducationalOrganization",
           "name": "Ruang Anagata",
+          "description": "Learning Management System for Anagata Academy (CodingMU)",
           "url": "https://www.ruanganagata.id",
-          "logo": "https://www.ruanganagata.id/images/logo.png",
-          "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "https://www.ruanganagata.id"
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.ruanganagata.id/asset/img/favicons/favicon.ico",
+            "width": "32",
+            "height": "32"
           },
-          "department": {
-            "@type": "WebPage",
-            "name": "FAQ",
-            "url": "https://www.ruanganagata.id/faq"
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "ID"
+          },
+          "sameAs": [
+            "https://www.instagram.com/anagata_academy/",
+            "https://www.youtube.com/@anagataacademy2022",
+            "https://x.com/coding_mu",
+            "https://www.instagram.com/coding_mu/",
+            "https://anagataacademy.com/"
+          ],
+          "offers": {
+            "@type": "Offer",
+            "category": "Education"
           },
           "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Layanan Anagata",
             "itemListElement": [
               {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": "Dashboard Pembelajaran",
-                  "url": "https://www.ruanganagata.id/dashboard"
-                }
+                "@type": "Course",
+                "name": "Dashboard Pembelajaran",
+                "description": "Platform pembelajaran online interaktif",
+                "provider": {
+                  "@type": "Organization",
+                  "name": "Ruang Anagata",
+                  "sameAs": "https://www.ruanganagata.id"
+                },
+                "url": "https://www.ruanganagata.id/dashboard"
               }
             ]
           }
