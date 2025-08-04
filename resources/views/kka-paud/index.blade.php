@@ -3,50 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Pelatihan Guru Koding & KA – Anagata Academy (CodingMU)</title>
+    <title>Pelatihan Guru Koding & KA Jenjang PAUD – Anagata Academy (CodingMU)</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{{ asset('koding_ka25/style.css') }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <!-- Structured Data for KKA PAUD Program -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Course",
-      "name": "Program KKA PAUD",
-      "description": "Program pelatihan khusus untuk guru PAUD dalam mengintegrasikan teknologi dan pembelajaran digital",
-      "provider": {
-        "@type": "Organization",
-        "name": "Anagata Academy (CodingMU)",
-        "sameAs": "https://www.ruanganagata.id"
-      },
-      "offers": {
-        "@type": "Offer",
-        "category": "Early Childhood Education Training",
-        "availability": "https://schema.org/InStock"
-      },
-      "hasCourseInstance": {
-        "@type": "CourseInstance",
-        "courseMode": ["onsite", "online"],
-        "courseWorkload": "PT180H",
-        "instructor": {
-          "@type": "Person",
-          "name": "Tim Fasilitator Anagata Academy"
-        }
-      },
-      "educationalLevel": "Early Childhood Education",
-      "timeRequired": "PT180H",
-      "teaches": [
-        "Pembelajaran Digital untuk PAUD",
-        "Integrasi Teknologi dalam Pembelajaran Anak Usia Dini",
-        "Metode Pembelajaran Interaktif",
-        "Pengembangan Materi Digital PAUD"
-      ]
-    }
-    </script>
   </head>
   <body>
     <!-- Navbar -->
@@ -62,9 +25,6 @@
           <ul class="navbar-nav gap-4">
             <li class="nav-item">
               <a class="nav-link fw-semibold text-dark" href="#">Beranda</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-semibold text-dark" href="#fasilitator">Fasilitator</a>
             </li>
             <li class="nav-item">
               <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id/faq">FAQ</a>
@@ -135,63 +95,6 @@
           Skema <span style="color: #002B5B;">Pelatihan</span>
         </h2>
 
-        <div class="row g-4">
-          <!-- Card 1 -->
-          <div class="col-md-4">
-            <div class="card h-100 shadow border-0">
-              <div class="card-body text-white text-center"
-                  style="background-color: #002B5B; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                <div class="mb-3">
-                  <i class="bi bi-journal-bookmark-fill fs-2"></i>
-                </div>
-                <h5 class="card-title fw-bold mb-3">IN-1 Pelatihan dan Pendalaman Konsep</h5>
-                <span class="badge bg-light text-dark px-3 py-2">Durasi: 40 JP</span>
-              </div>
-              <div class="card-body pt-3">
-                <p class="card-text">
-                  Peserta pelatihan akan memperoleh pemahaman fundamental mengenai dasar-dasar coding dan kecerdasan artifisial (AI), serta merancang strategi pembelajaran digital yang kontekstual dan sesuai dengan jenjang pendidikan masing-masing.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="col-md-4">
-            <div class="card h-100 shadow border-0">
-              <div class="card-body text-white text-center"
-                  style="background-color: #FF8C00; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                <div class="mb-3">
-                  <i class="bi bi-house-door-fill fs-2"></i>
-                </div>
-                <h5 class="card-title fw-bold mb-3">ON: Praktik Implementasi di Sekolah</h5>
-                <span class="badge bg-light text-dark px-3 py-2">Durasi: 120 JP</span>
-              </div>
-              <div class="card-body pt-3">
-                <p class="card-text">
-                  Peserta pelatihan mengintegrasikan materi ke praktik pembelajaran di sekolah. Didampingi fasilitator melalui mentoring, pemantauan perkembangan, serta umpan balik terarah.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="col-md-4">
-            <div class="card h-100 shadow border-0">
-              <div class="card-body text-white text-center"
-                  style="background-color: #002B5B; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                <div class="mb-3">
-                  <i class="bi bi-people-fill fs-2"></i>
-                </div>
-                <h5 class="card-title fw-bold mb-3">IN-2: Refleksi, Berbagi Praktik Baik, dan Penguatan</h5>
-                <span class="badge bg-light text-dark px-3 py-2">Durasi: 20 JP</span>
-              </div>
-              <div class="card-body pt-3">
-                <p class="card-text">
-                  Peserta kembali ke sesi tatap muka untuk refleksi lapangan, berbagi praktik baik, dan memperkuat strategi implementasi berkelanjutan guna mendukung transformasi pembelajaran digital.
-                </p>
-              </div>
-            </div>
-          </div>
 
         </div>
       </div>
@@ -201,14 +104,14 @@
     <section class="container py-5 mt-4">
       <div class="text-center mb-5">
         <h2 class="fw-bold">Program Berdasarkan <span style="color: #002B5B">Jenjang Pendidikan</span></h2>
-        <p class="text-muted">Materi dirancang sesuai tingkat dan kebutuhan peserta didik dari jenjang SD, SMP hingga SMA/SMK</p>
+        <p class="text-muted">Materi dirancang sesuai tingkat dan kebutuhan peserta didik dari jenjang PAUD </p>
       </div>
 
       <div class="row g-4">
         <!-- Jenjang SD -->
         <div class="col-md-4">
           <div class="p-4 h-100 rounded-4 border shadow-sm bg-white">
-            <h4 class="fw-bold text-primary mb-3">Pendidikan Dasar (SD)</h4>
+            <h4 class="fw-bold text-primary mb-3">Pendidikan Anak Usia Dini (PAUD)</h4>
             <ul class="ps-3">
               <li>Pengenalan perangkat teknologi & fungsi sehari-hari</li>
               <li>Literasi digital & etika dunia maya</li>
@@ -218,35 +121,6 @@
             </ul>
           </div>
         </div>
-
-        <!-- Jenjang SMP -->
-        <div class="col-md-4">
-          <div class="p-4 h-100 rounded-4 border shadow-sm bg-white">
-            <h4 class="fw-bold text-primary mb-3">Pendidikan Menengah Pertama (SMP)</h4>
-            <ul class="ps-3">
-              <li>Koding visual (Scratch, Blockly) untuk eksplorasi logika</li>
-              <li>Konsep struktur data sederhana (variabel, array)</li>
-              <li>Logika pemrograman: percabangan & perulangan</li>
-              <li>Pengenalan klasifikasi data & dasar Machine Learning</li>
-              <li>Etika & pengaruh AI terhadap masyarakat</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Jenjang SMA/SMK -->
-        <div class="col-md-4">
-          <div class="p-4 h-100 rounded-4 border shadow-sm bg-white">
-            <h4 class="fw-bold text-primary mb-3">Pendidikan Menengah Atas / Kejuruan (SMA/SMK)</h4>
-            <ul class="ps-3">
-              <li>Pemrograman teks (Python) & pengembangan aplikasi sederhana</li>
-              <li>Struktur data lanjutan (list, dict, set) & algoritma efisien</li>
-              <li>Pengenalan Machine Learning: klasifikasi & regresi dasar</li>
-              <li>Dasar Natural Language Processing (NLP) & Prompt Engineering</li>
-              <li>Pengantar Computer Vision & etika tata kelola AI</li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- Fasilitas Pelatihan -->
@@ -437,139 +311,77 @@
           </div>
       </div>
     </section>
+    
     <!-- Section 1: Judul -->
-    <section class="py-5 bg-light">
-      <div class="container">
-        <div class="row mb-4">
-          <h2 class="text-primary fw-bold fs-1">Lokasi kegiatan</h2>
-          <p class="fs-5 text-muted">
-            Pelatihan didampingi oleh fasilitator profesional dari 
-            <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
-          </p>
-          <div class="table-container mt-4">
-            <table class="table table-bordered table-striped" id="lokasiTable">
-              <thead class="table-primary">
-                <tr>
-                  <th>Provinsi</th>
-                  <th>Kabupaten/Kota</th>
-                  <th>Jenjang</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row mb-4">
+      <h2 class="text-primary fw-bold fs-1">Lokasi Kegiatan</h2>
+      <p class="fs-5 text-muted">
+        Pelatihan didampingi oleh fasilitator profesional dari 
+        <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
+      </p>
+      <div class="table-container mt-4">
+        <table class="table table-bordered table-striped" id="provinsiTable">
+          <thead class="table-primary">
+            <tr>
+              <th>Provinsi</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- Section 1: Judul -->
-    <section class="py-5 bg-light">
-      <div class="container">
-        <div class="row mb-4 text-center">
-          <h2 class="text-primary fw-bold fs-1">Admin Wilayah</h2>
-        </div>
+<script>
+  const provinsiData = [
+    "Aceh",
+    "Sumatera Utara",
+    "Sumatera Barat",
+    "Riau",
+    "Kepulauan Riau",
+    "Jambi",
+    "Sumatera Selatan",
+    "Bangka Belitung",
+    "Bengkulu",
+    "Lampung",
+    "D.K.I Jakarta",
+    "Jawa Barat",
+    "Banten",
+    "Jawa Tengah",
+    "D.I Yogyakarta",
+    "Jawa Timur",
+    "Bali",
+    "Nusa Tenggara Barat",
+    "Nusa Tenggara Timur",
+    "Kalimantan Barat",
+    "Kalimantan Tengah",
+    "Kalimantan Selatan",
+    "Kalimantan Timur",
+    "Kalimantan Utara",
+    "Sulawesi Utara",
+    "Gorontalo",
+    "Sulawesi Tengah",
+    "Sulawesi Barat",
+    "Sulawesi Selatan",
+    "Sulawesi Tenggara",
+    "Maluku",
+    "Maluku Utara",
+    "Papua",
+    "Papua Barat"
+  ];
 
-        <!-- Tabel Wilayah Admin -->
-        <div id="tabel-admin" class="table-responsive">
-          <table class="table table-bordered table-hover table-striped align-middle text-center bg-white shadow-sm">
-            <thead class="table-primary">
-              <tr>
-                <th>No</th>
-                <th>Wilayah</th>
-                <th>Nama Admin</th>
-                <th>No. Kontak</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>1</td><td>Bengkulu, Riau, Banten</td><td>Admin 1</td><td><a href="https://wa.me/6285173085391?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-7308-5391</a></td></tr>
-              <tr><td>2</td><td>Sumatera Selatan</td><td>Admin 2</td><td><a href="https://wa.me/6285173101589?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-7310-1589</a></td></tr>
-              <tr><td>3</td><td>Lampung, Sulawesi Selatan</td><td>Admin 3</td><td><a href="https://wa.me/6285121241229?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-2124-1229</a></td></tr>
-              <tr><td>4</td><td>DKI Jakarta, Jambi</td><td>Admin 4</td><td><a href="https://wa.me/6285128012198?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-2801-2198</a></td></tr>
-              <tr><td>5</td><td>Jawa Barat</td><td>Admin 5</td><td><a href="https://wa.me/6285880808822?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 858-8080-8822</a></td></tr>
-              <tr><td>6</td><td>Jawa Timur</td><td>Admin 6</td><td><a href="https://wa.me/6289696127612?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 896-9612-7612</a></td></tr>
-              <tr><td>7</td><td>D.I Yogyakarta</td><td>Admin 7</td><td><a href="https://wa.me/6285121261643?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-2126-1643</a></td></tr>
-              <tr><td>8</td><td>NTB, Aceh</td><td>Admin 8</td><td><a href="https://wa.me/6289636644671?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 896-3664-4671</a></td></tr>
-              <tr><td>9</td><td>Maluku Utara</td><td>Admin 9</td><td><a href="https://wa.me/6281287385104?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 812-8738-5104</a></td></tr>
-              <tr><td>10</td><td>Kalimantan Timur, Jawa Tengah</td><td>Admin 10</td><td><a href="https://wa.me/6281271966076?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 812-7196-6076</a></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+  const tbody = document.querySelector("#provinsiTable tbody");
 
+  provinsiData.forEach(provinsi => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${provinsi}</td>`;
+    tbody.appendChild(row);
+  });
+</script>
 
-    <script>
-      const lokasiData = [
-          { "provinsi": "Aceh", "kabupaten": "Kota Lhoksumawe", "jenjang": "SD" },
-          { "provinsi": "Aceh", "kabupaten": "Kota Lhoksumawe", "jenjang": "SMP" },
-          { "provinsi": "Aceh", "kabupaten": "Kota Lhoksumawe", "jenjang": "SMA" },
-
-          { "provinsi": "Banten", "kabupaten": "Kab. Tanggerang", "jenjang": "SMP" },
-          { "provinsi": "Banten", "kabupaten": "Kota Tanggerang", "jenjang": "SMA/K" },
-
-          { "provinsi": "D.I Yogyakarta", "kabupaten": "Kab Bantul", "jenjang": "SD" },
-          { "provinsi": "D.I Yogyakarta", "kabupaten": "Kab Bantul", "jenjang": "SMP" },
-          { "provinsi": "D.I Yogyakarta", "kabupaten": "Kab. Kulon Progo", "jenjang": "SMA/K" },
-
-          { "provinsi": "D.K.I Jakarta", "kabupaten": "Jakarta Selatan", "jenjang": "SMP" },
-
-          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Bogor", "jenjang": "SD" },
-          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Bogor", "jenjang": "SMA/K" },
-          { "provinsi": "Jawa Barat", "kabupaten": "Kab. kuningan", "jenjang": "SD" },
-          { "provinsi": "Jawa Barat", "kabupaten": "Kab. kuningan", "jenjang": "SMP" },
-          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Garut", "jenjang": "SMA/K" },
-          { "provinsi": "Jawa Barat", "kabupaten": "Kab. Karawang", "jenjang": "SMA/K" },
-
-          { "provinsi": "Jawa Tengah", "kabupaten": "Kab. Wonosobo", "jenjang": "SD" },
-          { "provinsi": "Jawa Tengah", "kabupaten": "Kab. Wonosobo", "jenjang": "SMP" },,
-          { "provinsi": "Jawa Tengah", "kabupaten": "Kab. Wonosobo", "jenjang": "SMA/K" },
-          { "provinsi": "Jawa Tengah", "kabupaten": "Kota Salatiga", "jenjang": "SMA/K" },
-
-          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Jombang", "jenjang": "SD" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Magetan", "jenjang": "SMA/K" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Malang", "jenjang": "SD" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Malang", "jenjang": "SMA/K" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Sidoarjo", "jenjang": "SD" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kab. Tulong agung", "jenjang": "SD" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kota Madiun", "jenjang": "SD" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kota Madiun", "jenjang": "SMP" },
-          { "provinsi": "Jawa Timur", "kabupaten": "Kota Madiun", "jenjang": "SMA/K" },
-
-          { "provinsi": "Sumatera Selatan", "kabupaten": "Kab. Ogan Komering Ulu Timur", "jenjang": "SD" },
-          { "provinsi": "Sumatera Selatan", "kabupaten": "Kab. Ogan Komering Ulu Timur", "jenjang": "SMP" },
-          { "provinsi": "Sumatera Selatan", "kabupaten": "Kab. Ogan Komering Ulu Timur", "jenjang": "SMA/K" },
-
-          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Barat", "jenjang": "SD" },
-          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Barat", "jenjang": "SMA/K" },
-          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Barat", "jenjang": "SMP" },
-          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Utara", "jenjang": "SMP" },
-          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Utara", "jenjang": "SMA/K" },
-          { "provinsi": "Lampung", "kabupaten": "Kab. Lampung Utara", "jenjang": "SD" },
-
-          { "provinsi": "NTB", "kabupaten": "Kab. Bima", "jenjang": "SD" },
-          { "provinsi": "NTB", "kabupaten": "Kab. Bima", "jenjang": "SMA/K" },
-          { "provinsi": "NTB", "kabupaten": "Kab. Bima", "jenjang": "SMP" },
-
-          { "provinsi": "Riau", "kabupaten": "Kota Pekanbaru", "jenjang": "SMA/K" },
-
-          { "provinsi": "Sulawesi Selatan", "kabupaten": "Bulukumba", "jenjang": "SD" },
-          { "provinsi": "Sulawesi Selatan", "kabupaten": "Bulukumba", "jenjang": "SMP" },
-
-          { "provinsi": "Maluku Utara", "kabupaten": "Kota Tidore Kepulauan", "jenjang": "SMA/K" },
-      ];
-
-      const tbody = document.querySelector("#lokasiTable tbody");
-
-      lokasiData.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${item.provinsi}</td>
-          <td>${item.kabupaten}</td>
-          <td>${item.jenjang}</td>
-        `;
-        tbody.appendChild(row);
-      });
-    </script>
 
 
 
