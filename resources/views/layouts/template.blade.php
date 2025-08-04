@@ -67,6 +67,21 @@
                   "name": "Ruang Anagata",
                   "sameAs": "https://www.ruanganagata.id"
                 },
+                "offers": {
+                  "@type": "Offer",
+                  "availability": "https://schema.org/InStock",
+                  "price": "0",
+                  "priceCurrency": "IDR"
+                },
+                "hasCourseInstance": {
+                  "@type": "CourseInstance",
+                  "courseMode": "online",
+                  "courseWorkload": "PT10H",
+                  "instructor": {
+                    "@type": "Person",
+                    "name": "Anagata Academy"
+                  }
+                },
                 "url": "https://www.ruanganagata.id/dashboard"
               }
             ]
