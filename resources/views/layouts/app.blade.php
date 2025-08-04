@@ -7,6 +7,40 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Structured Data JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "EducationalOrganization",
+          "name": "Ruang Anagata",
+          "url": "https://www.ruanganagata.id",
+          "logo": "https://www.ruanganagata.id/images/logo.png",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://www.ruanganagata.id"
+          },
+          "department": {
+            "@type": "WebPage",
+            "name": "FAQ",
+            "url": "https://www.ruanganagata.id/faq"
+          },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Layanan Anagata",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Dashboard Pembelajaran",
+                  "url": "https://www.ruanganagata.id/dashboard"
+                }
+              }
+            ]
+          }
+        }
+        </script>
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
