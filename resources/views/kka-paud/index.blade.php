@@ -109,7 +109,7 @@
 
       <div class="row g-4">
         <!-- Jenjang SD -->
-        <div class="col-md-4">
+        <div class="row g-4">
           <div class="p-4 h-100 rounded-4 border shadow-sm bg-white">
             <h4 class="fw-bold text-primary mb-3">Pendidikan Anak Usia Dini (PAUD)</h4>
             <ul class="ps-3">
@@ -121,6 +121,7 @@
             </ul>
           </div>
         </div>
+      </div>
     </section>
 
     <!-- Fasilitas Pelatihan -->
@@ -290,24 +291,6 @@
             <p class="fs-5 text-muted">
               Pelatihan ini didampingi oleh fasilitator profesional dari Anagata Academy (CodingMU), yang terdiri dari <strong>tim ahli di bidang teknologi, pendidikan, dan pengembangan kurikulum digital</strong>. Para fasilitator merupakan praktisi dan edukator yang telah berpengalaman luas dalam mengajar coding kepada berbagai jenjang pendidikan, mulai dari anak-anak hingga pendidik profesional. Dengan latar belakang sebagai pengembang, instruktur, dan perancang program pembelajaran interaktif, tim ini menggabungkan pendekatan pedagogis modern dengan penguasaan teknis untuk memastikan proses pelatihan berjalan efektif, aplikatif, dan menyenangkan.
             </p>
-          </div>
-      </div>
-    </section>
-
-    <section class="py-5 bg-light">
-      <div class="container">
-        <div class="row mb-4">
-            <h2 class="text-primary fw-bold fs-1">Alur Pendaftaran dan Pembayaran</h2>
-            <div class="text-center">
-              <div class="row g-4 justify-content-center">
-                <div class="col-md-6">
-                  <img src="/koding_ka25/alur_pendaftaran.jpeg" alt="Alur Pendaftaran" class="img-fluid rounded-4" style="max-width: 100%; height: auto;">
-                </div>
-                <div class="col-md-6">
-                  <img src="/koding_ka25/Pembayaran.png" alt="Alur Pendaftaran" class="img-fluid rounded-4" style="max-width: 100%; height: auto;">
-                </div>
-              </div>
-            </div>
           </div>
       </div>
     </section>
