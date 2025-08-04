@@ -109,7 +109,6 @@
 
       <div class="row g-4">
         <!-- Jenjang SD -->
-        <div class="row g-4">
           <div class="p-4 h-100 rounded-4 border shadow-sm bg-white">
             <h4 class="fw-bold text-primary mb-3">Pendidikan Anak Usia Dini (PAUD)</h4>
             <ul class="ps-3">
@@ -120,7 +119,6 @@
               <li>Memahami dampak AI dengan cara sederhana</li>
             </ul>
           </div>
-        </div>
       </div>
     </section>
 
