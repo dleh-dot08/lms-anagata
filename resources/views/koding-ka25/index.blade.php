@@ -10,6 +10,43 @@
     />
     <link rel="stylesheet" href="{{ asset('koding_ka25/style.css') }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Structured Data for Koding KA25 Program -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Program Pelatihan Guru Koding & KA",
+      "description": "Program pelatihan digital dan pengembangan bakat untuk guru di Indonesia, mencakup dasar-dasar coding dan kecerdasan artifisial (AI)",
+      "provider": {
+        "@type": "Organization",
+        "name": "Anagata Academy (CodingMU)",
+        "sameAs": "https://www.ruanganagata.id"
+      },
+      "offers": {
+        "@type": "Offer",
+        "category": "Teacher Training Program",
+        "availability": "https://schema.org/InStock"
+      },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": ["onsite", "online"],
+        "courseWorkload": "PT180H",
+        "instructor": {
+          "@type": "Person",
+          "name": "Tim Fasilitator Anagata Academy"
+        }
+      },
+      "educationalLevel": "Professional Development",
+      "timeRequired": "PT180H",
+      "teaches": [
+        "Dasar-dasar Coding",
+        "Kecerdasan Artifisial (AI)",
+        "Strategi Pembelajaran Digital",
+        "Implementasi di Sekolah"
+      ]
+    }
+    </script>
   </head>
   <body>
     <!-- Navbar -->

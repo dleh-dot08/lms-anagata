@@ -10,6 +10,43 @@
     />
     <link rel="stylesheet" href="{{ asset('koding_ka25/style.css') }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Structured Data for KKA PAUD Program -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Program KKA PAUD",
+      "description": "Program pelatihan khusus untuk guru PAUD dalam mengintegrasikan teknologi dan pembelajaran digital",
+      "provider": {
+        "@type": "Organization",
+        "name": "Anagata Academy (CodingMU)",
+        "sameAs": "https://www.ruanganagata.id"
+      },
+      "offers": {
+        "@type": "Offer",
+        "category": "Early Childhood Education Training",
+        "availability": "https://schema.org/InStock"
+      },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": ["onsite", "online"],
+        "courseWorkload": "PT180H",
+        "instructor": {
+          "@type": "Person",
+          "name": "Tim Fasilitator Anagata Academy"
+        }
+      },
+      "educationalLevel": "Early Childhood Education",
+      "timeRequired": "PT180H",
+      "teaches": [
+        "Pembelajaran Digital untuk PAUD",
+        "Integrasi Teknologi dalam Pembelajaran Anak Usia Dini",
+        "Metode Pembelajaran Interaktif",
+        "Pengembangan Materi Digital PAUD"
+      ]
+    }
+    </script>
   </head>
   <body>
     <!-- Navbar -->
