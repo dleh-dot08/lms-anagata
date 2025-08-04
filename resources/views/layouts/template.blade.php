@@ -25,6 +25,39 @@
         <meta name="msapplication-TileImage" content="{{ asset('asset/img/favicons/favicon.ico') }}">
         <meta name="theme-color" content="#ffffff">
 
+        <!-- Structured Data JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "EducationalOrganization",
+          "name": "Ruang Anagata",
+          "url": "https://www.ruanganagata.id",
+          "logo": "https://www.ruanganagata.id/images/logo.png",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://www.ruanganagata.id"
+          },
+          "department": {
+            "@type": "WebPage",
+            "name": "FAQ",
+            "url": "https://www.ruanganagata.id/faq"
+          },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Layanan Anagata",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Dashboard Pembelajaran",
+                  "url": "https://www.ruanganagata.id/dashboard"
+                }
+              }
+            ]
+          }
+        }
+        </script>
 
         <!-- ===============================================-->
         <!--    Stylesheets-->
