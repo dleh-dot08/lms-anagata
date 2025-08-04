@@ -56,12 +56,12 @@
           },
           "hasOfferCatalog": {
             "@type": "OfferCatalog",
-            "name": "Layanan Anagata",
+            "name": "Program Anagata Academy",
             "itemListElement": [
               {
                 "@type": "Course",
-                "name": "Dashboard Pembelajaran",
-                "description": "Platform pembelajaran online interaktif",
+                "name": "Program Pembelajaran Coding",
+                "description": "Program pembelajaran coding interaktif untuk mengembangkan keterampilan pemrograman",
                 "provider": {
                   "@type": "Organization",
                   "name": "Ruang Anagata",
@@ -69,6 +69,7 @@
                 },
                 "offers": {
                   "@type": "Offer",
+                  "category": "Programming Course",
                   "availability": "https://schema.org/InStock",
                   "price": "0",
                   "priceCurrency": "IDR"
@@ -76,13 +77,13 @@
                 "hasCourseInstance": {
                   "@type": "CourseInstance",
                   "courseMode": "online",
-                  "courseWorkload": "PT10H",
+                  "courseWorkload": "PT40H",
                   "instructor": {
                     "@type": "Person",
                     "name": "Anagata Academy"
                   }
                 },
-                "url": "https://www.ruanganagata.id/dashboard"
+                "url": "https://www.ruanganagata.id"
               }
             ]
           }
