@@ -48,6 +48,9 @@
                                     <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/koding-ka25') }}">Koding-KA 2025</a>
                                 </li>
                                 <li class="nav-item px-3 px-xl-1">
+                                    <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/kka-paud') }}">Koding-KA PAUD</a>
+                                </li>
+                                <li class="nav-item px-3 px-xl-1">
                                     <a class="btn btn-outline-dark order-1 order-lg-0 fw-medium" href="{{ url('/login') }}">Login</a>
                                 </li>
                                 <li class="nav-item px-3 px-xl-1">
