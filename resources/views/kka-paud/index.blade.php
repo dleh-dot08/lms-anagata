@@ -258,7 +258,7 @@
           <!-- Baris bawah -->
           <div class="col-md-4">
             <img
-              src="/koding_ka25/mengapa3.png"
+              src="/koding_ka25/mengapa56.JPG"
               class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
               alt="Pelatihan 3"
             />
