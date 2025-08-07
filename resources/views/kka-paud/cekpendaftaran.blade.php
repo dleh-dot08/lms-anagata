@@ -27,7 +27,7 @@
     </style>
 </head>
 <body>
-
+    <div class="container my-5 pt-5">
     <nav class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
         <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
             <a class="navbar-brand d-flex align-items-center" href="#">
@@ -76,7 +76,6 @@
             </div>
         </div>
     </nav>
-    <div class="container my-5 pt-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="card shadow-lg border-0">
