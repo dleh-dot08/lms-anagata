@@ -46,7 +46,7 @@ class CekPendaftaranController extends Controller
 
         } catch (\Exception $e) {
             // Tangani error jika gagal mengambil atau memproses data
-            return view('cekpendaftaran', [
+            return view('kka-paud.cekpendaftaran', [
                 'header' => [],
                 'data' => [],
                 'error_message' => 'Gagal memuat data dari Google Spreadsheet. Pastikan URL benar dan spreadsheet dapat diakses publik.'
