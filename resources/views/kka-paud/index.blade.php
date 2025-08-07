@@ -59,7 +59,7 @@
               Anagata Academy adalah Lembaga Kursus dan Pelatihan (LKP) berizin resmi yang memberikan pelatihan digital dan pengembangan bakat serta kemampuan sumber daya manusia Indonesia.
             </p>
             <a
-               href="#tabel-admin"
+               href="https://forms.gle/MSKYr4U81Janjt887"
               class="btn btn-lg mt-3 px-4 py-2 rounded-pill text-white shadow"
               style="background: linear-gradient(135deg, #ff9900, #ff6600); border: none;"
             >
