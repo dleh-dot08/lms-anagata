@@ -72,14 +72,15 @@
                                                     </td>
                                                 @endforeach
                                             </tr>
-                                        @else
-                                            <tr>
-                                                <td colspan="{{ count($header ?? []) }}" class="text-center py-4">
-                                                    Data pendaftaran tidak ditemukan.
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="{{ count($header ?? []) }}" class="text-center py-4">
+                                                Data pendaftaran tidak ditemukan.
+                                            </td>
+                                        </tr>
+                                    @endif
+                                </tbody>
                                 </table>
                             </div>
                         </div>
