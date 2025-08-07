@@ -459,51 +459,34 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      const provinsiData = [
-        "Aceh",
-        "Sumatera Utara",
-        "Sumatera Barat",
-        "Riau",
-        "Kepulauan Riau",
-        "Jambi",
-        "Sumatera Selatan",
-        "Bangka Belitung",
-        "Bengkulu",
-        "Lampung",
-        "D.K.I Jakarta",
-        "Jawa Barat",
-        "Banten",
-        "Jawa Tengah",
-        "D.I Yogyakarta",
-        "Jawa Timur",
-        "Bali",
-        "Nusa Tenggara Barat",
-        "Nusa Tenggara Timur",
-        "Kalimantan Barat",
-        "Kalimantan Tengah",
-        "Kalimantan Selatan",
-        "Kalimantan Timur",
-        "Kalimantan Utara",
-        "Sulawesi Utara",
-        "Gorontalo",
-        "Sulawesi Tengah",
-        "Sulawesi Barat",
-        "Sulawesi Selatan",
-        "Sulawesi Tenggara",
-        "Maluku",
-        "Maluku Utara",
-        "Papua",
-        "Papua Barat",
-      ];
+   <script>
+    const provinsiData = [
+      "Aceh", "Sumatera Utara", "Sumatera Barat", "Riau", "Kepulauan Riau", "Jambi",
+      "Sumatera Selatan", "Bangka Belitung", "Bengkulu", "Lampung", "D.K.I Jakarta",
+      "Jawa Barat", "Banten", "Jawa Tengah", "D.I Yogyakarta", "Jawa Timur", "Bali",
+      "Nusa Tenggara Barat", "Nusa Tenggara Timur", "Kalimantan Barat", "Kalimantan Tengah",
+      "Kalimantan Selatan", "Kalimantan Timur", "Kalimantan Utara", "Sulawesi Utara",
+      "Gorontalo", "Sulawesi Tengah", "Sulawesi Barat", "Sulawesi Selatan",
+      "Sulawesi Tenggara", "Maluku", "Maluku Utara", "Papua", "Papua Barat"
+    ];
 
-      const tbody = document.querySelector("#provinsiTable tbody");
+    const tbody = document.querySelector("#provinsiTable tbody");
+    const maxColumns = 4; // Jumlah kolom yang Anda inginkan
 
-      provinsiData.forEach((provinsi) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td class="text-center">${provinsi}</td>`;
-        tbody.appendChild(row);
-      });
-    </script>
+    let currentRow;
+    provinsiData.forEach((provinsi, index) => {
+      // Buat baris baru setiap kali mencapai jumlah kolom maksimum atau di awal
+      if (index % maxColumns === 0) {
+        currentRow = document.createElement("tr");
+        tbody.appendChild(currentRow);
+      }
+
+      // Buat sel dan tambahkan ke baris saat ini
+      const cell = document.createElement("td");
+      cell.className = "text-center";
+      cell.textContent = provinsi;
+      currentRow.appendChild(cell);
+    });
+  </script>
   </body>
 </html>
