@@ -57,6 +57,7 @@ use App\Http\Controllers\MentorAttendanceReportController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
 use App\Http\Controllers\Admin\SchoolDocumentController as AdminSchoolDocumentController;
+use App\Http\Controllers\CekPendaftaranController;
 
 // Add this route before the auth routes
 Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
@@ -69,6 +70,8 @@ Route::get('/koding-ka25', function () {
 Route::get('/kka-paud', function () {
         return view('kka-paud.index');
     })->name('kka-paud');
+
+Route::get('/cek-pendaftaran', [CekPendaftaranController::class, 'index']);
 
     Route::get('/cek-invoice', function () {
         return view('koding-ka25.invoice');

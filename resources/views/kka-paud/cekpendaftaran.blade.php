@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cek Status Pendaftaran</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .status-badge {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .status-waiting {
+            background-color: #ffc107;
+            color: #fff;
+        }
+        .status-approved {
+            background-color: #28a745;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="fw-bold mb-0">Cek Status Pendaftaran Guru</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    @if(isset($header))
+                                        @foreach($header as $column)
+                                            <th>{{ $column }}</th>
+                                        @endforeach
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(isset($data) && count($data) > 0)
+                                    @foreach($data as $row)
+                                        <tr>
+                                            @foreach($row as $key => $cell)
+                                                <td>
+                                                    @if(strtolower($cell) == 'menunggu')
+                                                        <span class="status-badge status-waiting">Menunggu</span>
+                                                    @elseif(strtolower($cell) == 'disetujui')
+                                                        <span class="status-badge status-approved">Disetujui</span>
+                                                    @else
+                                                        {{ $cell }}
+                                                    @endif
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="{{ count($header ?? []) }}" class="text-center py-4">
+                                            Data pendaftaran tidak ditemukan.
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
