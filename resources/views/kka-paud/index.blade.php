@@ -32,6 +32,9 @@
             <li class="nav-item">
               <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id">LMS-RuangAnagata</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold text-dark" href="##">Cek Status Pendaftaran</a>
+            </li>
           </ul>
         </div>
       </div>
