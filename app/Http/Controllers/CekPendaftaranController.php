@@ -16,7 +16,8 @@ class CekPendaftaranController extends Controller
                 throw new \Exception("Tidak bisa mengakses URL CSV");
             }
 
-            $rows = array_map('str_getcsv', explode("\n", $csvData));
+            $lines = preg_split("/\r\n|\n|\r/", trim($csvData));
+            $rows = array_map('str_getcsv', $lines);
 
             // Ambil header dari baris pertama
             $header = array_shift($rows);
