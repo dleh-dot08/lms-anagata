@@ -42,7 +42,7 @@ class CekPendaftaranController extends Controller
                 }
             }
             
-            return view('cekpendaftaran', compact('header', 'data'));
+            return view('kka-paud.cekpendaftaran', compact('header', 'data'));
 
         } catch (\Exception $e) {
             // Tangani error jika gagal mengambil atau memproses data
