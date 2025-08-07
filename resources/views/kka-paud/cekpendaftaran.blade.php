@@ -29,6 +29,54 @@
 <!-- ... (Bagian head dan style tetap sama) ... -->
 
 <body>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
+        <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+            <img
+                src="{{ asset('koding_ka25/logo_all.png') }}"
+                alt="Anagata Academy Logo"
+            />
+            </a>
+
+            <div class="d-none d-lg-flex mx-auto">
+            <ul class="navbar-nav gap-4">
+                <li class="nav-item">
+                <a class="nav-link fw-semibold text-dark" href="#">Beranda</a>
+                </li>
+                <li class="nav-item">
+                <a
+                    class="nav-link fw-semibold text-dark"
+                    href="https://ruanganagata.id/faq"
+                    >FAQ</a
+                >
+                </li>
+                <li class="nav-item">
+                <a
+                    class="nav-link fw-semibold text-dark"
+                    href="https://ruanganagata.id"
+                    >LMS-RuangAnagata</a
+                >
+                </li>
+                <li class="nav-item">
+                <a class="nav-link fw-semibold text-dark" href="/kka-paud/cek-pendaftaran">
+                    Cek Status Pendaftaran
+                </a>
+                </li>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Pembayaran
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Invoice</a></li>
+                    <li><a class="dropdown-item" href="#">Receipt</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#">Upload Bukti Pembayaran</a></li>
+                </ul>
+                </li>
+            </ul>
+            </div>
+        </div>
+        </nav>
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
