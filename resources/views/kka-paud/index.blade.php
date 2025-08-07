@@ -408,7 +408,7 @@
             <table class="table" id="provinsiTable">
               <thead class="table-primary">
                 <tr>
-                  <th colspan="4" class="text-center">Provinsi</th> </tr>
+                  <th colspan="6" class="text-center">Provinsi</th> </tr>
               </thead>
               <tbody>
                 </tbody>
