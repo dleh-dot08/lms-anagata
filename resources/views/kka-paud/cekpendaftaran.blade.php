@@ -89,6 +89,12 @@
                             </div>
                         @endif
 
+                        {{-- PENCARIAN NAMA --}}
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Cari Nama Peserta...">
+                        </div>
+
+                        {{-- TABEL DATA --}}
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover align-middle">
                                 <thead>
@@ -108,9 +114,9 @@
                                             <tr>
                                                 @foreach($row as $key => $cell)
                                                     <td class="text-center">
-                                                        @if(is_string($cell) && strtolower($cell) == 'menunggu')
+                                                        @if(is_string($cell) && strtolower(trim($cell)) == 'menunggu')
                                                             <span class="status-badge status-waiting">Menunggu</span>
-                                                        @elseif(is_string($cell) && strtolower($cell) == 'disetujui')
+                                                        @elseif(is_string($cell) && strtolower(trim($cell)) == 'disetujui')
                                                             <span class="status-badge status-approved">Disetujui</span>
                                                         @else
                                                             {{ $cell }}
@@ -135,6 +141,30 @@
         </div>
     </div>
 
+    {{-- Bootstrap JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- Script Pencarian Nama --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const tableRows = document.querySelectorAll('tbody tr');
+
+            searchInput.addEventListener('input', function () {
+                const keyword = this.value.toLowerCase();
+
+                tableRows.forEach(function (row) {
+                    const cells = row.querySelectorAll('td');
+                    const nameCell = cells.length > 1 ? cells[1].innerText.toLowerCase() : '';
+
+                    if (nameCell.includes(keyword)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
