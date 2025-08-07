@@ -404,17 +404,14 @@
             <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam
             dunia pendidikan dan teknologi.
           </p>
-          <div class="table-container mt-4 mx-auto" style="max-width: 600px">
-            <table
-              class="table table-bordered table-striped"
-              id="provinsiTable"
-            >
+          <div class="table-container mt-4 mx-auto" style="max-width: 900px">
+            <table class="table" id="provinsiTable">
               <thead class="table-primary">
                 <tr>
-                  <th class="text-center">Provinsi</th>
-                </tr>
+                  <th colspan="4" class="text-center">Provinsi</th> </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+                </tbody>
             </table>
           </div>
         </div>
@@ -471,11 +468,14 @@
     ];
 
     const tbody = document.querySelector("#provinsiTable tbody");
-    const maxColumns = 4; // Jumlah kolom yang Anda inginkan
+    const maxColumns = 4; // Atur jumlah kolom di sini
+
+    // Bersihkan tabel sebelum menambahkan data baru
+    tbody.innerHTML = '';
 
     let currentRow;
     provinsiData.forEach((provinsi, index) => {
-      // Buat baris baru setiap kali mencapai jumlah kolom maksimum atau di awal
+      // Buat baris baru setiap kali mencapai jumlah kolom yang diinginkan
       if (index % maxColumns === 0) {
         currentRow = document.createElement("tr");
         tbody.appendChild(currentRow);
@@ -483,7 +483,7 @@
 
       // Buat sel dan tambahkan ke baris saat ini
       const cell = document.createElement("td");
-      cell.className = "text-center";
+      cell.className = "text-center"; // Tambahkan kelas untuk perataan teks
       cell.textContent = provinsi;
       currentRow.appendChild(cell);
     });
