@@ -5,70 +5,68 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Cek Status Pendaftaran</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .card {
+            border-radius: 12px;
+        }
+        .card-header {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
         }
         .status-badge {
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 20px;
-            display: inline-block;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.9rem;
         }
         .status-waiting {
             background-color: #ffc107;
-            color: #fff;
+            color: #212529;
         }
         .status-approved {
             background-color: #28a745;
             color: #fff;
         }
+        .table th,
+        .table td {
+            vertical-align: middle !important;
+        }
+        .table thead {
+            background-color: #e9ecef;
+        }
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
-    <div class="container my-5 pt-5">
-    <nav class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
-        <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img
-                    src="{{ asset('koding_ka25/logo_all.png') }}"
-                    alt="Anagata Academy Logo"
-                />
+    <nav class="navbar navbar-expand-lg bg-white fixed-top border-bottom">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="#">
+                <img src="{{ asset('koding_ka25/logo_all.png') }}" alt="Anagata Academy Logo">
             </a>
-
-            <div class="d-none d-lg-flex mx-auto">
-                <ul class="navbar-nav gap-4">
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold text-dark" href="#">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            class="nav-link fw-semibold text-dark"
-                            href="https://ruanganagata.id/faq"
-                            >FAQ</a
-                        >
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            class="nav-link fw-semibold text-dark"
-                            href="https://ruanganagata.id"
-                            >LMS-RuangAnagata</a
-                        >
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold text-dark" href="/kka-paud/cek-pendaftaran">
-                            Cek Status Pendaftaran
-                        </a>
-                    </li>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav gap-3">
+                    <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id/faq">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id">LMS-RuangAnagata</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="/kka-paud/cek-pendaftaran">Cek Status</a></li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pembayaran
-                        </a>
+                        <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" role="button" data-bs-toggle="dropdown">Pembayaran</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Invoice</a></li>
                             <li><a class="dropdown-item" href="#">Receipt</a></li>
-                            <li><hr class="dropdown-divider" /></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">Upload Bukti Pembayaran</a></li>
                         </ul>
                     </li>
@@ -76,11 +74,13 @@
             </div>
         </div>
     </nav>
+
+    <div class="container py-5 mt-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <div class="card shadow-lg border-0">
+                <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white text-center py-4">
-                        <h2 class="fw-bold mb-0">Cek Status Pendaftaran Guru</h2>
+                        <h3 class="fw-bold mb-0">Cek Status Pendaftaran Guru</h3>
                     </div>
                     <div class="card-body p-4">
                         @if(isset($error_message))
@@ -90,15 +90,15 @@
                         @endif
 
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="bg-light">
+                            <table class="table table-bordered table-hover align-middle">
+                                <thead>
                                     <tr>
                                         @if(isset($header) && !empty($header))
                                             @foreach($header as $column)
-                                                <th>{{ $column }}</th>
+                                                <th class="text-center">{{ $column }}</th>
                                             @endforeach
                                         @else
-                                            <th>Tidak ada header</th>
+                                            <th class="text-center">Tidak ada header</th>
                                         @endif
                                     </tr>
                                 </thead>
@@ -107,7 +107,7 @@
                                         @foreach($data as $row)
                                             <tr>
                                                 @foreach($row as $key => $cell)
-                                                    <td>
+                                                    <td class="text-center">
                                                         @if(is_string($cell) && strtolower($cell) == 'menunggu')
                                                             <span class="status-badge status-waiting">Menunggu</span>
                                                         @elseif(is_string($cell) && strtolower($cell) == 'disetujui')
@@ -121,7 +121,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="{{ count($header ?? []) }}" class="text-center py-4">
+                                            <td colspan="{{ count($header ?? []) }}" class="text-center py-4 text-muted">
                                                 Data pendaftaran tidak ditemukan.
                                             </td>
                                         </tr>
@@ -134,6 +134,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
