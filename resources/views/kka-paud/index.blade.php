@@ -92,7 +92,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-semibold text-dark" href="/cek-pendaftaran"
+              <a class="nav-link fw-semibold text-dark" href="/kka-paud/cek-pendaftaran"
                 >Cek Status Pendaftaran</a
               >
             </li>
