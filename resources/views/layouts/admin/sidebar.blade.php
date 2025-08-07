@@ -37,9 +37,9 @@
                             <div data-i18n="Account">Data Pengguna</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('jenjang.*') ? 'active' : '' }}">
-                        <a href="{{ route('jenjang.index') }}" class="menu-link">
-                            <div data-i18n="Account">Data Jenjang</div>
+                    <li class="menu-item {{ request()->routeIs('semester.*') ? 'active' : '' }}">
+                        <a href="{{ route('semester.index') }}" class="menu-link">
+                            <div data-i18n="Account">Data Semester</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('program.*') ? 'active' : '' }}">

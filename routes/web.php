@@ -58,6 +58,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Admin\SekolahController as AdminSekolahController;
 use App\Http\Controllers\Admin\SchoolDocumentController as AdminSchoolDocumentController;
 use App\Http\Controllers\CekPendaftaranController;
+use App\Http\Controllers\SemesterController;
 
 // Add this route before the auth routes
 Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
@@ -140,6 +141,8 @@ Route::middleware(['throttle:100,1'])->group(function() {
             Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('destroy');
             Route::post('/{id}/restore', [KategoriController::class, 'restore'])->name('restore');
         });
+
+        Route::resource('semester', SemesterController::class);
 
         // Course Management (Admin Only
         Route::middleware(AdminMiddleware::class)->get('/courses/search-peserta', [CourseController::class, 'searchPeserta'])->name('courses.searchPeserta');
