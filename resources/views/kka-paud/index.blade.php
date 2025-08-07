@@ -9,112 +9,181 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{{ asset('koding_ka25/style.css') }}" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding-top: 80px;
+        font-family: Arial, sans-serif;
+      }
+      .navbar-brand img {
+        height: 70px;
+        transition: transform 0.3s ease-in-out;
+      }
+      .navbar-brand img:hover {
+        transform: scale(1.05);
+      }
+      .nav-link:hover {
+        color: #ff9900 !important;
+      }
+      .btn-orange {
+        background: linear-gradient(135deg, #ff9900, #ff6600);
+        border: none;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      }
+      .btn-orange:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(255, 102, 0, 0.4);
+      }
+      .card-transition:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+      }
+      .section-heading span {
+        color: #002b5b;
+      }
+      .text-orange {
+        color: #ff9900 !important;
+      }
+      .footer-bg {
+        background: linear-gradient(135deg, #0d1b2a, #1b263b);
+      }
+      .list-unstyled li a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      .list-unstyled li a:hover {
+        color: #fff;
+      }
+    </style>
   </head>
   <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
-      <div class="container-fluid d-flex justify-content-between align-items-center mx-lg-5">
-        <!-- Logo -->
+      <div
+        class="container-fluid d-flex justify-content-between align-items-center mx-lg-5"
+      >
         <a class="navbar-brand d-flex align-items-center" href="#">
-          <img src="{{ asset('koding_ka25/logo_all.png') }}" alt="" style="height: 70px" />
+          <img
+            src="{{ asset('koding_ka25/logo_all.png') }}"
+            alt="Anagata Academy Logo"
+          />
         </a>
 
-        <!-- Menu tengah (hanya muncul di layar besar) -->
         <div class="d-none d-lg-flex mx-auto">
           <ul class="navbar-nav gap-4">
             <li class="nav-item">
               <a class="nav-link fw-semibold text-dark" href="#">Beranda</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id/faq">FAQ</a>
+              <a
+                class="nav-link fw-semibold text-dark"
+                href="https://ruanganagata.id/faq"
+                >FAQ</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id">LMS-RuangAnagata</a>
+              <a
+                class="nav-link fw-semibold text-dark"
+                href="https://ruanganagata.id"
+                >LMS-RuangAnagata</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-semibold text-dark" href="##">Cek Status Pendaftaran</a>
+              <a class="nav-link fw-semibold text-dark" href="#"
+                >Cek Status Pendaftaran</a
+              >
             </li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <!-- Tambahkan style agar konten tidak tertutup navbar -->
-    <style>
-      body {
-        padding-top: 80px;
-      }
-    </style>
-
-
-    <!-- Hero Section Full Width Background -->
-    <section class="position-relative overflow-hidden" style="background: linear-gradient(to bottom right, #fffaf3, #fff0e1);">
+    <section
+      class="position-relative overflow-hidden py-5"
+      style="background: linear-gradient(to bottom right, #fffaf3, #fff0e1)"
+    >
       <div class="container py-5 position-relative z-2">
         <div class="row align-items-center">
-          
-          <!-- Kolom Teks -->
           <div class="col-lg-6 mb-5 mb-lg-0">
             <h1 class="fw-bold display-4 mb-3">
-              Anagata Academy <strong>(CodingMU)</strong> 
+              Anagata Academy <strong class="text-orange">(CodingMU)</strong>
             </h1>
             <p class="fs-5 text-muted">
-              Anagata Academy adalah Lembaga Kursus dan Pelatihan (LKP) berizin resmi yang memberikan pelatihan digital dan pengembangan bakat serta kemampuan sumber daya manusia Indonesia.
+              Anagata Academy adalah Lembaga Kursus dan Pelatihan (LKP) berizin
+              resmi yang memberikan pelatihan digital dan pengembangan bakat
+              serta kemampuan sumber daya manusia Indonesia.
             </p>
             <a
-               href="https://forms.gle/MSKYr4U81Janjt887"
-              class="btn btn-lg mt-3 px-4 py-2 rounded-pill text-white shadow"
-              style="background: linear-gradient(135deg, #ff9900, #ff6600); border: none;"
+              href="https://forms.gle/MSKYr4U81Janjt887"
+              class="btn btn-lg mt-3 px-4 py-2 rounded-pill text-white shadow btn-orange"
             >
               Daftarkan Guru Anda Sekarang
             </a>
           </div>
 
-          <!-- Kolom Gambar -->
           <div class="col-lg-6 position-relative">
             <div class="position-relative">
               <img
                 src="/koding_ka25/section.jpg"
                 alt="Pelatihan Guru"
                 class="img-fluid rounded-4 shadow-lg"
-                style="max-height: 500px; object-fit: cover; position: relative; z-index: 2;"
+                style="
+                  max-height: 500px;
+                  object-fit: cover;
+                  position: relative;
+                  z-index: 2;
+                "
               />
-              <!-- Shape background -->
               <div
                 class="position-absolute top-50 start-50 translate-middle z-1"
-                style="width: 120%; height: 120%; background: radial-gradient(circle, #ffe7cc 20%, transparent 70%); border-radius: 50%;">
-              </div>
+                style="
+                  width: 120%;
+                  height: 120%;
+                  background: radial-gradient(
+                    circle,
+                    #ffe7cc 20%,
+                    transparent 70%
+                  );
+                  border-radius: 50%;
+                "
+              ></div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- Skema Pelatihan Section -->
-    <section class="py-5" style="background-color: #f7fafd;">
+    <section class="py-5" style="background-color: #f7fafd">
       <div class="container">
-        <h2 class="text-center fw-bold mb-5">
-          Skema <span style="color: #002B5B;">Pelatihan</span>
+        <h2 class="text-center fw-bold mb-5 section-heading">
+          Skema <span>Pelatihan</span>
         </h2>
-
-
         </div>
-      </div>
     </section>
 
-    <!-- Program Berdasarkan Jenjang Pendidikan -->
     <section class="container py-5 mt-4">
       <div class="text-center mb-5">
-        <h2 class="fw-bold">Program Berdasarkan <span style="color: #002B5B">Jenjang Pendidikan</span></h2>
-        <p class="text-muted">Materi dirancang sesuai tingkat dan kebutuhan peserta didik dari jenjang PAUD </p>
+        <h2 class="fw-bold section-heading">
+          Program Berdasarkan <span>Jenjang Pendidikan</span>
+        </h2>
+        <p class="text-muted">
+          Materi dirancang sesuai tingkat dan kebutuhan peserta didik dari
+          jenjang PAUD
+        </p>
       </div>
 
-      <div class="row g-4">
-        <!-- Jenjang SD -->
-          <div class="p-4 h-100 rounded-4 border shadow-sm bg-white">
-            <h4 class="fw-bold text-primary mb-3">Pendidikan Anak Usia Dini (PAUD)</h4>
-            <ul class="ps-3">
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-8">
+          <div
+            class="p-4 h-100 rounded-4 border shadow-sm bg-white card-transition"
+          >
+            <h4 class="fw-bold text-orange mb-3">
+              Pendidikan Anak Usia Dini (PAUD)
+            </h4>
+            <ul class="ps-3 text-muted">
               <li>Pengenalan perangkat teknologi & fungsi sehari-hari</li>
               <li>Literasi digital & etika dunia maya</li>
               <li>Berpikir komputasional dasar (pola, dekomposisi, algoritma)</li>
@@ -122,107 +191,124 @@
               <li>Memahami dampak AI dengan cara sederhana</li>
             </ul>
           </div>
+        </div>
       </div>
     </section>
 
-    <!-- Fasilitas Pelatihan -->
-    <section class="py-5" style="background-color: #f8fafc;">
+    <section class="py-5" style="background-color: #f8fafc">
       <div class="container">
-        <h2 class="text-center fw-bold mb-5">
-          Fasilitas <span style="color: #002B5B;">Program</span> Kami
+        <h2 class="text-center fw-bold mb-5 section-heading">
+          Fasilitas <span>Program</span> Kami
         </h2>
 
         <div class="row g-4">
-          <!-- Fasilitas 1 -->
           <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition">
+            <div
+              class="p-4 bg-white rounded-4 border shadow-sm h-100 card-transition"
+            >
               <div class="mb-3 text-primary fs-1">
                 <i class="bi bi-book-half"></i>
               </div>
               <h5 class="fw-semibold">Materi Terstruktur & Siap Pakai</h5>
               <p class="mb-0 text-muted">
-                Modul belajar lengkap dan tersusun sistematis sesuai kebutuhan kurikulum digital masa kini.
+                Modul belajar lengkap dan tersusun sistematis sesuai kebutuhan
+                kurikulum digital masa kini.
               </p>
             </div>
           </div>
 
-          <!-- Fasilitas 2 -->
           <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition">
+            <div
+              class="p-4 bg-white rounded-4 border shadow-sm h-100 card-transition"
+            >
               <div class="mb-3 text-warning fs-1">
                 <i class="bi bi-display"></i>
               </div>
               <h5 class="fw-semibold">Platform Akses Belajar Online</h5>
               <p class="mb-0 text-muted">
-                Sistem pembelajaran daring fleksibel yang dapat diakses di berbagai perangkat kapan saja.
+                Sistem pembelajaran daring fleksibel yang dapat diakses di
+                berbagai perangkat kapan saja.
               </p>
             </div>
           </div>
 
-          <!-- Fasilitas 3 -->
           <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition">
+            <div
+              class="p-4 bg-white rounded-4 border shadow-sm h-100 card-transition"
+            >
               <div class="mb-3 text-success fs-1">
                 <i class="bi bi-award"></i>
               </div>
               <h5 class="fw-semibold">Sertifikasi Resmi Digital</h5>
               <p class="mb-0 text-muted">
-                Peserta mendapatkan sertifikat digital sebagai bukti kompetensi di bidang teknologi dan edukasi.
+                Peserta mendapatkan sertifikat digital sebagai bukti kompetensi
+                di bidang teknologi dan edukasi.
               </p>
             </div>
           </div>
 
-          <!-- Fasilitas 4 -->
           <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition">
+            <div
+              class="p-4 bg-white rounded-4 border shadow-sm h-100 card-transition"
+            >
               <div class="mb-3 text-danger fs-1">
                 <i class="bi bi-person-video3"></i>
               </div>
               <h5 class="fw-semibold">Pendampingan Belajar Langsung</h5>
               <p class="mb-0 text-muted">
-                Dapatkan bimbingan intensif dari fasilitator profesional sepanjang pelaksanaan program.
+                Dapatkan bimbingan intensif dari fasilitator profesional
+                sepanjang pelaksanaan program.
               </p>
             </div>
           </div>
 
-          <!-- Fasilitas 5 -->
           <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition">
+            <div
+              class="p-4 bg-white rounded-4 border shadow-sm h-100 card-transition"
+            >
               <div class="mb-3 text-info fs-1">
                 <i class="bi bi-chat-dots"></i>
               </div>
               <h5 class="fw-semibold">Forum & Komunitas Diskusi</h5>
               <p class="mb-0 text-muted">
-                Wadah kolaborasi peserta untuk berbagi pengalaman, bertanya, dan saling mendukung secara aktif.
+                Wadah kolaborasi peserta untuk berbagi pengalaman, bertanya, dan
+                saling mendukung secara aktif.
               </p>
             </div>
           </div>
 
-          <!-- Fasilitas 6 (Opsional / Tambahan) -->
           <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition">
+            <div
+              class="p-4 bg-white rounded-4 border shadow-sm h-100 card-transition"
+            >
               <div class="mb-3 text-secondary fs-1">
                 <i class="bi bi-lightbulb"></i>
               </div>
               <h5 class="fw-semibold">Studi Kasus & Proyek Nyata</h5>
               <p class="mb-0 text-muted">
-                Peserta akan menyelesaikan tugas berbasis proyek yang merefleksikan permasalahan dunia nyata.
+                Peserta akan menyelesaikan tugas berbasis proyek yang
+                merefleksikan permasalahan dunia nyata.
               </p>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- Mengapa Anagata Academy -->
-    <section class="py-5 text-white" style="background: linear-gradient(to bottom right, #0d1b2a, #1b263b);">
+    <section
+      class="py-5 text-white"
+      style="background: linear-gradient(to bottom right, #0d1b2a, #1b263b)"
+    >
       <div class="container">
         <div class="row align-items-center g-5">
           <div class="col-lg-6">
-            <h2 class="fw-bold display-5 mb-4">Kenapa <span style="color: #fca311;">Anagata Academy?</span></h2>
+            <h2 class="fw-bold display-5 mb-4 section-heading">
+              Kenapa <span class="text-orange">Anagata Academy?</span>
+            </h2>
             <p class="fs-5 mb-3">
-              Anagata Academy adalah <strong>Lembaga Kursus dan Pelatihan (LKP)</strong> resmi yang menyediakan program peningkatan skill digital bagi SDM Indonesia.
+              Anagata Academy adalah <strong>Lembaga Kursus dan Pelatihan (LKP)</strong
+              > resmi yang menyediakan program peningkatan skill digital bagi
+              SDM Indonesia.
             </p>
             <div class="mt-4">
               <h1 class="display-4 fw-bold">1,200+</h1>
@@ -231,8 +317,11 @@
           </div>
           <div class="col-lg-6">
             <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-lg">
-              <iframe src="https://www.youtube.com/embed/EN2CaOJf1To?si=I3JIFY9ukNxpc48T&amp;controls=0"
-                      title="Yuk Ngulik Coding, Mulai dari Sejarahnya!" allowfullscreen></iframe>
+              <iframe
+                src="https://www.youtube.com/embed/EN2CaOJf1To?si=I3JIFY9ukNxpc48T&amp;controls=0"
+                title="Yuk Ngulik Coding, Mulai dari Sejarahnya!"
+                allowfullscreen
+              ></iframe>
             </div>
           </div>
         </div>
@@ -241,42 +330,43 @@
 
     <section class="bg-light py-5">
       <div class="container text-center">
+        <h2 class="text-center fw-bold mb-5 section-heading">
+          Kegiatan <span>Kami</span>
+        </h2>
         <div class="row g-3">
-          <!-- Baris atas -->
           <div class="col-md-6">
             <img
               src="/koding_ka25/mengapa1.png"
-              class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
+              class="img-fluid rounded-4 w-100 h-100 object-fit-cover shadow-sm"
               alt="Pelatihan 1"
             />
           </div>
           <div class="col-md-6">
             <img
               src="/koding_ka25/mengapa2.JPG"
-              class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
+              class="img-fluid rounded-4 w-100 h-100 object-fit-cover shadow-sm"
               alt="Pelatihan 2"
             />
           </div>
 
-          <!-- Baris bawah -->
           <div class="col-md-4">
             <img
               src="/koding_ka25/mengapa56.JPG"
-              class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
+              class="img-fluid rounded-4 w-100 h-100 object-fit-cover shadow-sm"
               alt="Pelatihan 3"
             />
           </div>
           <div class="col-md-4">
             <img
               src="/koding_ka25/mengapa4.jpg"
-              class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
+              class="img-fluid rounded-4 w-100 h-100 object-fit-cover shadow-sm"
               alt="Pelatihan 4"
             />
           </div>
           <div class="col-md-4">
             <img
               src="/koding_ka25/mengapa5.jpg"
-              class="img-fluid rounded-4 w-100 h-100 object-fit-cover"
+              class="img-fluid rounded-4 w-100 h-100 object-fit-cover shadow-sm"
               alt="Pelatihan 5"
             />
           </div>
@@ -284,90 +374,136 @@
       </div>
     </section>
 
-    <!-- Section 1: Judul -->
-    <section class="py-5 bg-light">
+    <section class="py-5 bg-white">
       <div class="container">
-        <div class="row mb-4">
-            <h2 class="text-primary fw-bold fs-1">Fasilitator Kami</h2>
-            <p class="fs-5 text-muted">
-              Pelatihan ini didampingi oleh fasilitator profesional dari Anagata Academy (CodingMU), yang terdiri dari <strong>tim ahli di bidang teknologi, pendidikan, dan pengembangan kurikulum digital</strong>. Para fasilitator merupakan praktisi dan edukator yang telah berpengalaman luas dalam mengajar coding kepada berbagai jenjang pendidikan, mulai dari anak-anak hingga pendidik profesional. Dengan latar belakang sebagai pengembang, instruktur, dan perancang program pembelajaran interaktif, tim ini menggabungkan pendekatan pedagogis modern dengan penguasaan teknis untuk memastikan proses pelatihan berjalan efektif, aplikatif, dan menyenangkan.
-            </p>
-          </div>
+        <div class="row mb-4 text-center">
+          <h2 class="fw-bold fs-1 text-orange">Fasilitator Kami</h2>
+          <p class="fs-5 text-muted mt-3">
+            Pelatihan ini didampingi oleh fasilitator profesional dari Anagata
+            Academy (CodingMU), yang terdiri dari
+            <strong>tim ahli di bidang teknologi, pendidikan, dan pengembangan
+            kurikulum digital</strong>. Para fasilitator merupakan praktisi dan
+            edukator yang telah berpengalaman luas dalam mengajar coding kepada
+            berbagai jenjang pendidikan, mulai dari anak-anak hingga pendidik
+            profesional. Dengan latar belakang sebagai pengembang, instruktur,
+            dan perancang program pembelajaran interaktif, tim ini menggabungkan
+            pendekatan pedagogis modern dengan penguasaan teknis untuk
+            memastikan proses pelatihan berjalan efektif, aplikatif, dan
+            menyenangkan.
+          </p>
+        </div>
       </div>
     </section>
-    
-    <!-- Section 1: Judul -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <div class="row mb-4">
-      <h2 class="text-primary fw-bold fs-1">Lokasi Kegiatan</h2>
-      <p class="fs-5 text-muted">
-        Pelatihan didampingi oleh fasilitator profesional dari 
-        <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam dunia pendidikan dan teknologi.
-      </p>
-      <div class="table-container mt-4">
-        <table class="table table-bordered table-striped" id="provinsiTable">
-          <thead class="table-primary">
-            <tr>
-              <th>Provinsi</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+
+    <section class="py-5 bg-light">
+      <div class="container">
+        <div class="row mb-4 text-center">
+          <h2 class="fw-bold fs-1 text-orange">Lokasi Kegiatan</h2>
+          <p class="fs-5 text-muted mt-3">
+            Pelatihan didampingi oleh fasilitator profesional dari
+            <strong>Anagata Academy (CodingMU)</strong> yang berpengalaman dalam
+            dunia pendidikan dan teknologi.
+          </p>
+          <div class="table-container mt-4 mx-auto" style="max-width: 600px">
+            <table
+              class="table table-bordered table-striped"
+              id="provinsiTable"
+            >
+              <thead class="table-primary">
+                <tr>
+                  <th class="text-center">Provinsi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<script>
-  const provinsiData = [
-    "Aceh",
-    "Sumatera Utara",
-    "Sumatera Barat",
-    "Riau",
-    "Kepulauan Riau",
-    "Jambi",
-    "Sumatera Selatan",
-    "Bangka Belitung",
-    "Bengkulu",
-    "Lampung",
-    "D.K.I Jakarta",
-    "Jawa Barat",
-    "Banten",
-    "Jawa Tengah",
-    "D.I Yogyakarta",
-    "Jawa Timur",
-    "Bali",
-    "Nusa Tenggara Barat",
-    "Nusa Tenggara Timur",
-    "Kalimantan Barat",
-    "Kalimantan Tengah",
-    "Kalimantan Selatan",
-    "Kalimantan Timur",
-    "Kalimantan Utara",
-    "Sulawesi Utara",
-    "Gorontalo",
-    "Sulawesi Tengah",
-    "Sulawesi Barat",
-    "Sulawesi Selatan",
-    "Sulawesi Tenggara",
-    "Maluku",
-    "Maluku Utara",
-    "Papua",
-    "Papua Barat"
-  ];
+    <footer class="footer-bg text-white py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5 class="fw-bold text-orange">Anagata Academy</h5>
+            <p class="text-white-50">
+              Lembaga Kursus dan Pelatihan (LKP) berizin resmi yang memberikan
+              pelatihan digital.
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h5 class="fw-bold">Tautan Cepat</h5>
+            <ul class="list-unstyled">
+              <li><a href="#">Beranda</a></li>
+              <li><a href="https://ruanganagata.id/faq">FAQ</a></li>
+              <li><a href="https://ruanganagata.id">LMS-RuangAnagata</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h5 class="fw-bold">Hubungi Kami</h5>
+            <p class="text-white-50 mb-1">
+              Email: info@anagataacademy.com
+            </p>
+            <p class="text-white-50 mb-1">
+              Telepon: +62 812-3456-7890
+            </p>
+          </div>
+        </div>
+        <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.2)" />
+        <div class="text-center text-white-50">
+          <p class="mb-0">
+            © 2024 Anagata Academy. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
 
-  const tbody = document.querySelector("#provinsiTable tbody");
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const provinsiData = [
+        "Aceh",
+        "Sumatera Utara",
+        "Sumatera Barat",
+        "Riau",
+        "Kepulauan Riau",
+        "Jambi",
+        "Sumatera Selatan",
+        "Bangka Belitung",
+        "Bengkulu",
+        "Lampung",
+        "D.K.I Jakarta",
+        "Jawa Barat",
+        "Banten",
+        "Jawa Tengah",
+        "D.I Yogyakarta",
+        "Jawa Timur",
+        "Bali",
+        "Nusa Tenggara Barat",
+        "Nusa Tenggara Timur",
+        "Kalimantan Barat",
+        "Kalimantan Tengah",
+        "Kalimantan Selatan",
+        "Kalimantan Timur",
+        "Kalimantan Utara",
+        "Sulawesi Utara",
+        "Gorontalo",
+        "Sulawesi Tengah",
+        "Sulawesi Barat",
+        "Sulawesi Selatan",
+        "Sulawesi Tenggara",
+        "Maluku",
+        "Maluku Utara",
+        "Papua",
+        "Papua Barat",
+      ];
 
-  provinsiData.forEach(provinsi => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${provinsi}</td>`;
-    tbody.appendChild(row);
-  });
-</script>
+      const tbody = document.querySelector("#provinsiTable tbody");
 
-
-
-
+      provinsiData.forEach((provinsi) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td class="text-center">${provinsi}</td>`;
+        tbody.appendChild(row);
+      });
+    </script>
   </body>
 </html>
