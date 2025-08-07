@@ -71,7 +71,7 @@ Route::get('/kka-paud', function () {
         return view('kka-paud.index');
     })->name('kka-paud');
 
-Route::get('/cek-pendaftaran', [CekPendaftaranController::class, 'index']);
+Route::get('/kka-paud/cek-pendaftaran', [CekPendaftaranController::class, 'index']);
 
     Route::get('/cek-invoice', function () {
         return view('koding-ka25.invoice');
