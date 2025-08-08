@@ -104,6 +104,22 @@
                 if(data.success && data.status === 'sudah') {
                     alertBox.className = 'alert alert-success';
                     alertBox.innerHTML = '✅ ' + data.message;
+
+                    // Tampilkan tabel informasi
+                    if (data.data) {
+                        alertBox.innerHTML += `
+                            <div class="mt-3">
+                                <table class="table table-bordered">
+                                    <tr><th>Nama Peserta</th><td>${data.data.nama_peserta}</td></tr>
+                                    <tr><th>NPSN</th><td>${data.data.npsn}</td></tr>
+                                    <tr><th>Nama PAUD</th><td>${data.data.nama_paud}</td></tr>
+                                    <tr><th>No Invoice</th><td>${data.data.nomor_invoice}</td></tr>
+                                    <tr><th>Unduh Invoice</th>
+                                        <td><a href="${data.data.url_invoice}" target="_blank" class="btn btn-sm btn-primary">Unduh</a></td></tr>
+                                </table>
+                            </div>
+                        `;
+                    }
                 } else if(data.success && data.status === 'belum') {
                     alertBox.className = 'alert alert-warning';
                     alertBox.innerHTML = '⚠️ ' + data.message;
@@ -112,6 +128,7 @@
                     alertBox.innerHTML = '❌ ' + data.message;
                 }
             })
+
             .catch(err => {
                 resultDiv.style.display = 'block';
                 alertBox.className = 'alert alert-danger';

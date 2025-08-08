@@ -36,36 +36,45 @@ class CekPembayaranPaudController extends Controller
         $client = new Client();
 
         try {
-            // Ambil CSV
             $response1 = $client->get(self::FORM_RESPONSES_CSV_URL);
             $csvData1 = (string) $response1->getBody();
             $rows1 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData1));
             $headers1 = array_shift($rows1);
 
-            // Map kolom berdasarkan nama yang ada di CSV
             $formHeaderMap = [
-                'NPSN_Form'       => $this->findColumnIndex($headers1, 'NPSN SEKOLAH'),
-                'Nomor Invoice'   => $this->findColumnIndex($headers1, 'NO INVOICE'),
-                'URL PDF Invoice' => $this->findColumnIndex($headers1, 'URL'),
+                'NPSN_Form'       => array_search('NPSN SEKOLAH', $headers1),
+                'Nama_Paud'       => array_search('NAMA SEKOLAH', $headers1),
+                'Nama_Peserta'    => array_search('NAMA LENGKAP (GELAR LENGKAP)', $headers1),
+                'Nomor Invoice'   => array_search('NO INVOICE', $headers1),
+                'URL PDF Invoice' => array_search('URL', $headers1),
             ];
 
-            // Validasi semua kolom ditemukan
             foreach ($formHeaderMap as $key => $index) {
                 if ($index === false) {
-                    throw new Exception("Kolom untuk {$key} tidak ditemukan di CSV.");
+                    throw new Exception("Kolom '{$key}' tidak ditemukan di 'Form Responses 1' CSV.");
                 }
             }
 
-            // Cari data NPSN
             $found = false;
+            $resultData = [];
             foreach ($rows1 as $row) {
                 $maxIndex1 = max(array_values($formHeaderMap));
                 if (count($row) > $maxIndex1 && !empty($row[$formHeaderMap['NPSN_Form']])) {
                     if (strcasecmp(trim($row[$formHeaderMap['NPSN_Form']]), $inputNPSN) === 0) {
-                        $nomorInvoice = trim($row[$formHeaderMap['Nomor Invoice']]);
+                        $nomorInvoice  = trim($row[$formHeaderMap['Nomor Invoice']]);
                         $urlPdfInvoice = trim($row[$formHeaderMap['URL PDF Invoice']]);
+                        $namaPaud      = trim($row[$formHeaderMap['Nama_Paud']]);
+                        $namaPeserta   = trim($row[$formHeaderMap['Nama_Peserta']]);
+
                         if (!empty($nomorInvoice) && !empty($urlPdfInvoice)) {
                             $found = true;
+                            $resultData = [
+                                'nama_paud'      => $namaPaud,
+                                'nama_peserta'   => $namaPeserta,
+                                'npsn'           => $inputNPSN,
+                                'nomor_invoice'  => $nomorInvoice,
+                                'url_invoice'    => $urlPdfInvoice,
+                            ];
                             break;
                         }
                     }
@@ -74,11 +83,11 @@ class CekPembayaranPaudController extends Controller
 
             return response()->json([
                 'success' => true,
-                'npsn'    => $inputNPSN,
                 'status'  => $found ? 'sudah' : 'belum',
                 'message' => $found
                     ? 'Invoice PAUD sudah pernah dibuat.'
                     : 'Invoice PAUD belum pernah dibuat.',
+                'data'    => $found ? $resultData : null
             ]);
 
         } catch (Exception $e) {
@@ -89,4 +98,5 @@ class CekPembayaranPaudController extends Controller
             ], 500);
         }
     }
+
 }
