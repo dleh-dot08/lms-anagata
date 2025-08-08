@@ -33,9 +33,10 @@ class CekPembayaranPaudController extends Controller
 
             $formHeaderMap = [
                 'NPSN_Form'       => array_search('NPSN', $headers1),
-                'Nomor Invoice'   => array_search('Column 1', $headers1), // pastikan sesuai
+                'Nomor Invoice'   => array_search('Column 1', $headers1),
                 'URL PDF Invoice' => array_search('Column 2', $headers1),
             ];
+
 
             foreach ($formHeaderMap as $key => $index) {
                 if ($index === false) {
