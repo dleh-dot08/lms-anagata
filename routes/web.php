@@ -89,6 +89,9 @@ Route::get('/kka-paud/cek-pendaftaran', [CekPendaftaranController::class, 'index
     // Ini adalah route yang akan dipanggil oleh JavaScript fetch() di invoice.blade.php
     Route::post('/cek-invoice', [InvoiceController::class, 'checkInvoice'])->name('invoice.check'); // NAMA INI HARUS SAMA DENGAN route('invoice.check') DI BLADE
 
+    Route::get('/kka-paud/invoice', [InvoiceController::class, 'invoicePaudView'])->name('invoicePaud.view');
+    Route::post('/kka-paud/cek-invoice', [InvoiceController::class, 'cekInvoicePaud'])->name('invoicePaud.cek');
+
 // Apply rate limiting to all routes
 Route::middleware(['throttle:100,1'])->group(function() {
     Route::get('/', function () {

@@ -64,7 +64,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" role="button" data-bs-toggle="dropdown">Pembayaran</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Unduh Invoice</a></li>
+                            <li><a class="dropdown-item" href="{{ route('invoicePaud.view') }}">Unduh Invoice</a></li>
                             <li><a class="dropdown-item" href="#">Unduh Receipt</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">Upload Bukti Pembayaran</a></li>

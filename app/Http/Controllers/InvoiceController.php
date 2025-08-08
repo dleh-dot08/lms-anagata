@@ -14,6 +14,11 @@ class InvoiceController extends Controller
     // URL publik CSV untuk sheet "NPSN"
     const NPSN_MASTER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNzBpELuuwAn8mGFO3f5iKnmOGB1TWToRYNTouAS5I7bP6mRPSR6GdyBhCjtybEtO6ftxv1REe5DQo/pub?gid=1103969526&single=true&output=csv';
 
+    // --- PAUD ---
+    const FORM_RESPONSES_PAUD_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=XXXXXXXXXX&single=true&output=csv';
+    const NPSN_MASTER_PAUD_CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=YYYYYYYYYY&single=true&output=csv';
+
+
     /**
      * Memproses permintaan AJAX untuk mencari invoice berdasarkan NPSN.
      *
@@ -161,4 +166,97 @@ class InvoiceController extends Controller
             ], 500);
         }
     }
+
+    public function invoicePaudView()
+    {
+        return view('kka-paud.invoice');
+    }
+
+    public function cekInvoicePaud(Request $request)
+    {
+        $request->validate([
+            'npsn' => 'required|string',
+        ]);
+
+        $inputNPSN = trim($request->input('npsn'));
+        $client = new Client();
+
+        try {
+            // --- CSV khusus PAUD ---
+            $FORM_RESPONSES_PAUD_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vReWEoxjTD_Qvtygf2doavEexLwHB19qwrruKfKNaPIWnDKdRmNyePbcuC4dKSElsioM7sKgbxmvQ4A/pub?gid=995897769&single=true&output=csv';
+            $MASTER_NPSN_PAUD_CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vReWEoxjTD_Qvtygf2doavEexLwHB19qwrruKfKNaPIWnDKdRmNyePbcuC4dKSElsioM7sKgbxmvQ4A/pub?gid=1723572662&single=true&output=csv';
+
+            // Ambil data form PAUD
+            $response1 = $client->get($FORM_RESPONSES_PAUD_CSV_URL);
+            $csvData1 = (string) $response1->getBody();
+            $rows1 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData1));
+            $headers1 = array_shift($rows1);
+
+            $formHeaderMap = [
+                'NPSN_Form'       => array_search('NPSN', $headers1),
+                'Nomor Invoice'   => array_search('Column 1', $headers1),
+                'URL PDF Invoice' => array_search('Column 2', $headers1),
+            ];
+
+            foreach ($formHeaderMap as $key => $index) {
+                if ($index === false) {
+                    throw new Exception("Kolom '{$key}' tidak ditemukan di CSV Form Responses PAUD.");
+                }
+            }
+
+            $found = false;
+            foreach ($rows1 as $row) {
+                $maxIndex1 = max(array_values($formHeaderMap));
+                if (count($row) > $maxIndex1 && !empty($row[$formHeaderMap['NPSN_Form']])) {
+                    if (strcasecmp(trim($row[$formHeaderMap['NPSN_Form']]), $inputNPSN) === 0) {
+                        $nomorInvoice = trim($row[$formHeaderMap['Nomor Invoice']]);
+                        $urlPdfInvoice = trim($row[$formHeaderMap['URL PDF Invoice']]);
+                        if (!empty($nomorInvoice) && !empty($urlPdfInvoice)) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Ambil data master NPSN PAUD
+            $response2 = $client->get($MASTER_NPSN_PAUD_CSV_URL);
+            $csvData2 = (string) $response2->getBody();
+            $rows2 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData2));
+            $headers2 = array_shift($rows2);
+
+            $npsnIndex2 = array_search('NPSN', $headers2);
+            if ($npsnIndex2 === false) {
+                throw new Exception("Kolom 'NPSN' tidak ditemukan di CSV Master NPSN PAUD.");
+            }
+
+            $npsnExists = false;
+            foreach ($rows2 as $row) {
+                if (isset($row[$npsnIndex2]) && strcasecmp(trim($row[$npsnIndex2]), $inputNPSN) === 0) {
+                    $npsnExists = true;
+                    break;
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'npsn'    => $inputNPSN,
+                'status'  => $found ? 'sudah' : 'belum',
+                'exists'  => $npsnExists,
+                'message' => $found
+                    ? 'Invoice PAUD sudah pernah dibuat.'
+                    : 'Invoice PAUD belum pernah dibuat.',
+            ]);
+
+        } catch (Exception $e) {
+            \Log::error("Cek Invoice PAUD Error: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
 }
