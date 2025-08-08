@@ -25,6 +25,7 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReciptController;
+use App\Http\Controllers\CekPembayaranPaudController;
 
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProjectController;
@@ -88,12 +89,9 @@ Route::get('/kka-paud/cek-pendaftaran', [CekPendaftaranController::class, 'index
     // 2. Route untuk MEMPROSES pencarian invoice (method POST)
     // Ini adalah route yang akan dipanggil oleh JavaScript fetch() di invoice.blade.php
     Route::post('/cek-invoice', [InvoiceController::class, 'checkInvoice'])->name('invoice.check'); // NAMA INI HARUS SAMA DENGAN route('invoice.check') DI BLADE
-    
-    Route::get('/kka-paud/invoice', function () {
-        return view('kka-paud.invoice');
-    })->name('kka-paud.invoice');
 
-    Route::post('/kka-paud/cek-invoice', [InvoiceController::class, 'cekInvoicePaud'])->name('kka-paud.cekInvoice');
+    Route::get('/kka-paud/invoice', [CekPembayaranPaudController::class, 'showInvoiceForm'])->name('kka-paud.invoice');
+    Route::post('/kka-paud/cek-invoice', [CekPembayaranPaudController::class, 'cekInvoicePaud'])->name('kka-paud.cekInvoice');
 
 
 // Apply rate limiting to all routes
