@@ -12,7 +12,7 @@ class CekPembayaranPaudController extends Controller
 
     public function showInvoiceForm()
     {
-        return view('kka-paud.invoice');
+        return view('kka-paud.invoicepaud');
     }
 
     public function cekInvoicePaud(Request $request)
