@@ -79,7 +79,6 @@
                                     Anda dapat melihat atau mengunduh file PDF invoice Anda langsung dari sini.
                                 </li>
                             </ol>
-                        </div>
                         <form id="invoiceForm">
                             <div class="mb-3">
                                 <label for="npsn" class="form-label fw-semibold">Masukkan NPSN Sekolah</label>
