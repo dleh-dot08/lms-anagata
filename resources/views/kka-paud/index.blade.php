@@ -258,10 +258,6 @@
           Skema <span>Pelatihan</span>
         </h2>
         <section class="py-5" style="background-color: #f7fafd">
-          <div class="container">
-            <h2 class="text-center fw-bold mb-5 section-heading">
-              Skema <span>Pelatihan</span>
-            </h2>
             <div class="table-responsive mx-auto" style="max-width: 900px;">
               <table class="table" id="skemaPelatihanTable">
                 <thead>
