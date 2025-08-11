@@ -8,7 +8,7 @@ class CekPendaftaranController extends Controller
 {
     public function index()
     {
-        $csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpzd8ICvBeDIPxZwOl1n7oTrsPWhfc_HX_B5YVDZzoWH60W4TLcQ5lqnWLo4CA5J6J9t1nDD1U19M0/pub?gid=0&single=true&output=csv';
+        $csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vReWEoxjTD_Qvtygf2doavEexLwHB19qwrruKfKNaPIWnDKdRmNyePbcuC4dKSElsioM7sKgbxmvQ4A/pub?gid=1895052666&single=true&output=csv';
 
         try {
             $csvData = file_get_contents($csvUrl);
