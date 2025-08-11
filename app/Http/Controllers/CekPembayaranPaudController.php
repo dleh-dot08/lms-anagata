@@ -105,14 +105,24 @@ class CekPembayaranPaudController extends Controller
             $rows = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData));
             $headers = array_shift($rows);
 
+            // Fungsi cari index kolom case-insensitive + trim spasi
+            $findHeaderIndex = function ($search) use ($headers) {
+                foreach ($headers as $i => $header) {
+                    if (strcasecmp(trim($header), trim($search)) === 0) {
+                        return $i;
+                    }
+                }
+                return false;
+            };
+
             $headerMap = [
-                'NPSN'           => array_search('NPSN', $headers),
-                'Nama_Paud'      => array_search('NAMA SEKOLAH', $headers),
-                'Nama_Lokus'     => array_search('NAMA LOKUS', $headers),
-                'Nomor_Invoice'  => array_search('NO INVOICE', $headers),
-                'Bukti_Transfer' => array_search('BUKTI TRANSFER', $headers),
-                'No_Recipt'      => array_search('NO RECIPT', $headers),
-                'URL_Kwitansi'   => array_search('URL', $headers),
+                'NPSN'           => $findHeaderIndex('NPSN'),
+                'Nama_Paud'      => $findHeaderIndex('NAMA SEKOLAH'),
+                'Nama_Lokus'     => $findHeaderIndex('NAMA LOKUS'),
+                'Nomor_Invoice'  => $findHeaderIndex('NO INVOICE'),
+                'Bukti_Transfer' => $findHeaderIndex('BUKTI TRANSFER'),
+                'No_Recipt'      => $findHeaderIndex('NO RECIPT') !== false ? $findHeaderIndex('NO RECIPT') : $findHeaderIndex('NO RECEIPT'),
+                'URL_Kwitansi'   => $findHeaderIndex('URL'),
             ];
 
             foreach ($headerMap as $key => $index) {
@@ -123,6 +133,7 @@ class CekPembayaranPaudController extends Controller
 
             $found = false;
             $resultData = [];
+
             foreach ($rows as $row) {
                 $maxIndex = max(array_values($headerMap));
                 if (count($row) > $maxIndex && !empty($row[$headerMap['NPSN']])) {
@@ -158,4 +169,5 @@ class CekPembayaranPaudController extends Controller
             ], 500);
         }
     }
+
 }
