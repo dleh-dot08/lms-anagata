@@ -61,8 +61,8 @@
                     <div class="card-header bg-primary text-white text-center py-3">
                         <h3 class="fw-bold mb-0">Cek Invoice PAUD</h3>
                     </div>
-                     <div class="guide-section">
-                        <h2>Panduan Pencarian Invoice</h2>
+                    <div class="card-body p-4">
+                            <h4>Panduan Pencarian Invoice</h4>
                             <ol>
                                 <li>
                                     Silakan masukkan **Nomor Pokok Sekolah Nasional (NPSN)** Anda pada kolom di bawah ini.
@@ -80,7 +80,6 @@
                                 </li>
                             </ol>
                         </div>
-                    <div class="card-body p-4">
                         <form id="invoiceForm">
                             <div class="mb-3">
                                 <label for="npsn" class="form-label fw-semibold">Masukkan NPSN Sekolah</label>
