@@ -90,11 +90,11 @@ Route::get('/kka-paud/cek-pendaftaran', [CekPendaftaranController::class, 'index
     // Ini adalah route yang akan dipanggil oleh JavaScript fetch() di invoice.blade.php
     Route::post('/cek-invoice', [InvoiceController::class, 'checkInvoice'])->name('invoice.check'); // NAMA INI HARUS SAMA DENGAN route('invoice.check') DI BLADE
 
-    Route::get('/invoice-paud', [CekPembayaranPaudController::class, 'showInvoiceForm']);
-    Route::post('/cek-invoice-paud', [CekPembayaranPaudController::class, 'cekInvoicePaud']);
+    Route::get('/invoice-paud', [CekPembayaranPaudController::class, 'showInvoiceForm'])
+    ->name('kka-paud.invoice');
 
-    Route::get('/kwitansi-paud', [CekPembayaranPaudController::class, 'showKwitansiForm']);
-    Route::post('/cek-kwitansi-paud', [CekPembayaranPaudController::class, 'cekKwitansiPaud']);
+    Route::get('/kwitansi-paud', [CekPembayaranPaudController::class, 'showKwitansiForm'])
+        ->name('kka-paud.kwitansi');
 
 
 
