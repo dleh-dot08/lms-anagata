@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Cek Invoice PAUD</title>
+    <title>Cek Kwitansi PAUD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
@@ -37,7 +37,7 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav gap-3">
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="{{ url('/kka-paud') }}">Beranda</a></li>
-                     </li><li class="nav-item"><a class="nav-link fw-semibold text-dark" href="/kka-paud/cek-pendaftaran">Cek Status Pendaftaran</a></li>
+                    </li><li class="nav-item"><a class="nav-link fw-semibold text-dark" href="/kka-paud/cek-pendaftaran">Cek Status Pendaftaran</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id/faq">FAQ</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id">LMS-RuangAnagata</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://forms.gle/c32pQRw6dSW2TTqF8">Daftar Peserta</a></li>
@@ -59,33 +59,24 @@
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white text-center py-3">
-                        <h3 class="fw-bold mb-0">Cek Invoice PAUD</h3>
+                    <div class="card-header bg-success text-white text-center py-3">
+                        <h3 class="fw-bold mb-0">Cek Kwitansi PAUD</h3>
                     </div>
                     <div class="card-body p-4">
-                            <h4>Panduan Pencarian Invoice</h4>
-                            <ol>
-                                <li>
-                                    Silakan masukkan **Nomor Pokok Sekolah Nasional (NPSN)** Anda pada kolom di bawah ini.
-                                    NPSN adalah identitas unik sekolah Anda.
-                                </li>
-                                <li>
-                                    Pastikan NPSN yang Anda masukkan sudah benar dan sesuai dengan data yang Anda daftarkan.
-                                </li>
-                                <li>
-                                    Klik tombol **"Cari Invoice"**.
-                                </li>
-                                <li>
-                                    Jika NPSN Anda ditemukan dan memiliki invoice, detail invoice terbaru akan ditampilkan di halaman ini.
-                                    Anda dapat melihat atau mengunduh file PDF invoice Anda langsung dari sini.
-                                </li>
-                            </ol>
-                        <form id="invoiceForm">
+                        <h4>Panduan Pencarian Kwitansi</h4>
+                        <ol>
+                            <li>Masukkan <strong>Nomor Pokok Sekolah Nasional (NPSN)</strong> pada kolom di bawah.</li>
+                            <li>Pastikan NPSN benar sesuai data pendaftaran.</li>
+                            <li>Klik tombol <strong>"Cari Kwitansi"</strong>.</li>
+                            <li>Jika ditemukan, detail kwitansi terbaru akan muncul dan bisa diunduh.</li>
+                        </ol>
+
+                        <form id="kwitansiForm">
                             <div class="mb-3">
                                 <label for="npsn" class="form-label fw-semibold">Masukkan NPSN Sekolah</label>
                                 <input type="text" class="form-control" id="npsn" name="npsn" placeholder="Contoh: 12345678" required>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Cek Invoice</button>
+                            <button type="submit" class="btn btn-success w-100">Cek Kwitansi</button>
                         </form>
 
                         <div id="result" class="mt-4" style="display:none;">
@@ -97,18 +88,16 @@
         </div>
     </div>
 
-    {{-- Bootstrap JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-    {{-- AJAX Script --}}
     <script>
-        document.getElementById('invoiceForm').addEventListener('submit', function(e) {
+        document.getElementById('kwitansiForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const npsn = document.getElementById('npsn').value;
             const resultDiv = document.getElementById('result');
             const alertBox = resultDiv.querySelector('.alert');
 
-            fetch("{{ route('kka-paud.cekInvoice') }}", {
+            fetch("{{ route('kka-paud.cekKwitansi') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -123,7 +112,6 @@
                     alertBox.className = 'alert alert-success';
                     alertBox.innerHTML = '✅ ' + data.message;
 
-                    // Tampilkan tabel informasi
                     if (data.data) {
                         alertBox.innerHTML += `
                             <div class="mt-3">
@@ -132,8 +120,9 @@
                                     <tr><th>NPSN</th><td>${data.data.npsn}</td></tr>
                                     <tr><th>Nama PAUD</th><td>${data.data.nama_paud}</td></tr>
                                     <tr><th>No Invoice</th><td>${data.data.nomor_invoice}</td></tr>
-                                    <tr><th>Unduh Invoice</th>
-                                        <td><a href="${data.data.url_invoice}" target="_blank" class="btn btn-sm btn-primary">Unduh</a></td></tr>
+                                    <tr><th>No Receipt</th><td>${data.data.nomor_receipt}</td></tr>
+                                    <tr><th>Unduh Kwitansi</th>
+                                        <td><a href="${data.data.url_kwitansi}" target="_blank" class="btn btn-sm btn-success">Unduh</a></td></tr>
                                 </table>
                             </div>
                         `;
@@ -146,7 +135,6 @@
                     alertBox.innerHTML = '❌ ' + data.message;
                 }
             })
-
             .catch(err => {
                 resultDiv.style.display = 'block';
                 alertBox.className = 'alert alert-danger';

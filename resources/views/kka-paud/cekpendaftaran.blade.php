@@ -58,16 +58,18 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav gap-3">
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="{{ url('/kka-paud') }}">Beranda</a></li>
+                    </li><li class="nav-item"><a class="nav-link fw-semibold text-dark" href="/kka-paud/cek-pendaftaran">Cek Status Pendaftaran</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id/faq">FAQ</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://ruanganagata.id">LMS-RuangAnagata</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://forms.gle/c32pQRw6dSW2TTqF8">Daftar Peserta</a></li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" role="button" data-bs-toggle="dropdown">Pembayaran</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('kka-paud.invoice') }}">Unduh Invoice</a></li>
-                            <li><a class="dropdown-item" href="#">Unduh Receipt</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Upload Bukti Pembayaran</a></li>
+                            <li><a class="dropdown-item" href="https://forms.gle/aVyzgGRFqsKwbNuGA">Upload Bukti Pembayaran</a></li>
+                            <li><a class="dropdown-item" href="{{ route('kka-paud.kwitansi') }}">Unduh Receipt</a></li>
                         </ul>
                     </li>
                 </ul>
