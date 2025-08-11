@@ -46,7 +46,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('kka-paud.invoice') }}">Unduh Invoice</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="https://forms.gle/aVyzgGRFqsKwbNuGA">Upload Bukti Pembayaran</a></li>
+                            <li><a class="dropdown-item" href="https://forms.gle/y99iyuTFV1vWDMv78">Upload Bukti Pembayaran</a></li>
                             <li><a class="dropdown-item" href="{{ route('kka-paud.kwitansi') }}">Unduh Receipt</a></li>
                         </ul>
                     </li>
@@ -122,7 +122,13 @@
                                     <tr><th>No Invoice</th><td>${data.data.nomor_invoice}</td></tr>
                                     <tr><th>No Receipt</th><td>${data.data.nomor_receipt}</td></tr>
                                     <tr><th>Unduh Kwitansi</th>
-                                        <td><a href="${data.data.url_kwitansi}" target="_blank" class="btn btn-sm btn-success">Unduh</a></td></tr>
+                                        <td>
+                                            <a href="${data.data.url_kwitansi}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-success">
+                                                <i class="bi bi-receipt"></i> Unduh
+                                            </a>
+                                        </td>
+                                    </tr>
+
                                 </table>
                             </div>
                         `;
