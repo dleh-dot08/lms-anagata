@@ -91,11 +91,16 @@ Route::get('/kka-paud/cek-pendaftaran', [CekPendaftaranController::class, 'index
     Route::post('/cek-invoice', [InvoiceController::class, 'checkInvoice'])->name('invoice.check'); // NAMA INI HARUS SAMA DENGAN route('invoice.check') DI BLADE
 
     Route::get('/invoice-paud', [CekPembayaranPaudController::class, 'showInvoiceForm'])
-    ->name('kka-paud.invoice');
+        ->name('kka-paud.invoice');
+
+    Route::post('/cek-invoice-paud', [CekPembayaranPaudController::class, 'cekInvoicePaud'])
+        ->name('kka-paud.cekInvoice');
 
     Route::get('/kwitansi-paud', [CekPembayaranPaudController::class, 'showKwitansiForm'])
         ->name('kka-paud.kwitansi');
 
+    Route::post('/cek-kwitansi-paud', [CekPembayaranPaudController::class, 'cekKwitansiPaud'])
+        ->name('kka-paud.cekKwitansi');
 
 
 // Apply rate limiting to all routes
