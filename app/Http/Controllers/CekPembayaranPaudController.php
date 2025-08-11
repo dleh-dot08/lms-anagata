@@ -97,5 +97,11 @@ class CekPembayaranPaudController extends Controller
                 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage(),
             ], 500);
         }
+        
+    }
+
+    public function showInvoiceForm()
+    {
+        return view('invoicepaud');
     }
 }
