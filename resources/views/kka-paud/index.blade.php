@@ -156,14 +156,6 @@
       </div>
     </section>
 
-    <section class="py-5" style="background-color: #f7fafd">
-      <div class="container">
-        <h2 class="text-center fw-bold mb-5 section-heading">
-          Skema <span>Pelatihan</span>
-        </h2>
-        </div>
-    </section>
-
     <section class="container py-5 mt-4">
       <div class="text-center mb-5">
         <h2 class="fw-bold section-heading">
@@ -193,6 +185,98 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="py-5" style="background-color: #f7fafd">
+      <div class="container">
+        <h2 class="text-center fw-bold mb-5 section-heading">
+          Skema <span>Pelatihan</span>
+        </h2>
+        
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2">No</th>
+              <th rowspan="2">Materi</th>
+              <th rowspan="2">JP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A</td>
+              <td colspan="2"><b>Materi Pokok</b></td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Materi Pembelajaran mendalam dan pengantar pembelajaran koding PAUD</td>
+              <td>1 JP</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Konsep dan prinsip berpikir komputasional pada anak usia dini</td>
+              <td>2 JP</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Pembelajaran koding plugged pada PAUD</td>
+              <td>2 JP</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Praktek pembelajaran koding plugged pada PAUD</td>
+              <td>3 JP</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Simulasi praktek pembelajaran koding pada PAUD</td>
+              <td>3 JP</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Pengantar pemanfaatan KA dan etika penggunaan perangkat digital di satuan PAUD</td>
+              <td>2 JP</td>
+            </tr>
+            <tr>
+              <td>B</td>
+              <td colspan="2"><b>Rencana Tindak Lanjut (RTL)</b></td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Peserta melakukan pembelajaran KKA kepada Peserta Didik dan mendokumentasikan dalam bentuk video dengan durasi maksimal 15 menit</td>
+              <td>1 JP</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Fasilitator/Pengajar menilai video pembelajaran dengan metode sampling</td>
+              <td>1 JP</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Diskusi Terpumpun melalui Daring</td>
+              <td>1 JP</td>
+            </tr>
+            <tr>
+              <td>C</td>
+              <td colspan="2"><b>Penunjang</b></td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Pre-Test</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Post-Test</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="2">Total</td>
+              <td>16 JP</td>
+            </tr>
+          </tbody>
+        </table>
+
+        </div>
     </section>
 
     <section class="py-5" style="background-color: #f8fafc">
