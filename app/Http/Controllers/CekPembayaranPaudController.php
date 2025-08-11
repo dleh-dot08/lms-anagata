@@ -105,24 +105,17 @@ class CekPembayaranPaudController extends Controller
             $rows = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData));
             $headers = array_shift($rows);
 
-            // Fungsi cari index kolom case-insensitive + trim spasi
-            $findHeaderIndex = function ($search) use ($headers) {
-                foreach ($headers as $i => $header) {
-                    if (strcasecmp(trim($header), trim($search)) === 0) {
-                        return $i;
-                    }
-                }
-                return false;
-            };
+            // Normalisasi header (case-insensitive & trim)
+            $normalizedHeaders = array_map(fn($h) => strtolower(trim($h)), $headers);
 
             $headerMap = [
-                'NPSN'           => $findHeaderIndex('NPSN'),
-                'Nama_Paud'      => $findHeaderIndex('NAMA SEKOLAH'),
-                'Nama_Lokus'     => $findHeaderIndex('NAMA LOKUS'),
-                'Nomor_Invoice'  => $findHeaderIndex('NO INVOICE'),
-                'Bukti_Transfer' => $findHeaderIndex('BUKTI TRANSFER'),
-                'No_Recipt'      => $findHeaderIndex('NO RECIPT') !== false ? $findHeaderIndex('NO RECIPT') : $findHeaderIndex('NO RECEIPT'),
-                'URL_Kwitansi'   => $findHeaderIndex('URL'),
+                'NPSN'           => array_search('npsn', $normalizedHeaders),
+                'Nama_Paud'      => array_search('nama sekolah', $normalizedHeaders),
+                'Nama_Lokus'     => array_search('nama lokus', $normalizedHeaders),
+                'Nomor_Invoice'  => array_search('no invoice', $normalizedHeaders),
+                'Bukti_Transfer' => array_search('bukti transfer', $normalizedHeaders),
+                'No_Recipt'      => array_search('no recipt', $normalizedHeaders),
+                'URL_Kwitansi'   => array_search('url', $normalizedHeaders),
             ];
 
             foreach ($headerMap as $key => $index) {
@@ -133,22 +126,35 @@ class CekPembayaranPaudController extends Controller
 
             $found = false;
             $resultData = [];
+            $bestScore = -1;
 
             foreach ($rows as $row) {
                 $maxIndex = max(array_values($headerMap));
                 if (count($row) > $maxIndex && !empty($row[$headerMap['NPSN']])) {
                     if (strcasecmp(trim($row[$headerMap['NPSN']]), $inputNPSN) === 0) {
-                        $found = true;
-                        $resultData = [
-                            'npsn'           => $row[$headerMap['NPSN']],
-                            'nama_paud'      => $row[$headerMap['Nama_Paud']],
-                            'nama_lokus'     => $row[$headerMap['Nama_Lokus']],
-                            'nomor_invoice'  => $row[$headerMap['Nomor_Invoice']],
-                            'bukti_transfer' => $row[$headerMap['Bukti_Transfer']],
-                            'no_recipt'      => $row[$headerMap['No_Recipt']],
-                            'url_kwitansi'   => $row[$headerMap['URL_Kwitansi']],
-                        ];
-                        break;
+
+                        // Hitung skor kelengkapan
+                        $score = 0;
+                        foreach (['Nomor_Invoice', 'Bukti_Transfer', 'No_Recipt', 'URL_Kwitansi'] as $field) {
+                            if (!empty(trim($row[$headerMap[$field]]))) {
+                                $score++;
+                            }
+                        }
+
+                        // Pilih baris dengan skor kelengkapan tertinggi
+                        if ($score > $bestScore) {
+                            $bestScore = $score;
+                            $found = true;
+                            $resultData = [
+                                'npsn'           => $row[$headerMap['NPSN']],
+                                'nama_paud'      => $row[$headerMap['Nama_Paud']],
+                                'nama_lokus'     => $row[$headerMap['Nama_Lokus']],
+                                'nomor_invoice'  => $row[$headerMap['Nomor_Invoice']],
+                                'bukti_transfer' => $row[$headerMap['Bukti_Transfer']],
+                                'no_recipt'      => $row[$headerMap['No_Recipt']],
+                                'url_kwitansi'   => $row[$headerMap['URL_Kwitansi']],
+                            ];
+                        }
                     }
                 }
             }
@@ -169,5 +175,4 @@ class CekPembayaranPaudController extends Controller
             ], 500);
         }
     }
-
 }
