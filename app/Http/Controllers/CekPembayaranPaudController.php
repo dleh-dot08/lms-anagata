@@ -9,18 +9,9 @@ use Exception;
 class CekPembayaranPaudController extends Controller
 {
     const FORM_RESPONSES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vReWEoxjTD_Qvtygf2doavEexLwHB19qwrruKfKNaPIWnDKdRmNyePbcuC4dKSElsioM7sKgbxmvQ4A/pub?gid=995897769&single=true&output=csv';
+    const KWITANSI_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQafhQuw8fTlxB3yFb5391UirQQixHd3WWjOjTscAZotO_SVg1U7qDwEWTZWa_b6DdST_W1IDIFVStZ/pub?gid=1667067318&single=true&output=csv';
 
-    // Fungsi helper untuk cari kolom secara case-insensitive
-    private function findColumnIndex($headers, $name)
-    {
-        foreach ($headers as $index => $header) {
-            if (strcasecmp(trim($header), trim($name)) === 0) {
-                return $index;
-            }
-        }
-        return false;
-    }
-
+    /** ================= INVOICE ================= **/
     public function showInvoiceForm()
     {
         return view('kka-paud.invoicepaud');
@@ -36,44 +27,39 @@ class CekPembayaranPaudController extends Controller
         $client = new Client();
 
         try {
-            $response1 = $client->get(self::FORM_RESPONSES_CSV_URL);
-            $csvData1 = (string) $response1->getBody();
-            $rows1 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData1));
-            $headers1 = array_shift($rows1);
+            $response = $client->get(self::FORM_RESPONSES_CSV_URL);
+            $csvData = (string) $response->getBody();
+            $rows = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData));
+            $headers = array_shift($rows);
 
-            $formHeaderMap = [
-                'NPSN_Form'       => array_search('NPSN SEKOLAH', $headers1),
-                'Nama_Paud'       => array_search('NAMA SEKOLAH ', $headers1),
-                'Nama_Peserta'    => array_search('NAMA LENGKAP (GELAR LENGKAP)', $headers1),
-                'Nomor Invoice'   => array_search('NO INVOICE', $headers1),
-                'URL PDF Invoice' => array_search('URL', $headers1),
+            $headerMap = [
+                'NPSN_Form'       => array_search('NPSN SEKOLAH', $headers),
+                'Nama_Paud'       => array_search('NAMA SEKOLAH ', $headers),
+                'Nama_Peserta'    => array_search('NAMA LENGKAP (GELAR LENGKAP)', $headers),
+                'Nomor_Invoice'   => array_search('NO INVOICE', $headers),
+                'URL_PDF'         => array_search('URL', $headers),
             ];
 
-            foreach ($formHeaderMap as $key => $index) {
+            foreach ($headerMap as $key => $index) {
                 if ($index === false) {
-                    throw new Exception("Kolom '{$key}' tidak ditemukan di 'Form Responses 1' CSV.");
+                    throw new Exception("Kolom '{$key}' tidak ditemukan di CSV Invoice.");
                 }
             }
 
             $found = false;
             $resultData = [];
-            foreach ($rows1 as $row) {
-                $maxIndex1 = max(array_values($formHeaderMap));
-                if (count($row) > $maxIndex1 && !empty($row[$formHeaderMap['NPSN_Form']])) {
-                    if (strcasecmp(trim($row[$formHeaderMap['NPSN_Form']]), $inputNPSN) === 0) {
-                        $nomorInvoice  = trim($row[$formHeaderMap['Nomor Invoice']]);
-                        $urlPdfInvoice = trim($row[$formHeaderMap['URL PDF Invoice']]);
-                        $namaPaud      = trim($row[$formHeaderMap['Nama_Paud']]);
-                        $namaPeserta   = trim($row[$formHeaderMap['Nama_Peserta']]);
-
-                        if (!empty($nomorInvoice) && !empty($urlPdfInvoice)) {
+            foreach ($rows as $row) {
+                $maxIndex = max(array_values($headerMap));
+                if (count($row) > $maxIndex && !empty($row[$headerMap['NPSN_Form']])) {
+                    if (strcasecmp(trim($row[$headerMap['NPSN_Form']]), $inputNPSN) === 0) {
+                        if (!empty($row[$headerMap['Nomor_Invoice']]) && !empty($row[$headerMap['URL_PDF']])) {
                             $found = true;
                             $resultData = [
-                                'nama_paud'      => $namaPaud,
-                                'nama_peserta'   => $namaPeserta,
+                                'nama_paud'      => $row[$headerMap['Nama_Paud']],
+                                'nama_peserta'   => $row[$headerMap['Nama_Peserta']],
                                 'npsn'           => $inputNPSN,
-                                'nomor_invoice'  => $nomorInvoice,
-                                'url_invoice'    => $urlPdfInvoice,
+                                'nomor_invoice'  => $row[$headerMap['Nomor_Invoice']],
+                                'url_invoice'    => $row[$headerMap['URL_PDF']],
                             ];
                             break;
                         }
@@ -89,7 +75,6 @@ class CekPembayaranPaudController extends Controller
                     : 'Invoice PAUD belum pernah dibuat.',
                 'data'    => $found ? $resultData : null
             ]);
-
         } catch (Exception $e) {
             \Log::error("Cek Invoice PAUD Error: " . $e->getMessage());
             return response()->json([
@@ -99,4 +84,78 @@ class CekPembayaranPaudController extends Controller
         }
     }
 
+    /** ================= KWITANSI ================= **/
+    public function showKwitansiForm()
+    {
+        return view('kka-paud.kwitansipaud');
+    }
+
+    public function cekKwitansiPaud(Request $request)
+    {
+        $request->validate([
+            'npsn' => 'required|string',
+        ]);
+
+        $inputNPSN = trim($request->input('npsn'));
+        $client = new Client();
+
+        try {
+            $response = $client->get(self::KWITANSI_CSV_URL);
+            $csvData = (string) $response->getBody();
+            $rows = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData));
+            $headers = array_shift($rows);
+
+            $headerMap = [
+                'NPSN'           => array_search('NPSN', $headers),
+                'Nama_Paud'      => array_search('NAMA SEKOLAH', $headers),
+                'Nama_Lokus'     => array_search('NAMA LOKUS', $headers),
+                'Nomor_Invoice'  => array_search('NO INVOICE', $headers),
+                'Bukti_Transfer' => array_search('BUKTI TRANSFER', $headers),
+                'No_Recipt'      => array_search('NO RECIPT', $headers),
+                'URL_Kwitansi'   => array_search('URL', $headers),
+            ];
+
+            foreach ($headerMap as $key => $index) {
+                if ($index === false) {
+                    throw new Exception("Kolom '{$key}' tidak ditemukan di CSV Kwitansi.");
+                }
+            }
+
+            $found = false;
+            $resultData = [];
+            foreach ($rows as $row) {
+                $maxIndex = max(array_values($headerMap));
+                if (count($row) > $maxIndex && !empty($row[$headerMap['NPSN']])) {
+                    if (strcasecmp(trim($row[$headerMap['NPSN']]), $inputNPSN) === 0) {
+                        $found = true;
+                        $resultData = [
+                            'npsn'           => $row[$headerMap['NPSN']],
+                            'nama_paud'      => $row[$headerMap['Nama_Paud']],
+                            'nama_lokus'     => $row[$headerMap['Nama_Lokus']],
+                            'nomor_invoice'  => $row[$headerMap['Nomor_Invoice']],
+                            'bukti_transfer' => $row[$headerMap['Bukti_Transfer']],
+                            'no_recipt'      => $row[$headerMap['No_Recipt']],
+                            'url_kwitansi'   => $row[$headerMap['URL_Kwitansi']],
+                        ];
+                        break;
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'status'  => $found ? 'sudah' : 'belum',
+                'message' => $found
+                    ? 'Kwitansi PAUD sudah pernah dibuat.'
+                    : 'Kwitansi PAUD belum pernah dibuat.',
+                'data'    => $found ? $resultData : null
+            ]);
+        } catch (Exception $e) {
+            \Log::error("Cek Kwitansi PAUD Error: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
