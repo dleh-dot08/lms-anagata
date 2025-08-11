@@ -58,6 +58,71 @@
       .list-unstyled li a:hover {
         color: #fff;
       }
+      /* Style khusus untuk tabel di bagian "Skema Pelatihan" */
+      #skemaPelatihanTable {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        border-collapse: separate;
+        border-spacing: 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden; /* Ensures rounded corners are visible */
+      }
+
+      #skemaPelatihanTable th, 
+      #skemaPelatihanTable td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      #skemaPelatihanTable th {
+        background-color: #002b5b; /* Dark blue from section heading */
+        color: white;
+        font-weight: bold;
+        text-align: center;
+      }
+      
+      #skemaPelatihanTable tr:last-child td {
+        border-bottom: none;
+      }
+      
+      #skemaPelatihanTable tbody tr:hover {
+        background-color: #f5f5f5;
+      }
+      
+      #skemaPelatihanTable .section-header {
+        background-color: #ff9900; /* Orange color */
+        color: white;
+        font-weight: bold;
+      }
+      
+      #skemaPelatihanTable .section-header td {
+        padding: 12px 15px;
+      }
+      
+      #skemaPelatihanTable .total-row {
+        background-color: #fffaf3; /* Light background for total row */
+        font-weight: bold;
+      }
+      
+      #skemaPelatihanTable .total-row td {
+        text-align: right;
+      }
+      
+      #skemaPelatihanTable .total-row td:first-child {
+        text-align: left;
+      }
+      
+      #skemaPelatihanTable .total-row td:last-child {
+        text-align: center;
+      }
+      
+      /* Alignment for the 'No' column */
+      #skemaPelatihanTable td:first-child {
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -192,90 +257,97 @@
         <h2 class="text-center fw-bold mb-5 section-heading">
           Skema <span>Pelatihan</span>
         </h2>
-        
-        <table>
-          <thead>
-            <tr>
-              <th rowspan="2">No</th>
-              <th rowspan="2">Materi</th>
-              <th rowspan="2">JP</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>A</td>
-              <td colspan="2"><b>Materi Pokok</b></td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Materi Pembelajaran mendalam dan pengantar pembelajaran koding PAUD</td>
-              <td>1 JP</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Konsep dan prinsip berpikir komputasional pada anak usia dini</td>
-              <td>2 JP</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Pembelajaran koding plugged pada PAUD</td>
-              <td>2 JP</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Praktek pembelajaran koding plugged pada PAUD</td>
-              <td>3 JP</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Simulasi praktek pembelajaran koding pada PAUD</td>
-              <td>3 JP</td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>Pengantar pemanfaatan KA dan etika penggunaan perangkat digital di satuan PAUD</td>
-              <td>2 JP</td>
-            </tr>
-            <tr>
-              <td>B</td>
-              <td colspan="2"><b>Rencana Tindak Lanjut (RTL)</b></td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Peserta melakukan pembelajaran KKA kepada Peserta Didik dan mendokumentasikan dalam bentuk video dengan durasi maksimal 15 menit</td>
-              <td>1 JP</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Fasilitator/Pengajar menilai video pembelajaran dengan metode sampling</td>
-              <td>1 JP</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Diskusi Terpumpun melalui Daring</td>
-              <td>1 JP</td>
-            </tr>
-            <tr>
-              <td>C</td>
-              <td colspan="2"><b>Penunjang</b></td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Pre-Test</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Post-Test</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colspan="2">Total</td>
-              <td>16 JP</td>
-            </tr>
-          </tbody>
-        </table>
-
+        <section class="py-5" style="background-color: #f7fafd">
+          <div class="container">
+            <h2 class="text-center fw-bold mb-5 section-heading">
+              Skema <span>Pelatihan</span>
+            </h2>
+            <div class="table-responsive mx-auto" style="max-width: 900px;">
+              <table class="table" id="skemaPelatihanTable">
+                <thead>
+                  <tr>
+                    <th rowspan="2">No</th>
+                    <th rowspan="2">Materi</th>
+                    <th rowspan="2">JP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="section-header">
+                    <td>A</td>
+                    <td colspan="2">Materi Pokok</td>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>Materi Pembelajaran mendalam dan pengantar pembelajaran koding PAUD</td>
+                    <td>1 JP</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Konsep dan prinsip berpikir komputasional pada anak usia dini</td>
+                    <td>2 JP</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Pembelajaran koding plugged pada PAUD</td>
+                    <td>2 JP</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Praktek pembelajaran koding plugged pada PAUD</td>
+                    <td>3 JP</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Simulasi praktek pembelajaran koding pada PAUD</td>
+                    <td>3 JP</td>
+                  </tr>
+                  <tr>
+                    <td>6</td>
+                    <td>Pengantar pemanfaatan KA dan etika penggunaan perangkat digital di satuan PAUD</td>
+                    <td>2 JP</td>
+                  </tr>
+                  <tr class="section-header">
+                    <td>B</td>
+                    <td colspan="2">Rencana Tindak Lanjut (RTL)</td>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>Peserta melakukan pembelajaran KKA kepada Peserta Didik dan mendokumentasikan dalam bentuk video dengan durasi maksimal 15 menit</td>
+                    <td>1 JP</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Fasilitator/Pengajar menilai video pembelajaran dengan metode sampling</td>
+                    <td>1 JP</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Diskusi Terpumpun melalui Daring</td>
+                    <td>1 JP</td>
+                  </tr>
+                  <tr class="section-header">
+                    <td>C</td>
+                    <td colspan="2">Penunjang</td>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>Pre-Test</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Post-Test</td>
+                    <td></td>
+                  </tr>
+                  <tr class="total-row">
+                    <td colspan="2">Total</td>
+                    <td>16 JP</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
         </div>
     </section>
 
