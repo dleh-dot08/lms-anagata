@@ -61,6 +61,25 @@
                     <div class="card-header bg-primary text-white text-center py-3">
                         <h3 class="fw-bold mb-0">Cek Invoice PAUD</h3>
                     </div>
+                     <div class="guide-section">
+                        <h2>Panduan Pencarian Invoice</h2>
+                            <ol>
+                                <li>
+                                    Silakan masukkan **Nomor Pokok Sekolah Nasional (NPSN)** Anda pada kolom di bawah ini.
+                                    NPSN adalah identitas unik sekolah Anda.
+                                </li>
+                                <li>
+                                    Pastikan NPSN yang Anda masukkan sudah benar dan sesuai dengan data yang Anda daftarkan.
+                                </li>
+                                <li>
+                                    Klik tombol **"Cari Invoice"**.
+                                </li>
+                                <li>
+                                    Jika NPSN Anda ditemukan dan memiliki invoice, detail invoice terbaru akan ditampilkan di halaman ini.
+                                    Anda dapat melihat atau mengunduh file PDF invoice Anda langsung dari sini.
+                                </li>
+                            </ol>
+                        </div>
                     <div class="card-body p-4">
                         <form id="invoiceForm">
                             <div class="mb-3">
