@@ -8,23 +8,9 @@ use Exception;
 
 class InvoiceController extends Controller
 {
-    // URL publik CSV untuk sheet "Form Responses 1"
     const FORM_RESPONSES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNzBpELuuwAn8mGFO3f5iKnmOGB1TWToRYNTouAS5I7bP6mRPSR6GdyBhCjtybEtO6ftxv1REe5DQo/pub?gid=2102280756&single=true&output=csv';
-
-    // URL publik CSV untuk sheet "NPSN"
     const NPSN_MASTER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNzBpELuuwAn8mGFO3f5iKnmOGB1TWToRYNTouAS5I7bP6mRPSR6GdyBhCjtybEtO6ftxv1REe5DQo/pub?gid=1103969526&single=true&output=csv';
 
-    // --- PAUD ---
-    const FORM_RESPONSES_PAUD_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=XXXXXXXXXX&single=true&output=csv';
-    const NPSN_MASTER_PAUD_CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=YYYYYYYYYY&single=true&output=csv';
-
-
-    /**
-     * Memproses permintaan AJAX untuk mencari invoice berdasarkan NPSN.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function checkInvoice(Request $request)
     {
         $request->validate([
@@ -33,10 +19,9 @@ class InvoiceController extends Controller
 
         $inputNPSN = trim($request->input('npsn'));
         $client = new Client();
-        $invoiceDetails = [];
 
         try {
-            // --- 1. Ambil data dari "Form Responses 1" ---
+            // --- Ambil data dari "Form Responses 1" ---
             $response1 = $client->get(self::FORM_RESPONSES_CSV_URL);
             $csvData1 = (string) $response1->getBody();
             $rows1 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData1));
@@ -46,56 +31,46 @@ class InvoiceController extends Controller
                 'Timestamp'       => array_search('Timestamp', $headers1),
                 'EMAIL'           => array_search('EMAIL', $headers1),
                 'NPSN_Form'       => array_search('NPSN', $headers1),
-                'Nomor Invoice'   => array_search('Column 1', $headers1), // Asumsi Column 1 adalah Nomor Invoice
-                'URL PDF Invoice' => array_search('Column 2', $headers1), // Asumsi Column 2 adalah URL PDF Invoice
+                'Nomor Invoice'   => array_search('Column 1', $headers1),
+                'URL PDF Invoice' => array_search('Column 2', $headers1),
             ];
 
             foreach ($formHeaderMap as $key => $index) {
                 if ($index === false) {
-                    throw new Exception("Kolom '{$key}' tidak ditemukan di 'Form Responses 1' CSV. Mohon periksa header kolom.");
+                    throw new Exception("Kolom '{$key}' tidak ditemukan di 'Form Responses 1' CSV.");
                 }
             }
 
-            $validFormResponses = [];
+            $foundFormResponse = null;
+            // Scan dari atas ke bawah, tapi simpan hanya data terakhir yang valid
             foreach ($rows1 as $row) {
-                $maxIndex1 = max(array_values($formHeaderMap));
-                if (count($row) > $maxIndex1 && !empty($row[$formHeaderMap['NPSN_Form']])) {
+                $maxIndex = max(array_values($formHeaderMap));
+                if (count($row) > $maxIndex && !empty($row[$formHeaderMap['NPSN_Form']])) {
                     if (strcasecmp(trim($row[$formHeaderMap['NPSN_Form']]), $inputNPSN) === 0) {
                         $nomorInvoice = trim($row[$formHeaderMap['Nomor Invoice']]);
                         $urlPdfInvoice = trim($row[$formHeaderMap['URL PDF Invoice']]);
-
-                        // Hanya tambahkan jika Nomor Invoice DAN URL PDF Invoice tidak kosong
                         if (!empty($nomorInvoice) && !empty($urlPdfInvoice)) {
-                            $validFormResponses[] = [
-                                'timestamp'      => $row[$formHeaderMap['Timestamp']],
-                                'email'          => $row[$formHeaderMap['EMAIL']],
-                                'npsn'           => trim($row[$formHeaderMap['NPSN_Form']]),
-                                'no_invoice'     => $nomorInvoice,
-                                'url_pdf_invoice'=> $urlPdfInvoice,
-                                // Convert timestamp to a comparable format (e.g., Unix timestamp) for sorting
-                                'parsed_timestamp' => \DateTime::createFromFormat('d/m/Y H:i:s', $row[$formHeaderMap['Timestamp']])->getTimestamp(),
+                            $foundFormResponse = [
+                                'timestamp'         => $row[$formHeaderMap['Timestamp']],
+                                'email'             => $row[$formHeaderMap['EMAIL']],
+                                'npsn'              => trim($row[$formHeaderMap['NPSN_Form']]),
+                                'no_invoice'        => $nomorInvoice,
+                                'url_pdf_invoice'   => $urlPdfInvoice,
                             ];
+                            // Simpan, tapi terus lanjut loop untuk pastikan data terakhir
                         }
                     }
                 }
             }
 
-            if (empty($validFormResponses)) {
+            if (!$foundFormResponse) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'NPSN ditemukan, namun tidak ada data invoice lengkap (Nomor Invoice atau URL PDF) yang valid untuk NPSN ini.',
+                    'message' => 'NPSN ditemukan, namun tidak ada data invoice lengkap (Nomor Invoice dan URL PDF) yang valid.',
                 ]);
             }
 
-            // Sort by timestamp descending (latest first)
-            usort($validFormResponses, function($a, $b) {
-                return $b['parsed_timestamp'] - $a['parsed_timestamp'];
-            });
-
-            // Ambil entri terbaru yang valid
-            $foundFormResponse = $validFormResponses[0];
-
-            // --- 2. Ambil data dari sheet "NPSN" ---
+            // --- Ambil data dari sheet "NPSN" ---
             $response2 = $client->get(self::NPSN_MASTER_CSV_URL);
             $csvData2 = (string) $response2->getBody();
             $rows2 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData2));
@@ -111,7 +86,7 @@ class InvoiceController extends Controller
 
             foreach ($npsnMasterHeaderMap as $key => $index) {
                 if ($index === false) {
-                    throw new Exception("Kolom '{$key}' tidak ditemukan di 'NPSN' CSV. Mohon periksa header kolom.");
+                    throw new Exception("Kolom '{$key}' tidak ditemukan di 'NPSN' CSV.");
                 }
             }
 
@@ -132,8 +107,6 @@ class InvoiceController extends Controller
             }
 
             if (!$foundNPSNMasterData) {
-                // NPSN tidak ditemukan di master data sekolah, tapi mungkin invoice validnya ada.
-                // Tetap kembalikan invoice, tapi dengan detail sekolah 'N/A'
                 $foundNPSNMasterData = [
                     'nama_sekolah'      => 'Tidak Ditemukan',
                     'provinsi'          => 'Tidak Ditemukan',
@@ -142,7 +115,6 @@ class InvoiceController extends Controller
                 ];
             }
 
-            // --- 3. Gabungkan dan kembalikan data ---
             $invoiceDetails = array_merge($foundFormResponse, $foundNPSNMasterData);
 
             return response()->json([
@@ -182,11 +154,9 @@ class InvoiceController extends Controller
         $client = new Client();
 
         try {
-            // --- CSV khusus PAUD ---
             $FORM_RESPONSES_PAUD_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vReWEoxjTD_Qvtygf2doavEexLwHB19qwrruKfKNaPIWnDKdRmNyePbcuC4dKSElsioM7sKgbxmvQ4A/pub?gid=995897769&single=true&output=csv';
-            $MASTER_NPSN_PAUD_CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vReWEoxjTD_Qvtygf2doavEexLwHB19qwrruKfKNaPIWnDKdRmNyePbcuC4dKSElsioM7sKgbxmvQ4A/pub?gid=1723572662&single=true&output=csv';
+            $MASTER_NPSN_PAUD_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vReWEoxjTD_Qvtygf2doavEexLwHB19qwrruKfKNaPIWnDKdRmNyePbcuC4dKSElsioM7sKgbxmvQ4A/pub?gid=1723572662&single=true&output=csv';
 
-            // Ambil data form PAUD
             $response1 = $client->get($FORM_RESPONSES_PAUD_CSV_URL);
             $csvData1 = (string) $response1->getBody();
             $rows1 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData1));
@@ -219,7 +189,6 @@ class InvoiceController extends Controller
                 }
             }
 
-            // Ambil data master NPSN PAUD
             $response2 = $client->get($MASTER_NPSN_PAUD_CSV_URL);
             $csvData2 = (string) $response2->getBody();
             $rows2 = array_map('str_getcsv', preg_split("/((\r?\n)|(\r\n?))/", $csvData2));
@@ -256,7 +225,4 @@ class InvoiceController extends Controller
             ], 500);
         }
     }
-
-
-
 }
