@@ -8,8 +8,8 @@ use Exception;
 
 class InvoiceController extends Controller
 {
-    const FORM_RESPONSES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNzBpELuuwAn8mGFO3f5iKnmOGB1TWToRYNTouAS5I7bP6mRPSR6GdyBhCjtybEtO6ftxv1REe5DQo/pub?gid=2102280756&single=true&output=csv';
-    const NPSN_MASTER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNzBpELuuwAn8mGFO3f5iKnmOGB1TWToRYNTouAS5I7bP6mRPSR6GdyBhCjtybEtO6ftxv1REe5DQo/pub?gid=1103969526&single=true&output=csv';
+    const FORM_RESPONSES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1zwJA7YZJTDqV3O5S31Y4rl93skO-kfZ71sBemM8xiS4/export?format=csv&gid=2102280756';
+    const NPSN_MASTER_CSV_URL = 'https://docs.google.com/spreadsheets/d/1zwJA7YZJTDqV3O5S31Y4rl93skO-kfZ71sBemM8xiS4/export?format=csv&gid=1103969526';
 
     public function checkInvoice(Request $request)
     {

@@ -10,7 +10,7 @@ class ReciptController extends Controller
 {
     // GANTI URL INI dengan URL CSV yang Anda dapatkan dari publikasi Google Sheet
     // PASTIKAN INI URL YANG BERAKHIR DENGAN `output=csv`
-    const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQOFbseWnJ4BQ_WCUx3fIi0KAGhOphAP2Lgwb5yf59n3jRvsMIIBWBwrsyq1y6_oSMXRdZ9_FpKdYeU/pub?gid=1957615865&single=true&output=csv';
+    const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ICkAubkouudNTmXcDpDt6fSze5OTuXKUMeruB-P8mR8/export?format=csv&gid=1957615865';
 
     /**
      * Menampilkan form untuk mencari NPSN dan menampilkan detail kwitansinya.
