@@ -78,7 +78,7 @@
                                             <tr>
                                                 <td>{{ $peserta->name }}</td>
                                                 <td>{{ $peserta->email }}</td>
-                                                <td>{{ $peserta->created_at->format('d M Y') }}</td>
+                                                <td>{{ $peserta->created_at ? $peserta->created_at->format('d M Y') : 'N/A' }}</td>
                                             </tr>
                                         @empty
                                             <tr>
