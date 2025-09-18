@@ -29,7 +29,10 @@ class SchoolAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings
     public function query()
     {
         $query = Attendance::with(['user', 'user.kelas', 'user.jenjang', 'recordedByMentor'])
-                            ->whereHas('user', fn($q) => $q->where('sekolah_id', $this->schoolId));
+        ->whereHas('user', function ($q) {
+            $q->where('sekolah_id', $this->schoolId)
+              ->whereIn('role_id', [2, 3]); // 2 = Mentor, 3 = Peserta
+        });
 
         if ($this->startDate) {
             $query->whereDate('tanggal', '>=', $this->startDate);
