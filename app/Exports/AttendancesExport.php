@@ -7,6 +7,7 @@ use App\Exports\sheets\AllAttendancesSheetExport;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use App\Exports\sheets\CourseAttendancesSheetExport;
 use App\Exports\sheets\SchoolAttendancesSheetExport;
+use App\Exports\sheets\MentorAttendancesSheetExport;
 
 class AttendancesExport implements WithMultipleSheets
 {
@@ -40,6 +41,7 @@ class AttendancesExport implements WithMultipleSheets
             $courses = \App\Models\Course::all(); // Ambil semua kursus
             foreach ($courses as $course) {
                 $sheets[] = new CourseAttendancesSheetExport($course->id, $this->startDate, $this->endDate);
+                $sheets[] = new MentorAttendancesSheetExport($this->selectedSchoolId, $this->startDate, $this->endDate); // Tambah sheet mentor
             }
         } elseif ($this->exportType === 'selected_course' && $this->selectedCourseId) {
             $sheets[] = new CourseAttendancesSheetExport($this->selectedCourseId, $this->startDate, $this->endDate);
@@ -47,6 +49,7 @@ class AttendancesExport implements WithMultipleSheets
             $schools = \App\Models\Sekolah::all(); // Ambil semua sekolah
             foreach ($schools as $school) {
                 $sheets[] = new SchoolAttendancesSheetExport($school->id, $this->startDate, $this->endDate);
+                $sheets[] = new MentorAttendancesSheetExport($school->id, $this->startDate, $this->endDate); // Tambah sheet mentor
             }
         } elseif ($this->exportType === 'selected_school' && $this->selectedSchoolId) {
             $sheets[] = new SchoolAttendancesSheetExport($this->selectedSchoolId, $this->startDate, $this->endDate);

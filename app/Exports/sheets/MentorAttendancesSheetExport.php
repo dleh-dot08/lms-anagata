@@ -8,10 +8,10 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithStyles; // <-- Import WithStyles
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet; // <-- Import Worksheet
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class SchoolAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings, WithMapping, WithStyles
+class MentorAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings, WithMapping, WithStyles
 {
     protected $schoolId;
     protected $startDate;
@@ -29,7 +29,10 @@ class SchoolAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings
     public function query()
     {
         $query = Attendance::with(['user', 'user.kelas', 'user.jenjang', 'recordedByMentor'])
-                            ->whereHas('user', fn($q) => $q->where('sekolah_id', $this->schoolId));
+            ->whereHas('user', function ($q) {
+                $q->where('sekolah_id', $this->schoolId)
+                  ->where('role_id', 2); // Hanya mentor
+            });
 
         if ($this->startDate) {
             $query->whereDate('tanggal', '>=', $this->startDate);
@@ -44,8 +47,7 @@ class SchoolAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings
     public function headings(): array
     {
         return [
-            'Nama Peserta',
-            'Role',
+            'Nama Mentor',
             'Kelas',
             'Jenjang',
             'Status Absensi',
@@ -59,7 +61,6 @@ class SchoolAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings
     {
         return [
             $attendance->user->name ?? 'N/A',
-            $attendance->user->role_id == 2 ? 'Mentor' : ($attendance->user->role_id == 3 ? 'Peserta' : 'Lainnya'),
             $attendance->user->kelas->nama_kelas ?? 'N/A',
             $attendance->user->jenjang->nama_jenjang ?? 'N/A',
             $attendance->status,
@@ -71,18 +72,17 @@ class SchoolAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings
 
     public function title(): string
     {
-        return $this->schoolName;
+        return $this->schoolName . ' - Mentor';
     }
 
     public function styles(Worksheet $sheet)
     {
         return [
-            // Gaya untuk baris pertama (header)
-            1    => [
+            1 => [
                 'font' => ['bold' => true],
                 'fill' => [
                     'fillType'   => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'A4CCD9'], // Warna abu-abu terang
+                    'startColor' => ['argb' => 'FFD966'],
                 ],
             ],
         ];
