@@ -31,7 +31,7 @@ class MentorAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings
         $query = Attendance::with(['user', 'user.kelas', 'user.jenjang', 'recordedByMentor'])
             ->whereHas('user', function ($q) {
                 $q->where('sekolah_id', $this->schoolId)
-                  ->where('role_id', 2); // Hanya mentor
+                ->where('role_id', 2); // Mentor
             });
 
         if ($this->startDate) {
@@ -61,12 +61,12 @@ class MentorAttendancesSheetExport implements FromQuery, WithTitle, WithHeadings
     {
         return [
             $attendance->user->name ?? 'N/A',
+            $attendance->user->email ?? 'N/A',
             $attendance->user->kelas->nama_kelas ?? 'N/A',
             $attendance->user->jenjang->nama_jenjang ?? 'N/A',
             $attendance->status,
             \Carbon\Carbon::parse($attendance->tanggal)->format('d M Y'),
-            \Carbon\Carbon::parse($attendance->created_at)->format('H:i:s'),
-            $attendance->recordedByMentor->name ?? 'N/A',
+            \Carbon\Carbon::parse($attendance->created_at)->format('d M Y H:i:s'),
         ];
     }
 
