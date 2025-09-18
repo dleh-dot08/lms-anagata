@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\Exportable;
-use App\Exports\Sheets\AllAttendancesSheetExport;
+use App\Exports\sheets\AllAttendancesSheetExport;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use App\Exports\Sheets\CourseAttendancesSheetExport;
-use App\Exports\Sheets\SchoolAttendancesSheetExport;
+use App\Exports\sheets\CourseAttendancesSheetExport;
+use App\Exports\sheets\SchoolAttendancesSheetExport;
 
 class AttendancesExport implements WithMultipleSheets
 {
