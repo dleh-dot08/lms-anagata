@@ -19,14 +19,7 @@ $sql = "";
 
 switch ($table) {
     case 'attendances':
-        $sql = "SELECT 
-                    a.id, a.attendance_date, a.status, a.user_id, a.course_id,
-                    u.name AS user_name, u.email AS user_email, 
-                    c.course_name 
-                FROM attendances a
-                JOIN users u ON a.user_id = u.id
-                JOIN courses c ON a.course_id = c.id
-                ORDER BY a.attendance_date DESC";
+        $sql = "SELECT * FROM attendances";
         break;
     case 'users':
         $sql = "SELECT * FROM users";
