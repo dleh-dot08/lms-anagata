@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Ambil data
-$sql = "SELECT id, nama, email FROM pengguna";
+$sql = "SELECT * FROM attendances";
 $result = $conn->query($sql);
 
 $data = array();
