@@ -481,7 +481,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>1</td><td>Bengkulu, Riau, Banten</td><td>Admin 1</td><td><a href="https://wa.me/6285173085391?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-7308-5391</a></td></tr>
+              <tr><td>1</td><td>Bengkulu, Riau, Banten</td><td>Admin 1</td><td><a href="https://wa.me/6288806190895?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 888-0619-0895</a></td></tr>
               <tr><td>2</td><td>Sumatera Selatan</td><td>Admin 2</td><td><a href="https://wa.me/6285173101589?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-7310-1589</a></td></tr>
               <tr><td>3</td><td>Lampung, Sulawesi Selatan</td><td>Admin 3</td><td><a href="https://wa.me/6285121241229?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-2124-1229</a></td></tr>
               <tr><td>4</td><td>DKI Jakarta, Jambi</td><td>Admin 4</td><td><a href="https://wa.me/6285128012198?text=Halo%2C%20Perkenalkan%20saya%20dari%0ANama%3A%20%0ASekolah%3A%20%0AKeperluan%3A%20" target="_blank"><i class="fab fa-whatsapp text-success me-1"></i>+62 851-2801-2198</a></td></tr>
