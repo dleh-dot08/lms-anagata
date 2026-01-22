@@ -30,7 +30,7 @@ class EraportVerifyController extends Controller
             $certificateUrl = Storage::disk('public')->url($eraport->certificate_path);
         }
 
-        return view('public.eraport.verify', compact(
+        return view('eraport.verify', compact(
             'eraport', 'snap', 'isValid', 'pdfUrl', 'certificateUrl'
         ));
     }
