@@ -17,7 +17,7 @@ class EraportVerifyController extends Controller
             ? $eraport->snapshot_json
             : (json_decode($eraport->snapshot_json, true) ?: []);
 
-        $isValid = ($eraport->status === 'published') || !empty($eraport->published_at);
+        $isValid = ($eraport->status === 'PUBLISHED') || !empty($eraport->published_at);
 
         $pdfUrl = null;
         if (!empty($eraport->pdf_path) && Storage::disk('public')->exists($eraport->pdf_path)) {

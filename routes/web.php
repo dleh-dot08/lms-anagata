@@ -117,7 +117,7 @@ Route::middleware(['throttle:100,1'])->group(function() {
         return view('welcome');
     });
 
-    Route::get('/eraport/verify/{token}', [EraportVerifyController::class])
+    Route::get('/eraport/verify/{token}', EraportVerifyController::class)
         ->name('public.eraport.verify')
         ->where('token', '[A-Za-z0-9\-_]+');
 
