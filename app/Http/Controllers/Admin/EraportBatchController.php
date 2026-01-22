@@ -258,25 +258,33 @@ class EraportBatchController extends Controller
                 ->get();
 
             foreach ($entries as $entry) {
-                $payload = $this->buildSnapshotPayload($batch, $entry);
 
                 // nomor rapor + token
                 $reportNumber = $this->makeReportNumber($batch, $entry);
                 $token = Str::random(32);
 
-                // bikin record rapor
+                // ✅ Buat record rapor dulu (biar $eraport tersedia untuk payload)
                 $eraport = Eraport::create([
                     'batch_id'      => $batch->id,
                     'user_id'       => $entry->user_id,
                     'report_number' => $reportNumber,
                     'verify_token'  => $token,
-                    'snapshot_json' => json_encode($payload, JSON_UNESCAPED_UNICODE),
+                    'snapshot_json' => json_encode([], JSON_UNESCAPED_UNICODE), // sementara
+                    'status'        => 'PUBLISHED', // ✅ kapital
                     'published_at'  => now(),
+                    'published_by'  => Auth::id(), // kalau kolom ini ada
                 ]);
 
-                // generate pdf (opsional — kalau belum mau, bisa skip)
-                // kalau kamu belum pasang generator, comment baris ini, pdf_path akan null.
-                $pdfPath = $this->generatePdfFromTemplate($batch, $eraport, $payload);
+                // ✅ Build payload pakai $eraport yang sudah ada
+                $payload = $this->buildSnapshotPayload($batch, $entry, $eraport);
+
+                // simpan snapshot_json final
+                $eraport->update([
+                    'snapshot_json' => json_encode($payload, JSON_UNESCAPED_UNICODE),
+                ]);
+
+                // generate pdf
+                $pdfPath = $this->generatePdfFromTemplate($batch, $eraport, $payload, $entry);
                 if ($pdfPath) {
                     $eraport->update(['pdf_path' => $pdfPath]);
                 }
@@ -665,7 +673,7 @@ class EraportBatchController extends Controller
             ]);
         }
 
-        $pdfPath = $this->generatePdfFromTemplate($batch, $eraport, $payload);
+        $pdfPath = $this->generatePdfFromTemplate($batch, $eraport, $payload, $entry);
 
         if (!$pdfPath || !Storage::disk('public')->exists($pdfPath)) {
             Log::error('PDF gagal dibuat (on-demand)', [
@@ -697,17 +705,21 @@ class EraportBatchController extends Controller
             data_get($payload, 'eraport.verify_url') === null;
     }
 
-    private function injectEraportMetaToPayload(array $payload, EraportBatch $batch, EraportEntry $entry, Eraport $eraport): array
+    private function injectEraportMetaToPayload(array $payload, EraportBatch $batch, ?EraportEntry $entry, Eraport $eraport): array
     {
-        data_set($payload, 'eraport.number', $eraport->report_number ?: $this->makeReportNumber($batch, $entry));
+        // number wajib
+        data_set(
+            $payload,
+            'eraport.number',
+            $eraport->report_number ?: ($entry ? $this->makeReportNumber($batch, $entry) : ('ER-'.$batch->course_id.'-'.$batch->id.'-'.$eraport->user_id))
+        );
 
-        // pastikan verify_url tidak kosong
+        // verify_url wajib
         $verifyUrl = data_get($payload, 'eraport.verify_url');
         if (!$verifyUrl) {
             try {
                 $verifyUrl = route('public.eraport.verify', ['token' => $eraport->verify_token]);
             } catch (\Throwable $e) {
-                // fallback kalau route belum ada
                 $verifyUrl = url('/eraport/verify/'.$eraport->verify_token);
             }
             data_set($payload, 'eraport.verify_url', $verifyUrl);
@@ -787,7 +799,7 @@ class EraportBatchController extends Controller
         return $payload;
     }
 
-    private function generatePdfFromTemplate(EraportBatch $batch, Eraport $eraport, array $payload): ?string
+    private function generatePdfFromTemplate(EraportBatch $batch, Eraport $eraport, array $payload, ?EraportEntry $entry = null): ?string
     {
         try {
             $template = $batch->template;
@@ -796,7 +808,6 @@ class EraportBatchController extends Controller
                 return null;
             }
 
-            // field_map bisa string atau array
             $fieldMapRaw = $template->field_map ?? [];
             if (is_string($fieldMapRaw)) {
                 $fieldMap = json_decode($fieldMapRaw, true) ?: [];
@@ -811,7 +822,6 @@ class EraportBatchController extends Controller
                 return null;
             }
 
-            // background path (prioritas kolom background_path)
             $bgPath = $template->background_path ?: data_get($fieldMap, 'template.background.path');
             if (!$bgPath) {
                 Log::error('Background path tidak ada', ['template_id' => $template->id]);
@@ -834,7 +844,6 @@ class EraportBatchController extends Controller
 
             $backgroundDataUri = $this->toDataUriFromStorage($disk, $bgPath);
 
-            // ✅ kamu mau pakai ini:
             $view = 'eraport.pdf.render_png';
 
             if (!view()->exists($view)) {
@@ -847,11 +856,11 @@ class EraportBatchController extends Controller
             }
 
             // ✅ pastikan payload punya verify_url & number
-            $payload = $this->injectEraportMetaToPayload($payload, $batch, new EraportEntry(['user_id'=>$eraport->user_id]), $eraport);
+            $payload = $this->injectEraportMetaToPayload($payload, $batch, $entry, $eraport);
 
             $verifyUrl = data_get($payload, 'eraport.verify_url');
 
-            // ✅ generate QR di controller (lebih stabil + bisa log error)
+            // generate QR
             $qrDataUri = null;
             try {
                 $png = QrCode::format('png')
@@ -873,7 +882,7 @@ class EraportBatchController extends Controller
                     'fieldMap' => $fieldMap,
                     'payload'  => $payload,
                     'backgroundDataUri' => $backgroundDataUri,
-                    'qrDataUri' => $qrDataUri, // ✅ kirim ke blade
+                    'qrDataUri' => $qrDataUri,
                 ])
                 ->setPaper('a4', 'portrait')
                 ->setOption('isRemoteEnabled', true)

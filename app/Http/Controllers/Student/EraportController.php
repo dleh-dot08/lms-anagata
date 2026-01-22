@@ -22,7 +22,7 @@ class EraportController extends Controller
             ->where('user_id', $userId)
             ->where(function ($q) {
                 // aman: jika kolom status belum selalu konsisten
-                $q->where('status', 'published')
+                $q->where('status', 'PUBLISHED')
                   ->orWhereNotNull('published_at');
             })
             ->orderByDesc('published_at')
@@ -84,6 +84,6 @@ class EraportController extends Controller
 
     protected function isPublished(Eraport $eraport): bool
     {
-        return ($eraport->status === 'published') || !empty($eraport->published_at);
+        return ($eraport->status === 'PUBLISHED') || !empty($eraport->published_at);
     }
 }
