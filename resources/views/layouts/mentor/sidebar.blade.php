@@ -78,6 +78,12 @@
                 <div data-i18n="Analytics">Catatan</div>
             </a>
         </li>  
+        <li class="menu-item {{ request()->routeIs('mentor.eraport.*') ? 'active' : '' }}">
+            <a href="{{ route('mentor.eraport.batches.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div data-i18n="E-Raport">E-Raport</div>
+            </a>
+        </li>
         <li class="menu-item {{ request()->routeIs('mentor.score.*', 'mentor.attendance.report.*', 'mentor.self.attendance') ? 'open active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-report"></i>

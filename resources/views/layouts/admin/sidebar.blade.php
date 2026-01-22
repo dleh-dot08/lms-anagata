@@ -133,6 +133,41 @@
                     <div data-i18n="Boxicons">Data Laporan Nilai</div>
                 </a>
             </li>
+
+            @php
+                $eraportOpen = request()->routeIs('admin.eraport.*');
+            @endphp
+
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">E-Raport</span>
+            </li>
+
+            <li class="menu-item {{ $eraportOpen ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-file"></i>
+                    <div data-i18n="E-Raport">E-Raport</div>
+                </a>
+
+                <ul class="menu-sub">
+                    <li class="menu-item {{ request()->routeIs('admin.eraport.templates.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.eraport.templates.index') }}" class="menu-link">
+                            <div data-i18n="Templates">Template</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('admin.eraport.batches.index', 'admin.eraport.batches.show') ? 'active' : '' }}">
+                        <a href="{{ route('admin.eraport.batches.index') }}" class="menu-link">
+                            <div data-i18n="Batches">Batch Penerbitan</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('admin.eraport.batches.create') ? 'active' : '' }}">
+                        <a href="{{ route('admin.eraport.batches.create') }}" class="menu-link">
+                            <div data-i18n="Create Batch">Buat Batch</div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text"> Helpdesk Management</span>

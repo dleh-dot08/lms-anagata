@@ -48,6 +48,12 @@
                 <div data-i18n="Analytics">Project</div>
             </a>
         </li>
+        <li class="menu-item {{ request()->routeIs('peserta.eraport.*') ? 'active' : '' }}">
+            <a href="{{ route('peserta.eraport.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div data-i18n="E-Raport Saya">E-Raport Saya</div>
+            </a>
+        </li>
         {{-- <li class="menu-item {{ request()->routeIs('assignments.index') ? 'active' : '' }}">
             <a href="{{ route('assignments.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-file-doc"></i>

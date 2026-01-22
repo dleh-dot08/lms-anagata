@@ -61,6 +61,14 @@ use App\Http\Controllers\Admin\SchoolDocumentController as AdminSchoolDocumentCo
 use App\Http\Controllers\CekPendaftaranController;
 use App\Http\Controllers\SemesterController;
 
+use App\Http\Controllers\Admin\EraportTemplateController;
+use App\Http\Controllers\Admin\EraportBatchController;
+use App\Http\Controllers\Mentor\EraportEntryController;
+use App\Http\Controllers\Student\EraportController as StudentEraportController;
+use App\Http\Controllers\School\EraportSchoolController;
+use App\Http\Controllers\EraportVerifyController;
+
+
 // Add this route before the auth routes
 Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
 Route::get('/get-kelas-by-jenjang/{jenjangId}', [BiodataController::class, 'getKelasByJenjang'])->name('get.kelas.by.jenjang');
@@ -109,7 +117,9 @@ Route::middleware(['throttle:100,1'])->group(function() {
         return view('welcome');
     });
 
-    
+    Route::get('/eraport/verify/{token}', [EraportVerifyController::class])
+        ->name('public.eraport.verify')
+        ->where('token', '[A-Za-z0-9\-_]+');
 
     // Route buat verifikasi
     Route::get('/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -702,6 +712,88 @@ Route::middleware(['throttle:100,1'])->group(function() {
         Route::get('/school-documents/{document}/download', [AdminSchoolDocumentController::class, 'download'])->name('school_documents.download');
         // Jika admin juga bisa menghapus, tambahkan ini:
         // Route::delete('/school-documents/{document}', [AdminSchoolDocumentController::class, 'destroy'])->name('school_documents.destroy');
+    });
+
+    Route::middleware(['auth', 'verified'])->group(function () {
+
+        /*
+        |--------------------------------------------------------------------------
+        | E-RAPORT ROUTES (ROLE BASED)
+        |--------------------------------------------------------------------------
+        */
+
+        // ADMIN (role 1) - pakai AdminMiddleware Anda
+        Route::prefix('admin/eraport')
+            ->name('admin.eraport.')
+            ->middleware([AdminMiddleware::class])
+            ->group(function () {
+
+                // templates
+                Route::get('/templates', [EraportTemplateController::class, 'index'])->name('templates.index');
+                Route::get('/templates/create', [EraportTemplateController::class, 'create'])->name('templates.create');
+                Route::post('/templates', [EraportTemplateController::class, 'store'])->name('templates.store');
+                Route::get('/templates/{eraport_template}/edit', [EraportTemplateController::class, 'edit'])->name('templates.edit');
+                Route::put('/templates/{eraport_template}', [EraportTemplateController::class, 'update'])->name('templates.update');
+                Route::delete('/templates/{eraport_template}', [EraportTemplateController::class, 'destroy'])->name('templates.destroy');
+
+                // batches
+                Route::get('/batches', [EraportBatchController::class, 'index'])->name('batches.index');
+                Route::get('/batches/create', [EraportBatchController::class, 'create'])->name('batches.create');
+                Route::post('/batches', [EraportBatchController::class, 'store'])->name('batches.store');
+                Route::get('/batches/{batch}', [EraportBatchController::class, 'show'])->name('batches.show');
+
+                // workflow
+                Route::post('/batches/{batch}/validate', [EraportBatchController::class, 'validateBatch'])->name('batches.validate');
+                Route::post('/batches/{batch}/publish', [EraportBatchController::class, 'publish'])->name('batches.publish');
+                Route::post('/batches/{batch}/reopen', [EraportBatchController::class, 'reopen'])->name('batches.reopen');
+
+                // export zip
+                Route::get('/batches/{batch}/export-zip', [EraportBatchController::class, 'exportZip'])->name('batches.exportZip');
+                // PDF per siswa (admin)
+                Route::get('/batches/{batch}/entries/{entry}/pdf', [EraportBatchController::class, 'downloadEntryPdf'])->name('batches.entries.downloadPdf');
+
+            });
+
+        // MENTOR (role 2)
+        Route::prefix('mentor/eraport')
+            ->name('mentor.eraport.')
+            ->middleware([MentorMiddleware::class])
+            ->group(function () {
+                Route::get('/batches', [EraportEntryController::class, 'index'])->name('batches.index');
+                Route::get('/batches/{batch}', [EraportEntryController::class, 'showBatch'])->name('batches.show');
+                Route::get('/entries/{entry}/edit', [EraportEntryController::class, 'edit'])->name('entries.edit');
+                Route::put('/entries/{entry}', [EraportEntryController::class, 'update'])->name('entries.update');
+            });
+
+        // SEKOLAH (role 6)
+        Route::prefix('sekolah/eraport')
+            ->name('sekolah.eraport.')
+            ->middleware([SekolahMiddleware::class])
+            ->group(function () {
+                Route::get('/', [EraportSchoolController::class, 'index'])->name('index');
+                Route::get('/{eraport}/download', [EraportSchoolController::class, 'download'])->name('download');
+            });
+        
+        Route::prefix('peserta/eraport')
+        ->name('peserta.eraport.')
+        ->middleware([PesertaMiddleware::class])
+        ->group(function () {
+
+            Route::get('/', [StudentEraportController::class, 'index'])->name('index');
+
+            // ✅ detail rapor
+            Route::get('/{eraport}', [StudentEraportController::class, 'show'])->name('show');
+
+            // ✅ download pdf
+            Route::get('/{eraport}/download', [StudentEraportController::class, 'download'])->name('download');
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | ... ROUTES ANDA YANG LAIN (biarkan seperti sekarang)
+        |--------------------------------------------------------------------------
+        */
+
     });
 
 

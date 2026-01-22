@@ -85,6 +85,12 @@
                 </li>
             </ul>
         </li>
+        <li class="menu-item {{ request()->routeIs('sekolah.eraport.*') ? 'active' : '' }}">
+            <a href="{{ route('sekolah.eraport.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div data-i18n="E-Raport Peserta">E-Raport Peserta</div>
+            </a>
+        </li>
     </ul>
         </li>        
     </ul>
