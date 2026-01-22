@@ -9,6 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         Commands\GeneratePasswordHash::class,
+        \App\Console\Commands\FixEraportTemplateFieldMap::class,
     ];
 
     /**
