@@ -68,7 +68,7 @@
                                 <td>{{ $p->biodata->no_hp ?? '-' }}</td>
                                 <td>{{ $p->biodata->alamat ?? '-' }}</td>
                                 <td>{{ $p->kelas->nama_kelas ?? '-' }}</td>
-                                <td>{{ $p->created_at->format('d M Y') }}</td>
+                                <td>{{ optional($p->created_at)->format('d M Y') ?? '-' }}</td>
                                 <td>
                                     <!-- Direct Button -->
                                     <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $p->id }}">
@@ -106,7 +106,7 @@
                                                         <div class="col-md-6">
                                                             <dl class="row">
                                                                 <dt class="col-sm-4">Terdaftar</dt>
-                                                                <dd class="col-sm-8">{{ $p->created_at->format('d M Y H:i') }}</dd>
+                                                                <dd class="col-sm-8">{{ optional($p->created_at)->format('d M Y H:i') ?? '-' }}</dd>
 
                                                                 <dt class="col-sm-4">Email Terverifikasi</dt>
                                                                 <dd class="col-sm-8">

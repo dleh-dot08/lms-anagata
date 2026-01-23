@@ -696,6 +696,17 @@ class EraportBatchController extends Controller
 
         $studentName = DB::table('users')->where('id', $entry->user_id)->value('name');
 
+        // ✅ TAMBAHAN: ambil kelas dari users.kelas_id -> kelas.nama
+        $kelasFromMaster = null;
+        if (Schema::hasColumn('users', 'kelas_id')) {
+            $kelasId = DB::table('users')->where('id', $entry->user_id)->value('kelas_id');
+
+            if (!empty($kelasId)) {
+                // ganti 'kelas' & 'nama' jika nama tabel/kolom berbeda
+                $kelasFromMaster = DB::table('kelas')->where('id', $kelasId)->value('nama');
+            }
+        }
+
         $enr = DB::table('enrollments')
             ->where('course_id', $batch->course_id)
             ->where('user_id', $entry->user_id)
@@ -703,10 +714,17 @@ class EraportBatchController extends Controller
 
         $schoolName = null;
         if (!empty($enr?->sekolah_id)) {
-            $schoolName = DB::table('schools')->where('id', $enr->sekolah_id)->value('name');
+            $schoolName = DB::table('sekolah')->where('id', $enr->sekolah_id)->value('nama_sekolah');
         }
 
         $kelasLabel = $enr->kelas_label ?? $enr->kelas ?? null;
+
+        // ✅ PRIORITAS: kalau kelas master ada, pakai itu
+        if (!empty($kelasFromMaster)) {
+            $kelasLabel = $kelasFromMaster;
+        }
+
+        // fallback lama kamu tetap dipakai kalau masih kosong
         if (!$kelasLabel) {
             if (Schema::hasColumn('users', 'kelas_label')) {
                 $kelasLabel = DB::table('users')->where('id', $entry->user_id)->value('kelas_label');
@@ -753,6 +771,7 @@ class EraportBatchController extends Controller
             ],
         ];
     }
+
 
     /* ============================================================
        HELPERS

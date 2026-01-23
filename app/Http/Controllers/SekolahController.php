@@ -8,12 +8,17 @@ use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\DashboardMetricsService;
 
 class SekolahController extends Controller
 {
-    public function index()
+    public function index(DashboardMetricsService $metrics)
     {
-        return view('layouts.sekolah.dashboard');
+        $sekolahId = Auth::user()->sekolah_id;
+
+        $data = $metrics->sekolah($sekolahId);
+
+        return view('layouts.sekolah.dashboard', $data);
     }
 
     public function peserta(Request $request)

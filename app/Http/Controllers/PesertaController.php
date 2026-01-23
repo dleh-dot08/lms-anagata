@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\DashboardMetricsService;
 
 class PesertaController extends Controller
 {
-    public function index()
+    public function index(Request $request, DashboardMetricsService $metrics)
     {
-        return view('layouts.peserta.dashboard', [
-            // 'totalCourses' => Course::count(),
-            // 'totalUsers' => User::count(),
-            // 'totalMentors' => User::where('role', 'mentor')->count(),
-            // 'recentCourses' => Course::with('mentor')->latest()->take(5)->get(),
-        ]);
+        $data = $metrics->peserta($request->user()->id);
+
+        return view('layouts.peserta.dashboard', $data);
     }
 }

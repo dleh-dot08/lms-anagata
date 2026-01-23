@@ -21,21 +21,64 @@ class EraportSchoolController extends Controller
         $schoolUser = Auth::user();
         $studentIds = $this->getStudentIdsForSchool($schoolUser);
 
-        // Kalau mapping sekolah->peserta belum ditemukan, lebih aman: tampilkan kosong
+        // kalau mapping sekolah->peserta belum ditemukan
         if (empty($studentIds)) {
-            $eraports = Eraport::query()->whereRaw('1=0')->paginate(20);
+            $eraports = Eraport::query()->whereRaw('1=0')->paginate(10);
             return view('sekolah.eraport.index', compact('eraports'));
         }
 
-        $eraports = Eraport::query()
+        $q = Eraport::query()
             ->whereIn('user_id', $studentIds)
-            ->where(function ($q) {
-                $q->where('status', 'published')
-                  ->orWhereNotNull('published_at');
-            })
-            ->orderByDesc('published_at')
-            ->orderByDesc('id')
-            ->paginate(20);
+            ->where(function ($w) {
+                // ✅ status kamu pakai kapital semua
+                $w->where('status', 'PUBLISHED')
+                ->orWhereNotNull('published_at');
+            });
+
+        // =========================
+        // ✅ SEARCH (q)
+        // =========================
+        if ($request->filled('q')) {
+            $kw = trim($request->q);
+
+            $q->where(function ($w) use ($kw) {
+                $w->where('report_number', 'like', "%{$kw}%")
+                ->orWhere('snapshot_json', 'like', "%{$kw}%");
+                // snapshot_json biasanya berisi student.name / course.title / semester.label
+            });
+        }
+
+        // =========================
+        // ✅ FILTER SEMESTER (semester)
+        // =========================
+        if ($request->filled('semester')) {
+            $sem = trim($request->semester);
+            $q->where('snapshot_json', 'like', "%{$sem}%");
+            // kalau mau lebih spesifik: cari "semester":{"label":"..."}
+            // tapi LIKE sederhana biasanya cukup.
+        }
+
+        // =========================
+        // ✅ FILTER PROGRAM / COURSE (program)
+        // =========================
+        if ($request->filled('program')) {
+            $prg = trim($request->program);
+            $q->where('snapshot_json', 'like', "%{$prg}%");
+        }
+
+        // =========================
+        // ✅ SORT (opsional)
+        // sort=newest|oldest
+        // =========================
+        $sort = $request->get('sort', 'newest');
+        if ($sort === 'oldest') {
+            $q->orderBy('published_at')->orderBy('id');
+        } else {
+            $q->orderByDesc('published_at')->orderByDesc('id');
+        }
+
+        // ✅ 10 per page + tetap bawa query string saat pindah page
+        $eraports = $q->paginate(10)->appends($request->query());
 
         return view('sekolah.eraport.index', compact('eraports'));
     }

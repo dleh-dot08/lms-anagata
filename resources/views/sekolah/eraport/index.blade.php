@@ -8,6 +8,41 @@
             <small class="text-muted">Sekolah bisa mengunduh e-raport peserta yang terdaftar di sekolah.</small>
         </div>
     </div>
+    <form method="GET" class="row g-2 mb-3">
+        <div class="col-md-4">
+            <input type="text" name="q" value="{{ request('q') }}"
+            class="form-control"
+            placeholder="Cari nama / nomor rapor / program...">
+        </div>
+
+        <div class="col-md-3">
+            <input type="text" name="semester" value="{{ request('semester') }}"
+            class="form-control"
+            placeholder="Filter semester (contoh: Ganjil 2024/2025)">
+        </div>
+
+        <div class="col-md-3">
+            <input type="text" name="program" value="{{ request('program') }}"
+            class="form-control"
+            placeholder="Filter program/kursus">
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+            <select name="sort" class="form-select">
+            <option value="newest" {{ request('sort','newest')==='newest'?'selected':'' }}>Terbaru</option>
+            <option value="oldest" {{ request('sort')==='oldest'?'selected':'' }}>Terlama</option>
+            </select>
+            <button class="btn btn-primary">Terapkan</button>
+        </div>
+
+        @if(request()->filled('q') || request()->filled('semester') || request()->filled('program') || request()->filled('sort'))
+            <div class="col-12">
+            <a href="{{ route('sekolah.eraport.index') }}" class="btn btn-outline-secondary btn-sm">
+                Reset Filter
+            </a>
+            </div>
+        @endif
+        </form>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -33,9 +68,14 @@
                     @forelse($eraports as $r)
                         @php
                             $snap = is_array($r->snapshot_json) ? $r->snapshot_json : (json_decode($r->snapshot_json, true) ?: []);
-                            $studentName = data_get($snap,'nama','User #'.$r->user_id);
-                            $courseName = data_get($snap,'course.nama_kelas','-');
-                            $semester = data_get($snap,'semester_label','-');
+
+                            $studentName = data_get($snap,'student.name','User #'.$r->user_id);
+
+                            // sesuai payload kamu: course.title
+                            $courseName  = data_get($snap,'course.title','-');
+
+                            // sesuai payload kamu: semester.label
+                            $semester    = data_get($snap,'semester.label','-');
                         @endphp
                         <tr>
                             <td>{{ $r->id }}</td>
