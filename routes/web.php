@@ -68,6 +68,9 @@ use App\Http\Controllers\Student\EraportController as StudentEraportController;
 use App\Http\Controllers\School\EraportSchoolController;
 use App\Http\Controllers\EraportVerifyController;
 
+use App\Http\Controllers\Admin\InfografisController as AdminInfografisController;
+use App\Http\Controllers\Sekolah\InfografisController as SekolahInfografisController;
+
 
 // Add this route before the auth routes
 Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
@@ -115,6 +118,25 @@ Route::get('/kka-paud/cek-pendaftaran', [CekPendaftaranController::class, 'index
 Route::middleware(['throttle:100,1'])->group(function() {
     Route::get('/', function () {
         return view('welcome');
+    });
+
+    // Admin
+    Route::get('/admin/infografis', [AdminInfografisController::class, 'index'])->name('admin.infografis');
+    Route::get('/admin/infografis/export', [AdminInfografisController::class, 'export'])->name('admin.infografis.export');
+
+    // Sekolah
+    Route::get('/sekolah/infografis', [SekolahInfografisController::class, 'index'])->name('sekolah.infografis');
+    Route::get('/sekolah/infografis/export', [SekolahInfografisController::class, 'export'])->name('sekolah.infografis.export');
+
+    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+        Route::post('/infografis/resume/save', [\App\Http\Controllers\Admin\InfografisController::class, 'saveResume'])
+            ->name('infografis.resume.save');
+
+        Route::post('/infografis/resume/approve', [\App\Http\Controllers\Admin\InfografisController::class, 'approveResume'])
+            ->name('infografis.resume.approve');
+
+        Route::post('/infografis/resume/unapprove', [\App\Http\Controllers\Admin\InfografisController::class, 'unapproveResume'])
+            ->name('infografis.resume.unapprove');
     });
 
     Route::get('/eraport/verify/{token}', EraportVerifyController::class)

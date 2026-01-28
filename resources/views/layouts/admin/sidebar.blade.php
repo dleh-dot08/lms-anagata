@@ -75,6 +75,13 @@
                 </ul>
             </li>
 
+            <li class="menu-item {{ request()->routeIs('admin.infografis') || request()->routeIs('admin.infografis.export') ? 'active' : '' }}">
+                <a href="{{ route('admin.infografis') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                    <div data-i18n="Boxicons">Infografis</div>
+                </a>
+            </li>
+
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Course Management</span>
             </li>
