@@ -47,6 +47,16 @@
                             <div data-i18n="Account">Data Program</div>
                         </a>
                     </li>
+                    <li class="menu-item {{ request()->routeIs('admin.semester_promote.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.semester_promote.index') }}" class="menu-link">
+                            <div data-i18n="Account">Promote Semester</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.semester_snapshot.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.semester_snapshot.index') }}" class="menu-link">
+                            <div data-i18n="Account">Bootstrap Snapshot Peserta</div>
+                        </a>
+                    </li>
                     <li class="menu-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
                         <a href="{{ route('kategori.index') }}" class="menu-link">
                             <div data-i18n="Account">Data Kategori</div>

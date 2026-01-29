@@ -71,6 +71,9 @@ use App\Http\Controllers\EraportVerifyController;
 use App\Http\Controllers\Admin\InfografisController as AdminInfografisController;
 use App\Http\Controllers\Sekolah\InfografisController as SekolahInfografisController;
 
+use App\Http\Controllers\Admin\SemesterPromotionController;
+use App\Http\Controllers\Admin\SemesterSnapshotController;
+
 
 // Add this route before the auth routes
 Route::get('/api/jenjang/{jenjang}/kelas', [KelasController::class, 'getKelasByJenjang']);
@@ -137,6 +140,17 @@ Route::middleware(['throttle:100,1'])->group(function() {
 
         Route::post('/infografis/resume/unapprove', [\App\Http\Controllers\Admin\InfografisController::class, 'unapproveResume'])
             ->name('infografis.resume.unapprove');
+    });
+
+    Route::middleware(['auth'])->prefix('admin')->group(function () {
+        Route::get('/semester-promote', [SemesterPromotionController::class, 'index'])->name('admin.semester_promote.index');
+        Route::post('/semester-promote/preview', [SemesterPromotionController::class, 'preview'])->name('admin.semester_promote.preview');
+        Route::post('/semester-promote/run', [SemesterPromotionController::class, 'run'])->name('admin.semester_promote.run');
+        Route::post('/semester-promote/activate', [SemesterPromotionController::class, 'activate'])->name('admin.semester_promote.activate');
+
+        Route::get('/semester-snapshot', [SemesterSnapshotController::class, 'index'])->name('admin.semester_snapshot.index');
+    Route::post('/semester-snapshot/check', [SemesterSnapshotController::class, 'check'])->name('admin.semester_snapshot.check');
+    Route::post('/semester-snapshot/apply', [SemesterSnapshotController::class, 'apply'])->name('admin.semester_snapshot.apply');
     });
 
     Route::get('/eraport/verify/{token}', EraportVerifyController::class)
