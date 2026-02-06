@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 use App\Models\Jenjang;
 use App\Models\Kelas;
@@ -72,7 +73,7 @@ class UserController extends Controller
             // Validasi input
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'nullable|email|unique:users,email',
                 'password' => 'required|string|min:8|confirmed',
                 'role_id' => 'required|exists:roles,id',
                 'foto_diri' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -85,14 +86,23 @@ class UserController extends Controller
                     ->withInput();
             }
 
+            $hasRealEmail = $request->filled('email');
+
+            $email = $hasRealEmail
+                ? $request->email
+                : ('placeholder_' . uniqid() . '@placeholder.local');
+
+            $emailIsPlaceholder = !$hasRealEmail;
+
             // Prepare user data
             $userData = [
                 'name' => $request->name,
-                'email' => $request->email,
+                'email' => $email,
+                'email_is_placeholder' => $emailIsPlaceholder,
                 'password' => Hash::make($request->password),
                 'role_id' => $request->role_id,
                 'created_by' => Auth::id(),
-                'email_verified_at' => $request->has('verify_email') ? now() : null
+                'email_verified_at' => ($request->has('verify_email') && !$emailIsPlaceholder) ? now() : null,
             ];
 
             // Handle foto_diri upload if present
@@ -230,7 +240,19 @@ class UserController extends Controller
     public function showImportForm()
     {
         $roles = Role::all();
-        return view('users.import', compact('roles'));
+
+        $jenjangs = Jenjang::query()
+            ->whereNull('deleted_at')
+            ->orderBy('id')
+            ->get(['id', 'nama_jenjang']);
+
+        $kelas = Kelas::query()
+            ->whereNull('deleted_at')
+            ->orderBy('id_jenjang')
+            ->orderBy('id')
+            ->get(['id', 'nama', 'id_jenjang']);
+
+        return view('users.import', compact('roles', 'jenjangs', 'kelas'));
     }
 
     /**
@@ -241,87 +263,248 @@ class UserController extends Controller
      */
     public function import(Request $request)
     {
+        @set_time_limit(0);
+
         $request->validate([
             'csv_file' => 'required|file|mimes:csv,txt',
             'role_id' => 'required|exists:roles,id',
         ]);
 
         try {
+            $roleId = (int) $request->role_id;
+
+            // ✅ definisikan: role peserta (sesuaikan kalau id kamu beda)
+            $PESERTA_ROLE_ID = 3;
+            $needJenjangKelas = ($roleId === $PESERTA_ROLE_ID);
+
             $file = $request->file('csv_file');
             $path = $file->getRealPath();
-            
-            // Read CSV file
+
             $handle = fopen($path, "r");
-            
-            // Read header row
             $header = fgetcsv($handle);
-            
-            // Convert header to lowercase and trim
-            $header = array_map(function($value) {
-                return strtolower(trim($value));
-            }, $header);
-            
-            // Required columns
-            $requiredColumns = ['no', 'nama', 'email', 'waktu verifikasi email', 'password'];
-            
-            // Verify required columns exist
+
+            if (!$header) {
+                throw new \Exception("File CSV kosong atau header tidak terbaca.");
+            }
+
+            $header = array_map(fn($v) => strtolower(trim($v)), $header);
+
+            // ✅ wajib minimal untuk semua role
+            $requiredColumns = ['nama', 'email', 'password'];
             foreach ($requiredColumns as $column) {
                 if (!in_array($column, $header)) {
                     throw new \Exception("Kolom '$column' tidak ditemukan di file CSV");
                 }
             }
 
-            $users = [];
-            $row = 1;
-            
-            while (($data = fgetcsv($handle)) !== false) {
-                $row++;
-                
-                // Create associative array of row data
-                $userData = array_combine($header, $data);
-                
-                // Validate email
-                if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
-                    throw new \Exception("Baris $row: Format email tidak valid");
+            // ✅ kalau peserta, wajib ada kolom jenjang_id & kelas_id
+            if ($needJenjangKelas) {
+                foreach (['jenjang_id', 'kelas_id'] as $column) {
+                    if (!in_array($column, $header)) {
+                        throw new \Exception("Kolom '$column' wajib untuk role peserta.");
+                    }
                 }
-                
-                // Check if email already exists
-                if (User::where('email', $userData['email'])->exists()) {
-                    throw new \Exception("Baris $row: Email sudah terdaftar");
+            }
+
+            $now = now();
+            $adminId = Auth::id();
+
+            // ✅ cache master jenjang & kelas untuk validasi jika diperlukan
+            $validJenjangIds = [];
+            $kelasMap = null;
+
+            if ($needJenjangKelas) {
+                $validJenjangIds = Jenjang::query()
+                    ->whereNull('deleted_at')
+                    ->pluck('id')
+                    ->flip()
+                    ->toArray();
+
+                $kelasMap = Kelas::query()
+                    ->whereNull('deleted_at')
+                    ->get(['id', 'id_jenjang'])
+                    ->keyBy('id'); // kelas_id => model
+            }
+
+            $rows = [];
+            $emails = [];
+            $rowNum = 1;
+
+            while (($data = fgetcsv($handle)) !== false) {
+                $rowNum++;
+
+                if (count(array_filter($data, fn($v) => trim((string)$v) !== '')) === 0) {
+                    continue;
                 }
 
-                // Convert date format from d/m/Y H:i:s to Y-m-d H:i:s
-                $verificationDate = \DateTime::createFromFormat('d/m/Y H:i:s', $userData['waktu verifikasi email']);
-                if (!$verificationDate) {
-                    throw new \Exception("Baris $row: Format tanggal verifikasi tidak valid. Gunakan format dd/mm/yyyy HH:ii:ss");
+                if (count($data) < count($header)) {
+                    $data = array_pad($data, count($header), null);
                 }
-                
-                // Prepare user data
-                $user = [
-                    'name' => $userData['nama'],
-                    'email' => $userData['email'],
-                    'password' => Hash::make($userData['password']),
-                    'email_verified_at' => $verificationDate->format('Y-m-d H:i:s'),
-                    'role_id' => $request->role_id,
-                    'created_by' => Auth::id(),
-                    'created_at' => now(),
-                    'updated_at' => now()
+
+                $userData = array_combine($header, $data);
+
+                $name  = trim((string)($userData['nama'] ?? ''));
+                $email = trim((string)($userData['email'] ?? ''));
+                $pass  = (string)($userData['password'] ?? '');
+
+                if ($name === '') throw new \Exception("Baris $rowNum: Nama kosong");
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new \Exception("Baris $rowNum: Format email tidak valid");
+                if ($pass === '') throw new \Exception("Baris $rowNum: Password kosong");
+
+                $jenjangId = null;
+                $kelasId = null;
+
+                if ($needJenjangKelas) {
+                    $jenjangId = (int)($userData['jenjang_id'] ?? 0);
+                    $kelasId   = (int)($userData['kelas_id'] ?? 0);
+
+                    if ($jenjangId <= 0 || !isset($validJenjangIds[$jenjangId])) {
+                        throw new \Exception("Baris $rowNum: jenjang_id '$jenjangId' tidak valid.");
+                    }
+                    if ($kelasId <= 0 || !$kelasMap->has($kelasId)) {
+                        throw new \Exception("Baris $rowNum: kelas_id '$kelasId' tidak valid.");
+                    }
+                    if ((int)$kelasMap[$kelasId]->id_jenjang !== $jenjangId) {
+                        throw new \Exception("Baris $rowNum: kelas_id '$kelasId' tidak sesuai dengan jenjang_id '$jenjangId'.");
+                    }
+                } else {
+                    // role mentor/admin dll: kolom jenjang_id/kelas_id boleh ada boleh tidak, kalau kosong -> null
+                    $jenjangIdRaw = $userData['jenjang_id'] ?? null;
+                    $kelasIdRaw   = $userData['kelas_id'] ?? null;
+                    $jenjangId = (is_numeric($jenjangIdRaw) && (int)$jenjangIdRaw > 0) ? (int)$jenjangIdRaw : null;
+                    $kelasId   = (is_numeric($kelasIdRaw) && (int)$kelasIdRaw > 0) ? (int)$kelasIdRaw : null;
+                }
+
+                $rows[] = [
+                    'name' => $name,
+                    'email' => $email,
+                    'password_raw' => $pass,
+                    'jenjang_id' => $jenjangId,
+                    'kelas_id' => $kelasId,
                 ];
-                
-                $users[] = $user;
+
+                $emails[] = strtolower($email);
             }
-            
+
             fclose($handle);
-            
-            // Insert all users
-            User::insert($users);
-            
+
+            if (count($rows) === 0) {
+                throw new \Exception("Tidak ada data valid untuk diimport.");
+            }
+
+            // ✅ cek duplikat di CSV
+            $dup = array_diff_assoc($emails, array_unique($emails));
+            if (!empty($dup)) {
+                $dupeEmail = array_values($dup)[0];
+                throw new \Exception("Duplikat email di CSV: '$dupeEmail'");
+            }
+
+            // ✅ cek email sudah ada di DB (sekali query)
+            $existing = User::query()
+                ->whereIn('email', array_unique($emails))
+                ->pluck('email')
+                ->map(fn($e) => strtolower($e))
+                ->toArray();
+
+            if (!empty($existing)) {
+                throw new \Exception("Email sudah terdaftar: " . implode(', ', array_slice($existing, 0, 5)) . (count($existing) > 5 ? ' ...' : ''));
+            }
+
+            // ✅ insert users
+            $insertUsers = [];
+            foreach ($rows as $r) {
+                $insertUsers[] = [
+                    'name' => $r['name'],
+                    'email' => $r['email'],
+                    'password' => Hash::make($r['password_raw']),
+                    'role_id' => $roleId,
+                    'created_by' => $adminId,
+                    'jenjang_id' => $r['jenjang_id'],
+                    'kelas_id' => $r['kelas_id'],
+
+                    // ✅ auto verified (biar tidak ke /verify-email)
+                    'email_verified_at' => $now,
+                    'verified_by_admin_at' => $now,
+                    'verified_by_admin_id' => $adminId,
+
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+
+            foreach (array_chunk($insertUsers, 500) as $chunk) {
+                User::insert($chunk);
+            }
+
+            // ✅ ambil id user yang baru masuk (by email)
+            $newUsers = User::query()
+                ->whereIn('email', array_unique($emails))
+                ->get(['id', 'email']);
+
+            // ✅ bikin biodata untuk user yang belum punya biodata
+            // asumsi tabel: biodata (kolom: user_id, created_at, updated_at)
+            $newUserIds = $newUsers->pluck('id')->all();
+
+            $existingBiodataUserIds = \DB::table('biodata')
+                ->whereIn('id_user', $newUserIds)
+                ->pluck('id_user')
+                ->all();
+
+            $existingSet = array_flip($existingBiodataUserIds);
+
+            $insertBiodata = [];
+            foreach ($newUserIds as $uid) {
+                if (!isset($existingSet[$uid])) {
+                    $insertBiodata[] = [
+                        'id_user' => $uid,
+                        'tanggal_bergabung' => $now->toDateString(), 
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                }
+            }
+
+            if (!empty($insertBiodata)) {
+                foreach (array_chunk($insertBiodata, 500) as $chunk) {
+                    \DB::table('biodata')->insert($chunk);
+                }
+            }
+
             return redirect()->route('users.import.form')
-                ->with('success', count($users) . ' user berhasil diimport');
+                ->with('success', count($insertUsers) . " user berhasil diimport. Biodata dibuat: " . count($insertBiodata));
 
         } catch (\Exception $e) {
             return redirect()->route('users.import.form')
                 ->with('error', 'Error: ' . $e->getMessage());
         }
+    }
+
+
+
+    public function verifyByAdmin($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+
+        if (Auth::user()->role_id != 1) abort(403);
+
+        $now = now();
+
+        // 1) Update via Query Builder (bypass Model event/observer/mutator)
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update([
+                'verified_by_admin_at' => $now,
+                'verified_by_admin_id' => Auth::id(),
+                'email_verified_at'    => $now,
+                'updated_at'           => $now,
+            ]);
+
+        // 2) Ambil ulang dari DB untuk memastikan
+        $fresh = User::withTrashed()->find($user->id);
+
+        // sementara untuk cek (hapus setelah aman)
+        // dd($fresh->id, $fresh->email_verified_at, $fresh->verified_by_admin_at);
+
+        return back()->with('success', 'Akun diverifikasi oleh Admin.');
     }
 }

@@ -106,6 +106,7 @@
                             <th class="py-3">Email</th>
                             <th class="py-3">Role</th>
                             <th class="py-3">Status</th>
+                            <th class="py-3">Verifikasi</th>
                             <th class="py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -138,6 +139,15 @@
                                         @endif
                                     </td>
                                     <td>
+                                        @if($user->email_verified_at)
+                                            <span class="badge bg-primary">Email Verified</span>
+                                        @elseif($user->verified_by_admin_at)
+                                            <span class="badge bg-success">Admin Verified</span>
+                                        @else
+                                            <span class="badge bg-warning text-dark">Belum Verified</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <div class="d-flex justify-content-center gap-2">
                                             <a href="{{ route('users.show', $user->id) }}" class="btn btn-info" data-bs-toggle="tooltip" title="Detail">
                                                 <i class="bi bi-eye-fill me-1"></i> Detail
@@ -145,6 +155,22 @@
                                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning" data-bs-toggle="tooltip" title="Edit">
                                                 <i class="bi bi-pencil-fill me-1"></i> Edit
                                             </a>
+
+                                            @if(!$user->deleted_at && is_null($user->email_verified_at))
+                                                <form action="{{ route('admin.users.verifyByAdmin', $user->id) }}"
+                                                    method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success"
+                                                        onclick="return confirm('Verifikasi akun ini oleh admin?')"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Verifikasi Manual">
+                                                        <i class="bi bi-check-circle me-1"></i> Verify
+                                                    </button>
+                                                </form>
+                                            @endif
+
 
                                             <!-- Tombol Hapus atau Restore berdasarkan status deleted_at -->
                                             @if($user->deleted_at)
@@ -236,6 +262,18 @@
                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-warning flex-grow-1">
                                     <i class="bi bi-pencil me-1"></i> Edit
                                 </a>
+                               @if(!$user->deleted_at && is_null($user->email_verified_at))
+                                    <form action="{{ route('admin.users.verifyByAdmin', $user->id) }}"
+                                        method="POST"
+                                        class="flex-grow-1">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-sm btn-success w-100"
+                                            onclick="return confirm('Verifikasi akun ini oleh admin?')">
+                                            <i class="bi bi-check-circle me-1"></i> Verify
+                                        </button>
+                                    </form>
+                                @endif
                                 @if($user->deleted_at)
                                     <form action="{{ route('users.restore', $user->id) }}" method="POST" class="flex-grow-1">
                                         @csrf

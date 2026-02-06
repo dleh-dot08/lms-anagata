@@ -49,21 +49,57 @@
 
                         <div class="alert alert-info">
                             <h6>Format CSV yang diharapkan:</h6>
-                            <p>File CSV harus memiliki kolom berikut:</p>
-                            <ul>
-                                <li>no (nomor urut)</li>
-                                <li>nama (nama lengkap user)</li>
-                                <li>email (alamat email user)</li>
-                                <li>waktu verifikasi email (format: dd/mm/yyyy HH:ii:ss)</li>
-                                <li>password (password yang akan digunakan)</li>
+                            <ul class="mb-2">
+                                <li><b>nama</b></li>
+                                <li><b>email</b></li>
+                                <li><b>password</b></li>
+                                <li><b>jenjang_id</b> (ambil dari tabel referensi di bawah)</li>
+                                <li><b>kelas_id</b> (ambil dari tabel referensi di bawah)</li>
                             </ul>
-                            <p class="mb-0">Contoh format:</p>
-                            <pre class="mb-0">no,nama,email,waktu verifikasi email,password
-1,John Doe,john@example.com,13/06/2025 15:50:57,rahasia123</pre>
+
+                            <p class="mb-0">Contoh:</p>
+                    <pre class="mb-0">nama,email,password,jenjang_id,kelas_id
+                    Budi,budi@student.ruanganata.id,123456,1,1
+                    Siti,siti@student.ruanganata.id,123456,3,8</pre>
+
+                            <hr class="my-2">
+                            <small class="text-muted">
+                                Saat import, sistem otomatis mengisi email_verified_at = now(), verified_by_admin_at = now(), dan verified_by_admin_id = admin yang import.
+                            </small>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Import Users</button>
                     </form>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <strong>Referensi Jenjang dan Kelas (Realtime)</strong>
+                            <div class="small text-muted">Gunakan id yang ada di database yaitu (kolom id_jenjang dan id_kelas).</div>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-bordered table-sm mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th style="width:80px;">id Kelas</th>
+                                        <th>Nama</th>
+                                        <th style="width:120px;">id Jenjang</th>
+                                        <th> jenjang </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($kelas as $k)
+                                        <tr>
+                                            <td>{{ $k->id }}</td>
+                                            <td>{{ $k->nama }}</td>
+                                            <td>{{ $k->id_jenjang }}</td>
+                                            <td>{{ $jenjangs->where('id', $k->id_jenjang)->first()->nama_jenjang ?? 'Tidak Diketahui' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

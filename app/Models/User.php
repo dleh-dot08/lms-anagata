@@ -24,9 +24,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'name', 'email', 'password', 'foto_diri', 'tanggal_lahir', 'tempat_lahir',
         'alamat_tempat_tinggal', 'instansi', 'jenjang_id', 'jabatan',
         'bidang_pengajaran', 'divisi', 'no_telepon', 'tanggal_bergabung',
-        'surat_tugas', 'role_id', 'created_by', 'updated_by',
-        'jenis_kelamin', 'pendidikan_terakhir', 'pekerjaan', 'media_sosial',
-        'sekolah_id', 'kelas_id' // Add sekolah_id and kelas_id to fillable array
+        'surat_tugas', 'role_id', 'email_is_placeholder', 'email_verified_at', 'verified_by_admin_at','verified_by_admin_id',
+        'created_by', 'updated_by','jenis_kelamin', 'pendidikan_terakhir', 
+        'pekerjaan', 'media_sosial','sekolah_id', 'kelas_id', // Add sekolah_id and kelas_id to fillable array
     ];
 
     /**
@@ -182,6 +182,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sekolah()
     {
         return $this->belongsTo(Sekolah::class);
+    }
+
+    public function isVerified(): bool
+    {
+        return !is_null($this->email_verified_at) || !is_null($this->verified_by_admin_at);
     }
 
     public function mentorCourses()

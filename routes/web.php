@@ -140,6 +140,9 @@ Route::middleware(['throttle:100,1'])->group(function() {
 
         Route::post('/infografis/resume/unapprove', [\App\Http\Controllers\Admin\InfografisController::class, 'unapproveResume'])
             ->name('infografis.resume.unapprove');
+
+        Route::post('/users/{id}/verify-admin', [UserController::class, 'verifyByAdmin'])
+            ->name('users.verifyByAdmin');
     });
 
     Route::middleware(['auth'])->prefix('admin')->group(function () {
