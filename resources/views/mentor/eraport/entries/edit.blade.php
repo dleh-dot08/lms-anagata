@@ -52,11 +52,8 @@
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Kategori</label>
-                        <input type="text" name="category" class="form-control"
-                               value="{{ old('category', $entry->category) }}"
-                               placeholder="mis: Game Dev / AI / Animasi"
-                               {{ $entry->locked_at ? 'disabled' : '' }}>
+                        <label class="form-label">Kategori Kursus</label>
+                        <input type="text" class="form-control" value="{{ $courseCategoryName ?? '-' }}" readonly>
                     </div>
                 </div>
             </div>
@@ -71,7 +68,7 @@
                         <input type="number" step="0.01" min="0" max="100"
                                name="avg_project_score"
                                class="form-control"
-                               value="{{ old('avg_project_score', $entry->avg_project_score) }}"
+                               value="{{ old('avg_project_score', $entry->avg_project_score) }}" readonly
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
 
@@ -80,7 +77,7 @@
                         <input type="number" step="0.01" min="0" max="100"
                                name="logic_score"
                                class="form-control"
-                               value="{{ old('logic_score', $entry->logic_score) }}"
+                               value="{{ old('logic_score', $entry->logic_score) }}" readonly
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                         <small class="text-muted">Boleh kosong jika pakai predikat saja.</small>
                     </div>
@@ -88,7 +85,7 @@
                     <div class="col-md-4">
                         <label class="form-label">Predikat Logika/CT (opsional)</label>
                         <input type="text" name="logic_predicate" class="form-control"
-                               value="{{ old('logic_predicate', $entry->logic_predicate) }}"
+                               value="{{ old('logic_predicate', $entry->logic_predicate) }}" readonly
                                placeholder="mis: Sangat Baik / Baik / Cukup"
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
@@ -98,14 +95,14 @@
                         <input type="number" step="0.01" min="0" max="100"
                                name="creativity_score"
                                class="form-control"
-                               value="{{ old('creativity_score', $entry->creativity_score) }}"
+                               value="{{ old('creativity_score', $entry->creativity_score) }}" readonly
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label">Predikat Kreativitas (opsional)</label>
                         <input type="text" name="creativity_predicate" class="form-control"
-                               value="{{ old('creativity_predicate', $entry->creativity_predicate) }}"
+                               value="{{ old('creativity_predicate', $entry->creativity_predicate) }}" readonly
                                placeholder="mis: Sangat Baik / Baik / Cukup"
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
@@ -127,25 +124,25 @@
                     <div class="col-md-3">
                         <label class="form-label">Hadir</label>
                         <input type="number" min="0" name="hadir_count" class="form-control"
-                               value="{{ old('hadir_count', $entry->hadir_count) }}"
+                               value="{{ old('hadir_count', $entry->hadir_count) }}" readonly
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Sakit</label>
                         <input type="number" min="0" name="sakit_count" class="form-control"
-                               value="{{ old('sakit_count', $entry->sakit_count) }}"
+                               value="{{ old('sakit_count', $entry->sakit_count) }}" readonly
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Izin</label>
                         <input type="number" min="0" name="izin_count" class="form-control"
-                               value="{{ old('izin_count', $entry->izin_count) }}"
+                               value="{{ old('izin_count', $entry->izin_count) }}" readonly
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Alpha</label>
                         <input type="number" min="0" name="alpha_count" class="form-control"
-                               value="{{ old('alpha_count', $entry->alpha_count) }}"
+                               value="{{ old('alpha_count', $entry->alpha_count) }}" readonly
                                {{ $entry->locked_at ? 'disabled' : '' }}>
                     </div>
                 </div>

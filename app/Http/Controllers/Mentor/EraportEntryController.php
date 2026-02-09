@@ -33,7 +33,11 @@ class EraportEntryController extends Controller
             return back()->with('error', 'Entry sudah dikunci (batch publish).');
         }
 
-        return view('mentor.eraport.entries.edit', compact('entry'));
+        $entry->load('batch.course.kategori');
+
+        $courseCategoryName = optional($entry->batch->course->kategori)->nama_kategori;
+
+        return view('mentor.eraport.entries.edit', compact('entry', 'courseCategoryName'));
     }
 
     public function update(Request $request, EraportEntry $entry)
@@ -44,7 +48,6 @@ class EraportEntryController extends Controller
 
         $data = $request->validate([
             'platform' => ['nullable','string','max:80'],
-            'category' => ['nullable','string','max:120'],
 
             'avg_project_score' => ['nullable','numeric','min:0','max:100'],
             'logic_score' => ['nullable','numeric','min:0','max:100'],
